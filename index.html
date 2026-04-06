@@ -87,6 +87,14 @@
     margin-bottom: 2.75rem;
     letter-spacing: 0.1em;
   }
+  #instructions {
+    text-align: center;
+    color: var(--dim);
+    font-size: 0.95rem;
+    margin-bottom: 1rem;
+    opacity: 0.75;
+    line-height: 1.4;
+  }
 
   /* --- Raisin counters --- */
   #raisin-bar {
@@ -301,6 +309,7 @@
     .raisin-svg { width: 40px; height: 36px; }
     h1 { font-size: 2rem; letter-spacing: 0.15em; margin-right: -0.15em; }
     #subtitle { font-size: 1rem; margin-top: -0.75rem; margin-bottom: 1rem; }
+    #instructions { font-size: 0.85rem; margin-bottom: 1rem; }
     #raisin-bar { font-size: 1.1rem; margin-bottom: 1rem; }
     #current-level { font-size: 0.75rem; }
     #level-up-message { font-size: 0.95rem; }
@@ -364,6 +373,7 @@
     </div>
     <span id="stake-raisins"></span>
   </div>
+  <div id="instructions">The symbols below are letters, making up a common phrase. Guess it correctly and earn raisins.</div>
   <div id="cipher-display"></div>
   <div id="clue-display"></div>
   <div id="hints-area"></div>
@@ -1214,9 +1224,15 @@ const resultPhraseEl = document.getElementById('result-phrase');
 const resultMappingEl = document.getElementById('result-mapping');
 const shareBtn = document.getElementById('share-btn');
 const shareToast = document.getElementById('share-toast');
+const instructionsEl = document.getElementById('instructions');
 const totalRaisinsEl = document.getElementById('total-raisins');
 const stakeRaisinsEl = document.getElementById('stake-raisins');
 const currentLevelEl = document.getElementById('current-level');
+
+// --- Instructions (hide if player has won before) ---
+if (getTotalRaisins() > 0) {
+  instructionsEl.classList.add('hidden');
+}
 
 // --- Raisin display ---
 function updateRaisinDisplay() {
@@ -1321,6 +1337,7 @@ function showWin() {
   const totalBefore = getTotalRaisins();
   saveTotalRaisins(totalBefore + won);
   updateRaisinDisplay();
+  instructionsEl.classList.add('hidden');
   feedbackEl.textContent = 'Correct!';
   feedbackEl.className = 'feedback-correct';
   let raisinText = 'You got ' + won + ' raisin' + (won !== 1 ? 's' : '') + '!';
