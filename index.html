@@ -86,7 +86,20 @@
     font-size: 1.3rem;
   }
   #total-raisins { color: var(--gold); }
+  #total-raisins-wrap { display: flex; flex-direction: column; }
+  #current-level { color: var(--dim); font-size: 0.85rem; margin-top: 0.15rem; }
   #stake-raisins { color: var(--accent); }
+  #level-up-message {
+    color: var(--accent-bright);
+    font-size: 1.1rem;
+    margin-top: 0.75rem;
+    animation: levelUpGlow 1.5s ease-in-out;
+  }
+  @keyframes levelUpGlow {
+    0% { opacity: 0; transform: scale(0.9); }
+    50% { opacity: 1; transform: scale(1.05); }
+    100% { opacity: 1; transform: scale(1); }
+  }
 
   /* --- Cipher panel --- */
   #cipher-display {
@@ -247,6 +260,8 @@
     h1 { font-size: 2rem; letter-spacing: 0.15em; margin-right: -0.15em; }
     #subtitle { font-size: 1rem; margin-top: -0.75rem; margin-bottom: 1rem; }
     #raisin-bar { font-size: 1.1rem; margin-bottom: 1rem; }
+    #current-level { font-size: 0.75rem; }
+    #level-up-message { font-size: 0.95rem; }
     #cipher-display { font-size: 1.4rem; padding: 1.25rem; }
     #clue-display { font-size: 1.2rem; }
     #input-area { flex-direction: column; }
@@ -301,7 +316,10 @@
   </div>
   <div id="subtitle">Guess the phrase and collect raisins</div>
   <div id="raisin-bar">
-    <span id="total-raisins"></span>
+    <div id="total-raisins-wrap">
+      <span id="total-raisins"></span>
+      <div id="current-level"></div>
+    </div>
     <span id="stake-raisins"></span>
   </div>
   <div id="cipher-display"></div>
@@ -859,6 +877,39 @@ const PHRASES = [
 let game = null;
 const MAX_RAISINS = 5;
 
+const REWARD_LEVELS = [
+  { threshold: 15,  phrase: "Raise a toast!",                            label: "Toast Raiser" },
+  { threshold: 30,  phrase: "I dub thee, Sir/Madam Raisin",              label: "Sir/Madam Raisin" },
+  { threshold: 50,  phrase: "You are my raison d'etre",                  label: "Raison d'Etre" },
+  { threshold: 75,  phrase: "You've really raisined the stakes!",        label: "Stake Raiser" },
+  { threshold: 100, phrase: "Raisin for Celebration!!",                  label: "Celebrator" },
+  { threshold: 150, phrase: "You're an Amazin Raisin!",                  label: "Amazin Raisin" },
+  { threshold: 200, phrase: "You have totally raised the bar! You win!!", label: "Bar Raiser" },
+];
+
+function getCurrentLevel(total) {
+  let current = null;
+  for (const level of REWARD_LEVELS) {
+    if (total >= level.threshold) current = level;
+  }
+  return current;
+}
+
+function getNextLevel(total) {
+  for (const level of REWARD_LEVELS) {
+    if (total < level.threshold) return level;
+  }
+  return null;
+}
+
+function checkLevelUp(before, after) {
+  let newLevel = null;
+  for (const level of REWARD_LEVELS) {
+    if (before < level.threshold && after >= level.threshold) newLevel = level;
+  }
+  return newLevel;
+}
+
 // --- localStorage helpers ---
 function getUsed() {
   try { return JSON.parse(localStorage.getItem('phraisins_used')) || []; }
@@ -918,12 +969,23 @@ const resultPhraseEl = document.getElementById('result-phrase');
 const resultMappingEl = document.getElementById('result-mapping');
 const totalRaisinsEl = document.getElementById('total-raisins');
 const stakeRaisinsEl = document.getElementById('stake-raisins');
+const currentLevelEl = document.getElementById('current-level');
 
 // --- Raisin display ---
 function updateRaisinDisplay() {
-  totalRaisinsEl.textContent = 'Total Raisins: ' + getTotalRaisins();
+  const total = getTotalRaisins();
+  totalRaisinsEl.textContent = 'Total Raisins: ' + total;
   stakeRaisinsEl.textContent = game ? 'At Stake: ' + game.raisins : '';
   hintBtn.disabled = game && game.raisins <= 1;
+  const level = getCurrentLevel(total);
+  const next = getNextLevel(total);
+  if (level) {
+    currentLevelEl.textContent = level.label + (next ? ' (next: ' + next.threshold + ')' : ' (MAX)');
+  } else if (next) {
+    currentLevelEl.textContent = 'Next level: ' + next.threshold;
+  } else {
+    currentLevelEl.textContent = '';
+  }
 }
 
 function spendRaisin() {
@@ -1009,11 +1071,17 @@ function revealHint() {
 function showWin() {
   game.isOver = true;
   const won = game.raisins;
-  saveTotalRaisins(getTotalRaisins() + won);
+  const totalBefore = getTotalRaisins();
+  saveTotalRaisins(totalBefore + won);
   updateRaisinDisplay();
   feedbackEl.textContent = 'Correct!';
   feedbackEl.className = 'feedback-correct';
-  resultRaisinsEl.textContent = 'You collected ' + won + ' raisin' + (won !== 1 ? 's' : '') + '!';
+  let raisinText = 'You collected ' + won + ' raisin' + (won !== 1 ? 's' : '') + '!';
+  const levelUp = checkLevelUp(totalBefore, totalBefore + won);
+  if (levelUp) {
+    raisinText += '<div id="level-up-message">' + levelUp.phrase + '</div>';
+  }
+  resultRaisinsEl.innerHTML = raisinText;
   showResult();
 }
 
