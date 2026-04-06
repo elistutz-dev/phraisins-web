@@ -1,0 +1,1053 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PHRAISINS</title>
+<style>
+  :root {
+    --bg: #110b1a;
+    --bg-panel: #1c1428;
+    --accent: #e2c4ff;
+    --accent-bright: #f0deff;
+    --gold: #e8b87a;
+    --gold-bright: #f5d4a0;
+    --red: #f06060;
+    --text: #ede4d6;
+    --dim: #a99bbe;
+    --border: #362852;
+    --border-light: #4a3870;
+    --font: 'Courier New', Consolas, monospace;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--bg);
+    background-image:
+      radial-gradient(ellipse at 20% 0%, rgba(120, 40, 160, 0.1) 0%, transparent 60%),
+      radial-gradient(ellipse at 80% 100%, rgba(90, 30, 120, 0.08) 0%, transparent 50%);
+    color: var(--text);
+    font-family: var(--font);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    padding: 2.5rem 1.5rem;
+  }
+  #app {
+    max-width: 860px;
+    width: 100%;
+  }
+
+  /* --- Title with raisin graphics --- */
+  .title-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1.2rem;
+    margin-bottom: 2.5rem;
+  }
+  .raisin-svg { flex-shrink: 0; }
+  h1 {
+    color: var(--gold);
+    font-family: var(--font);
+    font-size: 3.2rem;
+    font-weight: bold;
+    letter-spacing: 0.35em;
+    margin-right: -0.35em;
+    text-align: center;
+    text-shadow: 0 2px 16px rgba(160, 100, 50, 0.3);
+  }
+
+  /* --- Subtitle --- */
+  #subtitle {
+    text-align: center;
+    color: var(--dim);
+    font-size: 1.25rem;
+    margin-top: -1.5rem;
+    margin-bottom: 2rem;
+    letter-spacing: 0.1em;
+  }
+
+  /* --- Raisin counters --- */
+  #raisin-bar {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+    font-size: 1.3rem;
+  }
+  #total-raisins { color: var(--gold); }
+  #stake-raisins { color: var(--accent); }
+
+  /* --- Cipher panel --- */
+  #cipher-display {
+    background: var(--bg-panel);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 2rem;
+    margin-bottom: 1rem;
+    text-align: center;
+    font-size: 2rem;
+    color: var(--accent);
+    letter-spacing: 0.15em;
+    word-break: break-word;
+    line-height: 1.7;
+    box-shadow: 0 4px 24px rgba(80, 30, 120, 0.12);
+  }
+
+  /* --- Clue --- */
+  #clue-display {
+    text-align: center;
+    color: var(--dim);
+    margin-top: 1.5rem;
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+  }
+  #clue-display::before { content: 'Clue: '; color: var(--gold); }
+
+  /* --- Hints --- */
+  #hints-area {
+    margin-bottom: 1.25rem;
+    min-height: 1.5rem;
+  }
+  .hint {
+    display: inline-block;
+    background: var(--bg-panel);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 0.35rem 0.75rem;
+    margin: 0.25rem 0.35rem;
+    font-size: 1.25rem;
+    color: var(--accent);
+  }
+
+  /* --- Input --- */
+  #input-area {
+    display: flex;
+    gap: 0.75rem;
+    margin-bottom: 1.25rem;
+  }
+  #guess-input {
+    flex: 1;
+    background: var(--bg-panel);
+    border: 1px solid var(--border-light);
+    border-radius: 6px;
+    padding: 0.9rem 1.2rem;
+    color: var(--accent-bright);
+    font-family: var(--font);
+    font-size: 1.15rem;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  #guess-input:focus {
+    border-color: var(--gold);
+    box-shadow: 0 0 0 2px rgba(232, 184, 122, 0.18);
+  }
+  #guess-input::placeholder { color: var(--dim); }
+
+  /* --- Buttons --- */
+  button {
+    background: var(--bg-panel);
+    border: 1px solid var(--border-light);
+    border-radius: 6px;
+    padding: 0.9rem 1.5rem;
+    color: var(--gold);
+    font-family: var(--font);
+    font-size: 1.05rem;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
+  }
+  button:hover {
+    border-color: var(--gold);
+    background: rgba(232, 184, 122, 0.08);
+    box-shadow: 0 2px 8px rgba(232, 184, 122, 0.12);
+  }
+  #submit-btn { color: #7cc88a; border-color: rgba(124, 200, 138, 0.25); }
+  #submit-btn:hover {
+    border-color: #7cc88a;
+    background: rgba(124, 200, 138, 0.08);
+    box-shadow: 0 2px 8px rgba(124, 200, 138, 0.1);
+  }
+  #giveup-btn { color: #e0976a; border-color: rgba(224, 151, 106, 0.25); }
+  #giveup-btn:hover {
+    color: #f0ad82;
+    border-color: #e0976a;
+    background: rgba(224, 151, 106, 0.08);
+    box-shadow: 0 2px 8px rgba(224, 151, 106, 0.12);
+  }
+  #hint-btn { color: #a8b4f0; border-color: rgba(168, 180, 240, 0.25); }
+  #hint-btn:hover {
+    border-color: #a8b4f0;
+    background: rgba(168, 180, 240, 0.08);
+    box-shadow: 0 2px 8px rgba(168, 180, 240, 0.1);
+  }
+  #newgame-btn { color: #7cc88a; border-color: rgba(124, 200, 138, 0.25); margin-bottom: 1.25rem; }
+  #newgame-btn:hover {
+    border-color: #7cc88a;
+    background: rgba(124, 200, 138, 0.08);
+    box-shadow: 0 2px 8px rgba(124, 200, 138, 0.1);
+  }
+  #buttons { display: flex; gap: 0.75rem; margin-bottom: 1.5rem; }
+
+  /* --- Feedback --- */
+  #feedback {
+    text-align: center;
+    margin-bottom: 1.25rem;
+    font-size: 1.15rem;
+    min-height: 1.5rem;
+  }
+  .feedback-wrong { color: var(--red); }
+  .feedback-correct { color: var(--accent-bright); }
+
+  /* --- Result --- */
+  #result {
+    background: var(--bg-panel);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 2rem;
+    display: none;
+    box-shadow: 0 4px 24px rgba(80, 30, 120, 0.12);
+  }
+  #result h3 { color: var(--gold); margin-bottom: 1rem; font-size: 1.15rem; }
+  #result-raisins {
+    text-align: center;
+    color: var(--gold);
+    font-size: 1.25rem;
+    margin-top: 1.25rem;
+  }
+  #result-phrase {
+    color: var(--accent);
+    font-size: 1.4rem;
+    margin-bottom: 1.25rem;
+    text-align: center;
+  }
+  #result-mapping {
+    font-size: 1rem;
+    color: var(--dim);
+    line-height: 2;
+    word-break: break-word;
+  }
+
+  .hidden { display: none !important; }
+
+  @media (max-width: 600px) {
+    body { padding: 1.25rem 0.75rem; }
+    .title-row { gap: 0.6rem; margin-bottom: 1.5rem; }
+    .raisin-svg { width: 40px; height: 36px; }
+    h1 { font-size: 2rem; letter-spacing: 0.15em; margin-right: -0.15em; }
+    #subtitle { font-size: 1rem; margin-top: -0.75rem; margin-bottom: 1rem; }
+    #raisin-bar { font-size: 1.1rem; margin-bottom: 1rem; }
+    #cipher-display { font-size: 1.4rem; padding: 1.25rem; }
+    #clue-display { font-size: 1.2rem; }
+    #input-area { flex-direction: column; }
+    #submit-btn { width: 100%; }
+    #buttons { flex-wrap: wrap; }
+    #buttons button { flex: 1 1 auto; }
+    #result { padding: 1.25rem; }
+    #result-phrase { font-size: 1.15rem; }
+    #result-mapping { font-size: 0.9rem; }
+  }
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="title-row">
+    <svg class="raisin-svg" width="52" height="48" viewBox="0 0 52 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- wrinkled raisin body - irregular, shriveled outline -->
+      <path d="M26 8c-6-1-12 2-16 8-3 5-4 11-2 16 2 6 7 10 14 11 3 0 6 0 9-2 5-3 9-8 10-14 1-5-1-10-4-14-3-3-7-5-11-5z" fill="#3d1a5c"/>
+      <path d="M26 8c-6-1-12 2-16 8-3 5-4 11-2 16 2 6 7 10 14 11 3 0 6 0 9-2 5-3 9-8 10-14 1-5-1-10-4-14-3-3-7-5-11-5z" fill="url(#rg1)"/>
+      <!-- deep wrinkle creases -->
+      <path d="M14 16c3 4 5 8 4 13" stroke="#2a0e40" stroke-width="1.4" stroke-linecap="round" fill="none" opacity="0.7"/>
+      <path d="M19 12c1 6-1 13-2 18" stroke="#2a0e40" stroke-width="1.2" stroke-linecap="round" fill="none" opacity="0.6"/>
+      <path d="M26 10c0 7-2 14-4 20" stroke="#2a0e40" stroke-width="1.3" stroke-linecap="round" fill="none" opacity="0.65"/>
+      <path d="M32 13c-1 5-3 10-5 15" stroke="#2a0e40" stroke-width="1.1" stroke-linecap="round" fill="none" opacity="0.55"/>
+      <path d="M36 18c-2 4-3 9-4 12" stroke="#2a0e40" stroke-width="1" stroke-linecap="round" fill="none" opacity="0.5"/>
+      <!-- cross wrinkles for shriveled texture -->
+      <path d="M12 22c6-2 14-1 22 1" stroke="#2a0e40" stroke-width="0.9" stroke-linecap="round" fill="none" opacity="0.4"/>
+      <path d="M14 30c5-1 11-2 18 0" stroke="#2a0e40" stroke-width="0.8" stroke-linecap="round" fill="none" opacity="0.35"/>
+      <!-- highlight ridge -->
+      <path d="M20 13c2 5 1 11-1 17" stroke="#5a2888" stroke-width="0.8" stroke-linecap="round" fill="none" opacity="0.5"/>
+      <!-- stem -->
+      <path d="M26 8c0-3 1-5 3-7" stroke="#6b8a3a" stroke-width="2" stroke-linecap="round"/>
+      <path d="M27 4c2-1 4-1 5 0" stroke="#6b8a3a" stroke-width="1.2" stroke-linecap="round" opacity="0.6"/>
+      <defs><radialGradient id="rg1" cx="0.35" cy="0.3" r="0.5"><stop offset="0%" stop-color="#6b3fa0" stop-opacity="0.35"/><stop offset="100%" stop-color="#2d1450" stop-opacity="0"/></radialGradient></defs>
+    </svg>
+    <h1>PHRAISINS</h1>
+    <svg class="raisin-svg" width="52" height="48" viewBox="0 0 52 48" fill="none" xmlns="http://www.w3.org/2000/svg" style="transform: scaleX(-1)">
+      <path d="M26 8c-6-1-12 2-16 8-3 5-4 11-2 16 2 6 7 10 14 11 3 0 6 0 9-2 5-3 9-8 10-14 1-5-1-10-4-14-3-3-7-5-11-5z" fill="#3d1a5c"/>
+      <path d="M26 8c-6-1-12 2-16 8-3 5-4 11-2 16 2 6 7 10 14 11 3 0 6 0 9-2 5-3 9-8 10-14 1-5-1-10-4-14-3-3-7-5-11-5z" fill="url(#rg2)"/>
+      <path d="M14 16c3 4 5 8 4 13" stroke="#2a0e40" stroke-width="1.4" stroke-linecap="round" fill="none" opacity="0.7"/>
+      <path d="M19 12c1 6-1 13-2 18" stroke="#2a0e40" stroke-width="1.2" stroke-linecap="round" fill="none" opacity="0.6"/>
+      <path d="M26 10c0 7-2 14-4 20" stroke="#2a0e40" stroke-width="1.3" stroke-linecap="round" fill="none" opacity="0.65"/>
+      <path d="M32 13c-1 5-3 10-5 15" stroke="#2a0e40" stroke-width="1.1" stroke-linecap="round" fill="none" opacity="0.55"/>
+      <path d="M36 18c-2 4-3 9-4 12" stroke="#2a0e40" stroke-width="1" stroke-linecap="round" fill="none" opacity="0.5"/>
+      <path d="M12 22c6-2 14-1 22 1" stroke="#2a0e40" stroke-width="0.9" stroke-linecap="round" fill="none" opacity="0.4"/>
+      <path d="M14 30c5-1 11-2 18 0" stroke="#2a0e40" stroke-width="0.8" stroke-linecap="round" fill="none" opacity="0.35"/>
+      <path d="M20 13c2 5 1 11-1 17" stroke="#5a2888" stroke-width="0.8" stroke-linecap="round" fill="none" opacity="0.5"/>
+      <path d="M26 8c0-3 1-5 3-7" stroke="#6b8a3a" stroke-width="2" stroke-linecap="round"/>
+      <path d="M27 4c2-1 4-1 5 0" stroke="#6b8a3a" stroke-width="1.2" stroke-linecap="round" opacity="0.6"/>
+      <defs><radialGradient id="rg2" cx="0.35" cy="0.3" r="0.5"><stop offset="0%" stop-color="#6b3fa0" stop-opacity="0.35"/><stop offset="100%" stop-color="#2d1450" stop-opacity="0"/></radialGradient></defs>
+    </svg>
+  </div>
+  <div id="subtitle">Guess the phrase and win raisins</div>
+  <div id="raisin-bar">
+    <span id="total-raisins"></span>
+    <span id="stake-raisins"></span>
+  </div>
+  <div id="cipher-display"></div>
+  <div id="clue-display"></div>
+  <div id="hints-area"></div>
+  <button id="newgame-btn" class="hidden">NEW GAME</button>
+  <div id="feedback"></div>
+  <div id="input-area">
+    <input type="text" id="guess-input" placeholder="Enter your guess..." autocomplete="off">
+    <button id="submit-btn">DECODE</button>
+  </div>
+  <div id="buttons">
+    <button id="hint-btn">HINT</button>
+    <button id="giveup-btn">GIVE UP</button>
+  </div>
+  <div id="result">
+    <h3>DECODED TRANSMISSION</h3>
+    <div id="result-phrase"></div>
+    <div id="result-mapping"></div>
+    <div id="result-raisins"></div>
+  </div>
+</div>
+<script>
+const SYMBOLS = ['$','#','@','%','&','*','+','=','~','^','!','?','<','>','{','}','[',']','(',')','§','¤','¥','£','ø'];
+
+const PHRASES = [
+  {id:1,phrase:"better late than never",clue:"tardiness is superior to non-existence"},
+  {id:2,phrase:"actions speak louder than words",clue:"deeds vocalize at higher volume than vocabulary"},
+  {id:3,phrase:"break the ice",clue:"shatter the frozen water"},
+  {id:4,phrase:"hit the nail on the head",clue:"strike the fastener upon the cranium"},
+  {id:5,phrase:"bite the bullet",clue:"chomp the ammunition"},
+  {id:6,phrase:"piece of cake",clue:"a portion of baked confection"},
+  {id:7,phrase:"spill the beans",clue:"topple the legumes"},
+  {id:8,phrase:"under the weather",clue:"beneath the meteorological conditions"},
+  {id:9,phrase:"cost an arm and a leg",clue:"priced at two limbs"},
+  {id:10,phrase:"let the cat out of the bag",clue:"release the feline from the sack"},
+  {id:11,phrase:"once in a blue moon",clue:"singular occurrence during a colored lunar event"},
+  {id:12,phrase:"the best of both worlds",clue:"the finest from each realm"},
+  {id:13,phrase:"back to square one",clue:"return to the initial quadrilateral"},
+  {id:14,phrase:"burn the midnight oil",clue:"ignite the petroleum at twelve a.m."},
+  {id:15,phrase:"a blessing in disguise",clue:"a divine gift wearing a costume"},
+  {id:16,phrase:"add insult to injury",clue:"append offense to wound"},
+  {id:17,phrase:"beat around the bush",clue:"strike the vicinity of the shrub"},
+  {id:18,phrase:"cut to the chase",clue:"trim directly to the pursuit"},
+  {id:19,phrase:"easy come easy go",clue:"effortless arrival effortless departure"},
+  {id:20,phrase:"hang in there",clue:"suspend yourself in that location"},
+  {id:21,phrase:"miss the boat",clue:"fail to catch the vessel"},
+  {id:22,phrase:"no pain no gain",clue:"absence of suffering absence of profit"},
+  {id:23,phrase:"pull someones leg",clue:"tug on a persons limb"},
+  {id:24,phrase:"so far so good",clue:"this distance this satisfactory"},
+  {id:25,phrase:"time flies",clue:"chronology has wings"},
+  {id:26,phrase:"a penny for your thoughts",clue:"one cent for your mental musings"},
+  {id:27,phrase:"a picture paints a thousand words",clue:"a visual rendering depicts a millennium of vocabulary"},
+  {id:28,phrase:"all ears",clue:"entirely auditory organs"},
+  {id:29,phrase:"all thumbs",clue:"completely the thickest digits"},
+  {id:30,phrase:"apple of my eye",clue:"fruit of my optical organ"},
+  {id:31,phrase:"at the drop of a hat",clue:"upon the descent of headwear"},
+  {id:32,phrase:"back to the drawing board",clue:"return to the illustration plank"},
+  {id:33,phrase:"ball is in your court",clue:"sphere resides in your judicial arena"},
+  {id:34,phrase:"barking up the wrong tree",clue:"vocalizing toward the incorrect timber"},
+  {id:35,phrase:"birds of a feather",clue:"avians sharing identical plumage"},
+  {id:36,phrase:"blow off steam",clue:"expel pressurized vapor"},
+  {id:37,phrase:"break a leg",clue:"fracture a lower limb"},
+  {id:38,phrase:"burning bridges",clue:"igniting crossing structures"},
+  {id:39,phrase:"by the skin of your teeth",clue:"via the epidermis of your molars"},
+  {id:40,phrase:"call it a day",clue:"declare the daylight hours concluded"},
+  {id:41,phrase:"caught red handed",clue:"apprehended with crimson palms"},
+  {id:42,phrase:"cross that bridge later",clue:"traverse that structure subsequently"},
+  {id:43,phrase:"cry over spilt milk",clue:"weep above toppled dairy"},
+  {id:44,phrase:"curiosity killed the cat",clue:"inquisitiveness slayed the feline"},
+  {id:45,phrase:"cut corners",clue:"trim the right angles"},
+  {id:46,phrase:"devil in the details",clue:"satan resides in the specifics"},
+  {id:47,phrase:"do not judge a book by its cover",clue:"refrain from evaluating literature by its exterior"},
+  {id:48,phrase:"down to earth",clue:"descended to the planet"},
+  {id:49,phrase:"drastic times call for drastic measures",clue:"extreme epochs demand extreme actions"},
+  {id:50,phrase:"early bird catches the worm",clue:"punctual avian seizes the invertebrate"},
+  {id:51,phrase:"elephant in the room",clue:"pachyderm occupying the chamber"},
+  {id:52,phrase:"every cloud has a silver lining",clue:"each vapor mass possesses a metallic interior"},
+  {id:53,phrase:"face the music",clue:"confront the melodies"},
+  {id:54,phrase:"fat chance",clue:"obese probability"},
+  {id:55,phrase:"feel under the weather",clue:"sense beneath the atmospheric conditions"},
+  {id:56,phrase:"fish out of water",clue:"aquatic creature beyond its liquid habitat"},
+  {id:57,phrase:"fly off the handle",clue:"soar away from the grip"},
+  {id:58,phrase:"food for thought",clue:"nourishment for cognition"},
+  {id:59,phrase:"get cold feet",clue:"acquire frigid lower extremities"},
+  {id:60,phrase:"get out of hand",clue:"escape from the palm"},
+  {id:61,phrase:"give the cold shoulder",clue:"offer the frigid upper joint"},
+  {id:62,phrase:"go the extra mile",clue:"travel the additional distance unit"},
+  {id:63,phrase:"good things come to those who wait",clue:"positive items arrive for the patient ones"},
+  {id:64,phrase:"grass is always greener",clue:"vegetation is perpetually more verdant"},
+  {id:65,phrase:"have a change of heart",clue:"undergo a cardiac alteration"},
+  {id:66,phrase:"head in the clouds",clue:"cranium among the vapor formations"},
+  {id:67,phrase:"hear it through the grapevine",clue:"receive it via the climbing plant"},
+  {id:68,phrase:"heart of gold",clue:"cardiac organ of precious metal"},
+  {id:69,phrase:"hold your horses",clue:"restrain your equines"},
+  {id:70,phrase:"ignorance is bliss",clue:"lack of knowledge equals joy"},
+  {id:71,phrase:"in hot water",clue:"submerged in heated liquid"},
+  {id:72,phrase:"in the same boat",clue:"within the identical vessel"},
+  {id:73,phrase:"jump on the bandwagon",clue:"leap onto the musical vehicle"},
+  {id:74,phrase:"keep your chin up",clue:"maintain your jaw protrusion elevated"},
+  {id:75,phrase:"kill two birds with one stone",clue:"slay dual avians using a single rock"},
+  {id:76,phrase:"last straw",clue:"final piece of dried grain stem"},
+  {id:77,phrase:"leave no stone unturned",clue:"abandon zero rocks unrotated"},
+  {id:78,phrase:"let sleeping dogs lie",clue:"allow dormant canines to recline"},
+  {id:79,phrase:"like riding a bicycle",clue:"similar to operating a two wheeled vehicle"},
+  {id:80,phrase:"live and learn",clue:"exist and acquire knowledge"},
+  {id:81,phrase:"look before you leap",clue:"observe prior to jumping"},
+  {id:82,phrase:"loose cannon",clue:"unfastened artillery piece"},
+  {id:83,phrase:"make a long story short",clue:"render an extended narrative brief"},
+  {id:84,phrase:"method to the madness",clue:"system within the insanity"},
+  {id:85,phrase:"mum is the word",clue:"mother equals the vocabulary unit"},
+  {id:86,phrase:"nip it in the bud",clue:"pinch it at the plant growth"},
+  {id:87,phrase:"not playing with a full deck",clue:"lacking a complete card collection"},
+  {id:88,phrase:"off the hook",clue:"removed from the curved metal"},
+  {id:89,phrase:"on cloud nine",clue:"atop vapor formation number nine"},
+  {id:90,phrase:"on the ball",clue:"upon the spherical object"},
+  {id:91,phrase:"on the fence",clue:"atop the boundary barrier"},
+  {id:92,phrase:"on thin ice",clue:"upon slender frozen water"},
+  {id:93,phrase:"out of the blue",clue:"emerging from the azure"},
+  {id:94,phrase:"over the moon",clue:"above the lunar body"},
+  {id:95,phrase:"pass the buck",clue:"transfer the male deer"},
+  {id:96,phrase:"play it by ear",clue:"perform it via the auditory organ"},
+  {id:97,phrase:"practice makes perfect",clue:"rehearsal produces flawlessness"},
+  {id:98,phrase:"pull yourself together",clue:"assemble your own person"},
+  {id:99,phrase:"put all eggs in one basket",clue:"place every ovum in a single container"},
+  {id:100,phrase:"rain on your parade",clue:"precipitate upon your procession"},
+  {id:101,phrase:"read between the lines",clue:"interpret amid the horizontal marks"},
+  {id:102,phrase:"ring a bell",clue:"chime a hollow metal instrument"},
+  {id:103,phrase:"rock the boat",clue:"oscillate the watercraft"},
+  {id:104,phrase:"rule of thumb",clue:"regulation of the short digit"},
+  {id:105,phrase:"run out of steam",clue:"deplete your pressurized vapor"},
+  {id:106,phrase:"save for a rainy day",clue:"preserve for a precipitation occasion"},
+  {id:107,phrase:"see eye to eye",clue:"observe optical organ to optical organ"},
+  {id:108,phrase:"shoot the breeze",clue:"fire at the gentle wind"},
+  {id:109,phrase:"sit on the fence",clue:"rest atop the boundary barrier"},
+  {id:110,phrase:"speak of the devil",clue:"vocalize about the demon"},
+  {id:111,phrase:"steal the show",clue:"pilfer the performance"},
+  {id:112,phrase:"stick to your guns",clue:"adhere to your firearms"},
+  {id:113,phrase:"straight from the horses mouth",clue:"directly from the equines oral cavity"},
+  {id:114,phrase:"take it with a grain of salt",clue:"accept it alongside a tiny mineral crystal"},
+  {id:115,phrase:"take the plunge",clue:"accept the deep dive"},
+  {id:116,phrase:"the ball is rolling",clue:"the sphere is in rotation"},
+  {id:117,phrase:"the whole nine yards",clue:"the complete nine units of measure"},
+  {id:118,phrase:"throw in the towel",clue:"hurl the drying cloth inward"},
+  {id:119,phrase:"tip of the iceberg",clue:"summit of the frozen water mountain"},
+  {id:120,phrase:"turn a blind eye",clue:"rotate a sightless optical organ"},
+  {id:121,phrase:"twist someones arm",clue:"rotate a persons upper limb"},
+  {id:122,phrase:"two peas in a pod",clue:"dual legumes within a shell"},
+  {id:123,phrase:"up in the air",clue:"elevated within the atmosphere"},
+  {id:124,phrase:"water under the bridge",clue:"liquid beneath the crossing structure"},
+  {id:125,phrase:"when pigs fly",clue:"upon the occasion swine become airborne"},
+  {id:126,phrase:"wrap your head around it",clue:"encircle your cranium about it"},
+  {id:127,phrase:"you can say that again",clue:"you may repeat that statement"},
+  {id:128,phrase:"your guess is as good as mine",clue:"your estimate equals my own"},
+  {id:129,phrase:"a taste of your own medicine",clue:"a sample of your personal remedy"},
+  {id:130,phrase:"absence makes the heart grow fonder",clue:"being away increases cardiac affection"},
+  {id:131,phrase:"all bark and no bite",clue:"entirely vocalization zero chomping"},
+  {id:132,phrase:"an arm and a leg",clue:"one upper limb plus one lower limb"},
+  {id:133,phrase:"as cool as a cucumber",clue:"equally chilled as a green vegetable"},
+  {id:134,phrase:"at the end of the day",clue:"upon conclusion of daylight hours"},
+  {id:135,phrase:"back against the wall",clue:"spine pressed to the vertical surface"},
+  {id:136,phrase:"bad blood",clue:"defective vital fluid"},
+  {id:137,phrase:"beat a dead horse",clue:"strike a deceased equine"},
+  {id:138,phrase:"behind closed doors",clue:"beyond sealed entryways"},
+  {id:139,phrase:"between a rock and a hard place",clue:"amid a stone and a firm location"},
+  {id:140,phrase:"big fish in a small pond",clue:"large aquatic creature in a tiny body of water"},
+  {id:141,phrase:"bite off more than you can chew",clue:"sever excess beyond your mastication capacity"},
+  {id:142,phrase:"blood is thicker than water",clue:"vital fluid has greater viscosity than liquid"},
+  {id:143,phrase:"blow hot and cold",clue:"expel heated and chilled air"},
+  {id:144,phrase:"bone to pick",clue:"skeletal fragment to select"},
+  {id:145,phrase:"born with a silver spoon",clue:"arrived with a precious metal utensil"},
+  {id:146,phrase:"bread and butter",clue:"baked grain and churned dairy"},
+  {id:147,phrase:"break new ground",clue:"fracture fresh earth"},
+  {id:148,phrase:"burn the candle at both ends",clue:"ignite the wax cylinder from dual extremities"},
+  {id:149,phrase:"bury the hatchet",clue:"inter the small axe"},
+  {id:150,phrase:"butter someone up",clue:"spread dairy product on a person"},
+  {id:151,phrase:"by and large",clue:"through and extensive"},
+  {id:152,phrase:"calm before the storm",clue:"tranquility preceding the tempest"},
+  {id:153,phrase:"change of pace",clue:"alteration of velocity"},
+  {id:154,phrase:"chip on your shoulder",clue:"fragment upon your upper joint"},
+  {id:155,phrase:"clean slate",clue:"spotless writing tablet"},
+  {id:156,phrase:"close but no cigar",clue:"near yet absent the tobacco roll"},
+  {id:157,phrase:"cold turkey",clue:"frigid poultry"},
+  {id:158,phrase:"come rain or shine",clue:"arrive precipitation or radiance"},
+  {id:159,phrase:"count your blessings",clue:"enumerate your divine gifts"},
+  {id:160,phrase:"crack of dawn",clue:"fracture of early morning"},
+  {id:161,phrase:"dark horse",clue:"lightless equine"},
+  {id:162,phrase:"dead of night",clue:"deceased portion of darkness"},
+  {id:163,phrase:"diamond in the rough",clue:"precious gem amid the coarse"},
+  {id:164,phrase:"dig your own grave",clue:"excavate your personal burial site"},
+  {id:165,phrase:"down in the dumps",clue:"low within the refuse areas"},
+  {id:166,phrase:"draw the line",clue:"sketch the boundary"},
+  {id:167,phrase:"dressed to the nines",clue:"attired to the highest single digit"},
+  {id:168,phrase:"drop in the bucket",clue:"a single bead in the pail"},
+  {id:169,phrase:"eat humble pie",clue:"consume a modest pastry"},
+  {id:170,phrase:"fall from grace",clue:"descend from divine favor"},
+  {id:171,phrase:"feather in your cap",clue:"plumage adorning your headwear"},
+  {id:172,phrase:"few and far between",clue:"scarce and distantly separated"},
+  {id:173,phrase:"fight fire with fire",clue:"combat flames using flames"},
+  {id:174,phrase:"fill someones shoes",clue:"occupy a persons footwear"},
+  {id:175,phrase:"find your feet",clue:"locate your lower extremities"},
+  {id:176,phrase:"fit as a fiddle",clue:"healthy as a stringed instrument"},
+  {id:177,phrase:"flash in the pan",clue:"brief illumination in the cooking vessel"},
+  {id:178,phrase:"fly by night",clue:"soar during darkness"},
+  {id:179,phrase:"follow your heart",clue:"pursue your cardiac organ"},
+  {id:180,phrase:"foot in the door",clue:"lower extremity within the entryway"},
+  {id:181,phrase:"from scratch",clue:"originating from zero"},
+  {id:182,phrase:"get a kick out of",clue:"receive a foot strike from"},
+  {id:183,phrase:"get the ball rolling",clue:"initiate the sphere rotating"},
+  {id:184,phrase:"give and take",clue:"offer and receive"},
+  {id:185,phrase:"go back to basics",clue:"return to fundamentals"},
+  {id:186,phrase:"go down in flames",clue:"descend amid combustion"},
+  {id:187,phrase:"going out on a limb",clue:"venturing onto a tree branch"},
+  {id:188,phrase:"golden opportunity",clue:"precious metal occasion"},
+  {id:189,phrase:"good as gold",clue:"fine as precious metal"},
+  {id:190,phrase:"got up on the wrong side",clue:"arose from the incorrect flank"},
+  {id:191,phrase:"green with envy",clue:"colored with jealousy"},
+  {id:192,phrase:"grin and bear it",clue:"smile and tolerate it"},
+  {id:193,phrase:"have a blast",clue:"possess an explosion"},
+  {id:194,phrase:"have an axe to grind",clue:"possess a chopping tool to sharpen"},
+  {id:195,phrase:"hit or miss",clue:"strike or fail"},
+  {id:196,phrase:"hit the books",clue:"strike the bound pages"},
+  {id:197,phrase:"hit the ground running",clue:"contact the earth while in motion"},
+  {id:198,phrase:"hit the sack",clue:"strike the sleeping bag"},
+  {id:199,phrase:"hold the fort",clue:"maintain the military structure"},
+  {id:200,phrase:"hook line and sinker",clue:"curved metal thread and weight"},
+  {id:201,phrase:"in a nutshell",clue:"within a seed casing"},
+  {id:202,phrase:"in the dark",clue:"within the absence of light"},
+  {id:203,phrase:"in the nick of time",clue:"at the precise incision of chronology"},
+  {id:204,phrase:"iron out the details",clue:"flatten the specifics"},
+  {id:205,phrase:"it takes two to tango",clue:"the dance requires a pair"},
+  {id:206,phrase:"jack of all trades",clue:"fellow of every profession"},
+  {id:207,phrase:"jump the gun",clue:"leap past the firearm"},
+  {id:208,phrase:"keep a straight face",clue:"maintain a linear visage"},
+  {id:209,phrase:"keep an eye on",clue:"maintain an optical organ upon"},
+  {id:210,phrase:"kick the bucket",clue:"strike the pail with your foot"},
+  {id:211,phrase:"know the ropes",clue:"understand the thick cords"},
+  {id:212,phrase:"land on your feet",clue:"arrive upon your lower extremities"},
+  {id:213,phrase:"learn the ropes",clue:"acquire knowledge of the thick cords"},
+  {id:214,phrase:"lend me your ear",clue:"loan me your auditory organ"},
+  {id:215,phrase:"let bygones be bygones",clue:"allow past events to remain past events"},
+  {id:216,phrase:"let your hair down",clue:"release your head fibers downward"},
+  {id:217,phrase:"light at the end of the tunnel",clue:"illumination at the terminus of the passageway"},
+  {id:218,phrase:"long shot",clue:"extended distance attempt"},
+  {id:219,phrase:"make ends meet",clue:"cause extremities to converge"},
+  {id:220,phrase:"mind over matter",clue:"cognition above substance"},
+  {id:221,phrase:"money talks",clue:"currency vocalizes"},
+  {id:222,phrase:"neck of the woods",clue:"cervical region of the forest"},
+  {id:223,phrase:"needle in a haystack",clue:"sharp implement in dried grass"},
+  {id:224,phrase:"nine times out of ten",clue:"nine occasions from a total of ten"},
+  {id:225,phrase:"not my cup of tea",clue:"outside my preferred heated beverage"},
+  {id:226,phrase:"on the tip of my tongue",clue:"upon the apex of my taste organ"},
+  {id:227,phrase:"once bitten twice shy",clue:"single chomping double timid"},
+  {id:228,phrase:"one in a million",clue:"singular among a vast quantity"},
+  {id:229,phrase:"open a can of worms",clue:"unseal a container of invertebrates"},
+  {id:230,phrase:"out of sight out of mind",clue:"beyond vision beyond cognition"},
+  {id:231,phrase:"out on a limb",clue:"beyond on a tree appendage"},
+  {id:232,phrase:"over the hill",clue:"past the elevated terrain"},
+  {id:233,phrase:"paint the town red",clue:"color the municipality crimson"},
+  {id:234,phrase:"par for the course",clue:"standard for the pathway"},
+  {id:235,phrase:"penny wise pound foolish",clue:"small coin clever large coin unwise"},
+  {id:236,phrase:"pick up the pieces",clue:"collect the fragments"},
+  {id:237,phrase:"play devil advocate",clue:"perform the demons supporter"},
+  {id:238,phrase:"point of no return",clue:"location of zero reversal"},
+  {id:239,phrase:"pour salt on the wound",clue:"cascade minerals onto the injury"},
+  {id:240,phrase:"push the envelope",clue:"thrust the paper container"},
+  {id:241,phrase:"put your foot down",clue:"place your lower extremity downward"},
+  {id:242,phrase:"quick on the draw",clue:"rapid at the extraction"},
+  {id:243,phrase:"rain cats and dogs",clue:"precipitate felines and canines"},
+  {id:244,phrase:"raise the bar",clue:"elevate the horizontal rod"},
+  {id:245,phrase:"right as rain",clue:"correct as precipitation"},
+  {id:246,phrase:"rob peter to pay paul",clue:"steal from one to compensate another"},
+  {id:247,phrase:"roll up your sleeves",clue:"coil your arm coverings upward"},
+  {id:248,phrase:"run circles around",clue:"sprint loops surrounding"},
+  {id:249,phrase:"run the gauntlet",clue:"traverse the armored glove"},
+  {id:250,phrase:"saved by the bell",clue:"rescued by the chiming instrument"},
+  {id:251,phrase:"second to none",clue:"runner up to zero"},
+  {id:252,phrase:"see the light",clue:"perceive the illumination"},
+  {id:253,phrase:"set in stone",clue:"established in rock"},
+  {id:254,phrase:"sharp as a tack",clue:"keen as a small nail"},
+  {id:255,phrase:"show your true colors",clue:"display your authentic hues"},
+  {id:256,phrase:"sink or swim",clue:"submerge or propel through water"},
+  {id:257,phrase:"sitting duck",clue:"a stationary waterfowl"},
+  {id:258,phrase:"skeleton in the closet",clue:"bones within the wardrobe"},
+  {id:259,phrase:"sleep on it",clue:"slumber upon the matter"},
+  {id:260,phrase:"smooth sailing",clue:"frictionless nautical travel"},
+  {id:261,phrase:"snowed under",clue:"buried beneath frozen flakes"},
+  {id:262,phrase:"spick and span",clue:"pristine and immaculate"},
+  {id:263,phrase:"stab in the back",clue:"blade wound to the posterior"},
+  {id:264,phrase:"stand your ground",clue:"maintain your terrain position"},
+  {id:265,phrase:"start from scratch",clue:"begin from absolute zero"},
+  {id:266,phrase:"steal the spotlight",clue:"pilfer the focused beam"},
+  {id:267,phrase:"step up to the plate",clue:"advance toward the flat dish"},
+  {id:268,phrase:"stir the pot",clue:"agitate the cooking vessel"},
+  {id:269,phrase:"straight as an arrow",clue:"linear as a projectile"},
+  {id:270,phrase:"struck a nerve",clue:"impacted a sensory fiber"},
+  {id:271,phrase:"sweet tooth",clue:"sugary molar"},
+  {id:272,phrase:"take a rain check",clue:"accept a precipitation voucher"},
+  {id:273,phrase:"take the cake",clue:"claim the baked dessert"},
+  {id:274,phrase:"test the waters",clue:"evaluate the liquids"},
+  {id:275,phrase:"that ship has sailed",clue:"that vessel has departed"},
+  {id:276,phrase:"the last laugh",clue:"the final chortle"},
+  {id:277,phrase:"the sky is the limit",clue:"the atmosphere is the boundary"},
+  {id:278,phrase:"think outside the box",clue:"cogitate beyond the container"},
+  {id:279,phrase:"through thick and thin",clue:"across dense and slender"},
+  {id:280,phrase:"throw a curveball",clue:"hurl a bending sphere"},
+  {id:281,phrase:"throw caution to the wind",clue:"hurl prudence into the breeze"},
+  {id:282,phrase:"tighten your belt",clue:"constrict your waist strap"},
+  {id:283,phrase:"tongue in cheek",clue:"taste organ within the face side"},
+  {id:284,phrase:"too many cooks",clue:"excessive quantity of chefs"},
+  {id:285,phrase:"top of the morning",clue:"summit of the early hours"},
+  {id:286,phrase:"tough nut to crack",clue:"resilient seed to fracture"},
+  {id:287,phrase:"trial and error",clue:"experiment and mistake"},
+  {id:288,phrase:"turn over a new leaf",clue:"rotate a fresh foliage piece"},
+  {id:289,phrase:"two heads are better than one",clue:"dual craniums surpass a singular one"},
+  {id:290,phrase:"up a creek without a paddle",clue:"elevated in a stream lacking a rowing implement"},
+  {id:291,phrase:"up for grabs",clue:"available for seizing"},
+  {id:292,phrase:"walk on eggshells",clue:"tread upon ovum casings"},
+  {id:293,phrase:"waste not want not",clue:"squander nothing desire nothing"},
+  {id:294,phrase:"wear your heart on your sleeve",clue:"display your cardiac organ on your arm covering"},
+  {id:295,phrase:"weather the storm",clue:"endure the tempest"},
+  {id:296,phrase:"wet behind the ears",clue:"moist posterior to the auditory organs"},
+  {id:297,phrase:"wild goose chase",clue:"untamed waterfowl pursuit"},
+  {id:298,phrase:"win win situation",clue:"victory victory circumstance"},
+  {id:299,phrase:"wolf in sheeps clothing",clue:"predator in ovine garments"},
+  {id:300,phrase:"worth its weight in gold",clue:"valued at its mass in precious metal"},
+  {id:301,phrase:"writing on the wall",clue:"text upon the vertical surface"},
+  {id:302,phrase:"you reap what you sow",clue:"you harvest what you plant"},
+  {id:303,phrase:"zip your lip",clue:"fasten your mouth covering"},
+  {id:304,phrase:"a dime a dozen",clue:"ten cents per twelve units"},
+  {id:305,phrase:"ants in your pants",clue:"insects within your trousers"},
+  {id:306,phrase:"armed to the teeth",clue:"weaponized to the molars"},
+  {id:307,phrase:"at wits end",clue:"upon the terminus of intelligence"},
+  {id:308,phrase:"bark worse than the bite",clue:"vocalization exceeds the chomp"},
+  {id:309,phrase:"beat the clock",clue:"defeat the timepiece"},
+  {id:310,phrase:"bend over backwards",clue:"curve yourself rearward"},
+  {id:311,phrase:"best thing since sliced bread",clue:"finest item since sectioned grain loaf"},
+  {id:312,phrase:"blow your own trumpet",clue:"exhale into your personal brass instrument"},
+  {id:313,phrase:"born yesterday",clue:"arrived the prior day"},
+  {id:314,phrase:"brain drain",clue:"cerebral fluid departure"},
+  {id:315,phrase:"bread winner",clue:"grain loaf victor"},
+  {id:316,phrase:"bring home the bacon",clue:"transport the cured pork domestically"},
+  {id:317,phrase:"bull in a china shop",clue:"bovine within a ceramic store"},
+  {id:318,phrase:"call the shots",clue:"announce the fired projectiles"},
+  {id:319,phrase:"cat got your tongue",clue:"feline acquired your taste organ"},
+  {id:320,phrase:"catch some rays",clue:"seize several beams of light"},
+  {id:321,phrase:"chickens come home to roost",clue:"poultry return to their perch"},
+  {id:322,phrase:"come full circle",clue:"arrive at the complete ring"},
+  {id:323,phrase:"cook the books",clue:"prepare the accounting records"},
+  {id:324,phrase:"cool as a cucumber",clue:"chilled as a green vegetable"},
+  {id:325,phrase:"couch potato",clue:"furniture tuber"},
+  {id:326,phrase:"cut the mustard",clue:"slice the yellow condiment"},
+  {id:327,phrase:"dead ringer",clue:"deceased bell chimer"},
+  {id:328,phrase:"dodge a bullet",clue:"evade a projectile"},
+  {id:329,phrase:"double edged sword",clue:"twin bladed weapon"},
+  {id:330,phrase:"down the drain",clue:"below into the pipe"},
+  {id:331,phrase:"drag your feet",clue:"pull your lower extremities slowly"},
+  {id:332,phrase:"drop the ball",clue:"release the sphere"},
+  {id:333,phrase:"dry run",clue:"moisture free rehearsal"},
+  {id:334,phrase:"ducks in a row",clue:"waterfowl arranged linearly"},
+  {id:335,phrase:"eat your words",clue:"consume your vocabulary"},
+  {id:336,phrase:"egg on your face",clue:"ovum upon your visage"},
+  {id:337,phrase:"elbow grease",clue:"joint lubricant from effort"},
+  {id:338,phrase:"eye of the storm",clue:"optical center of the tempest"},
+  {id:339,phrase:"fall on deaf ears",clue:"descend upon non hearing organs"},
+  {id:340,phrase:"fast and loose",clue:"rapid and unrestrained"},
+  {id:341,phrase:"feast or famine",clue:"banquet or starvation"},
+  {id:342,phrase:"fifth wheel",clue:"the additional circular roller"},
+  {id:343,phrase:"fingers crossed",clue:"digits intertwined"},
+  {id:344,phrase:"fire in the belly",clue:"combustion within the abdomen"},
+  {id:345,phrase:"flying colors",clue:"airborne hues"},
+  {id:346,phrase:"fools gold",clue:"dimwits precious metal"},
+  {id:347,phrase:"from pillar to post",clue:"from column to upright timber"},
+  {id:348,phrase:"full of beans",clue:"completely packed with legumes"},
+  {id:349,phrase:"get off your high horse",clue:"dismount your elevated equine"},
+  {id:350,phrase:"get your act together",clue:"organize your theatrical performance"},
+  {id:351,phrase:"give the green light",clue:"offer the verdant illumination"},
+  {id:352,phrase:"go fly a kite",clue:"proceed to pilot a tethered airfoil"},
+  {id:353,phrase:"go with the flow",clue:"travel alongside the current"},
+  {id:354,phrase:"gone fishing",clue:"departed to capture aquatic creatures"},
+  {id:355,phrase:"grasp at straws",clue:"clutch at dried grain stems"},
+  {id:356,phrase:"graveyard shift",clue:"burial ground work period"},
+  {id:357,phrase:"growing pains",clue:"expansion related discomfort"},
+  {id:358,phrase:"gut feeling",clue:"intestinal intuition"},
+  {id:359,phrase:"had a field day",clue:"experienced an outdoor recreation event"},
+  {id:360,phrase:"hand over fist",clue:"palm above clenched fingers"},
+  {id:361,phrase:"hands are tied",clue:"palms are fastened"},
+  {id:362,phrase:"hard pill to swallow",clue:"difficult tablet to ingest"},
+  {id:363,phrase:"hat trick",clue:"headwear illusion"},
+  {id:364,phrase:"have a bone to pick",clue:"possess a skeletal fragment to select"},
+  {id:365,phrase:"have the last word",clue:"possess the final vocabulary unit"},
+  {id:366,phrase:"head over heels",clue:"cranium above the rear foot parts"},
+  {id:367,phrase:"heads will roll",clue:"craniums shall tumble"},
+  {id:368,phrase:"hedge your bets",clue:"surround your wagers with shrubbery"},
+  {id:369,phrase:"high and dry",clue:"elevated and moisture free"},
+  {id:370,phrase:"hit the roof",clue:"strike the overhead structure"},
+  {id:371,phrase:"hold all the cards",clue:"grip the entire deck"},
+  {id:372,phrase:"home free",clue:"dwelling liberated"},
+  {id:373,phrase:"hot off the press",clue:"heated from the printing machine"},
+  {id:374,phrase:"hot potato",clue:"heated tuber"},
+  {id:375,phrase:"in a pickle",clue:"within a brined cucumber"},
+  {id:376,phrase:"in cold blood",clue:"within frigid vital fluid"},
+  {id:377,phrase:"in one ear and out the other",clue:"entering one auditory organ exiting the opposite"},
+  {id:378,phrase:"in stitches",clue:"within sewn thread loops"},
+  {id:379,phrase:"in the bag",clue:"within the sack"},
+  {id:380,phrase:"in the blink of an eye",clue:"within the flutter of an optical organ"},
+  {id:381,phrase:"in the doghouse",clue:"inside the canine dwelling"},
+  {id:382,phrase:"in the drivers seat",clue:"within the operators chair"},
+  {id:383,phrase:"in the groove",clue:"within the narrow channel"},
+  {id:384,phrase:"in the heat of the moment",clue:"amid the temperature of the instant"},
+  {id:385,phrase:"in the limelight",clue:"within the citrus illumination"},
+  {id:386,phrase:"in the loop",clue:"within the circular path"},
+  {id:387,phrase:"in the red",clue:"within the crimson"},
+  {id:388,phrase:"it is not rocket science",clue:"it is not propulsion research"},
+  {id:389,phrase:"ivory tower",clue:"pale tusk structure"},
+  {id:390,phrase:"jump for joy",clue:"leap for happiness"},
+  {id:391,phrase:"jump ship",clue:"leap from the vessel"},
+  {id:392,phrase:"jury is still out",clue:"the deliberation panel remains absent"},
+  {id:393,phrase:"just the tip of the iceberg",clue:"merely the summit of the frozen mass"},
+  {id:394,phrase:"keep a lid on it",clue:"maintain a cover upon it"},
+  {id:395,phrase:"keep a low profile",clue:"maintain a diminished silhouette"},
+  {id:396,phrase:"keep it under wraps",clue:"maintain it beneath coverings"},
+  {id:397,phrase:"keep the peace",clue:"maintain the tranquility"},
+  {id:398,phrase:"keep your eyes peeled",clue:"maintain your optical organs unsheathed"},
+  {id:399,phrase:"keep your nose clean",clue:"maintain your olfactory organ spotless"},
+  {id:400,phrase:"knock on wood",clue:"rap upon timber"},
+  {id:401,phrase:"know which way the wind blows",clue:"understand the direction of air movement"},
+  {id:402,phrase:"larger than life",clue:"exceeding the dimensions of existence"},
+  {id:403,phrase:"last but not least",clue:"final yet not minimal"},
+  {id:404,phrase:"last ditch effort",clue:"final trench attempt"},
+  {id:405,phrase:"lay your cards on the table",clue:"place your deck upon the flat surface"},
+  {id:406,phrase:"lead by example",clue:"guide via demonstration"},
+  {id:407,phrase:"left high and dry",clue:"abandoned elevated and without moisture"},
+  {id:408,phrase:"lend a hand",clue:"loan a palm"},
+  {id:409,phrase:"let off the hook",clue:"release from the curved metal"},
+  {id:410,phrase:"level playing field",clue:"flat recreational terrain"},
+  {id:411,phrase:"like two peas in a pod",clue:"similar to dual legumes in a shell"},
+  {id:412,phrase:"long in the tooth",clue:"extended in the molar region"},
+  {id:413,phrase:"lose your marbles",clue:"misplace your glass spheres"},
+  {id:414,phrase:"make a mountain out of a molehill",clue:"construct a peak from a tiny dirt mound"},
+  {id:415,phrase:"make hay while the sun shines",clue:"produce dried grass during solar illumination"},
+  {id:416,phrase:"make or break",clue:"construct or shatter"},
+  {id:417,phrase:"make waves",clue:"generate undulations"},
+  {id:418,phrase:"more than meets the eye",clue:"exceeding what the optical organ encounters"},
+  {id:419,phrase:"move the goalposts",clue:"relocate the scoring frames"},
+  {id:420,phrase:"muddy the waters",clue:"soil the liquids"},
+  {id:421,phrase:"music to my ears",clue:"melodies to my auditory organs"},
+  {id:422,phrase:"nail biter",clue:"fastener chomper"},
+  {id:423,phrase:"nest egg",clue:"avian home ovum"},
+  {id:424,phrase:"new kid on the block",clue:"fresh child upon the street section"},
+  {id:425,phrase:"night owl",clue:"darkness dwelling raptor"},
+  {id:426,phrase:"no dice",clue:"absent the numbered cubes"},
+  {id:427,phrase:"no strings attached",clue:"zero cords affixed"},
+  {id:428,phrase:"not all its cracked up to be",clue:"not everything its fractured reputation suggests"},
+  {id:429,phrase:"nothing ventured nothing gained",clue:"zero risked zero acquired"},
+  {id:430,phrase:"nuts and bolts",clue:"threaded fasteners and their partners"},
+  {id:431,phrase:"off the beaten path",clue:"away from the trampled route"},
+  {id:432,phrase:"off the cuff",clue:"beyond the sleeve edge"},
+  {id:433,phrase:"off the record",clue:"removed from the official account"},
+  {id:434,phrase:"off the top of my head",clue:"from the summit of my cranium"},
+  {id:435,phrase:"old hat",clue:"aged headwear"},
+  {id:436,phrase:"on a roll",clue:"atop a cylindrical bread"},
+  {id:437,phrase:"on a shoestring",clue:"upon a footwear lace"},
+  {id:438,phrase:"on pins and needles",clue:"upon sharp fasteners and sewing implements"},
+  {id:439,phrase:"on the dot",clue:"upon the tiny circle"},
+  {id:440,phrase:"on the fly",clue:"upon the winged insect"},
+  {id:441,phrase:"on the house",clue:"upon the dwelling"},
+  {id:442,phrase:"on the nose",clue:"upon the olfactory organ"},
+  {id:443,phrase:"on the rocks",clue:"upon the stones"},
+  {id:444,phrase:"on the same page",clue:"upon the identical sheet"},
+  {id:445,phrase:"on the wagon",clue:"upon the wheeled vehicle"},
+  {id:446,phrase:"once in a lifetime",clue:"singular during an entire existence"},
+  {id:447,phrase:"one for the books",clue:"singular for the bound pages"},
+  {id:448,phrase:"one trick pony",clue:"single skill small horse"},
+  {id:449,phrase:"out of the frying pan",clue:"beyond the cooking surface"},
+  {id:450,phrase:"out of the loop",clue:"beyond the circular path"},
+  {id:451,phrase:"out of the woods",clue:"beyond the forest"},
+  {id:452,phrase:"out to lunch",clue:"departed for midday meal"},
+  {id:453,phrase:"over and done with",clue:"above and completed alongside"},
+  {id:454,phrase:"pain in the neck",clue:"discomfort in the cervical region"},
+  {id:455,phrase:"pay through the nose",clue:"compensate via the olfactory organ"},
+  {id:456,phrase:"penny dropped",clue:"the small coin descended"},
+  {id:457,phrase:"piece of the pie",clue:"portion of the baked pastry"},
+  {id:458,phrase:"play hooky",clue:"perform truancy"},
+  {id:459,phrase:"play second fiddle",clue:"perform the supporting stringed instrument"},
+  {id:460,phrase:"playing with fire",clue:"recreating with combustion"},
+  {id:461,phrase:"plot thickens",clue:"the narrative becomes more dense"},
+  {id:462,phrase:"plum job",clue:"fruit occupation"},
+  {id:463,phrase:"poles apart",clue:"earth extremities separated"},
+  {id:464,phrase:"pull out all the stops",clue:"extract every organ register"},
+  {id:465,phrase:"pull strings",clue:"tug the cords"},
+  {id:466,phrase:"pull the plug",clue:"extract the stopper"},
+  {id:467,phrase:"pull the rug out",clue:"yank the floor covering away"},
+  {id:468,phrase:"put a sock in it",clue:"insert a foot garment within"},
+  {id:469,phrase:"put on ice",clue:"place upon frozen water"},
+  {id:470,phrase:"put the cart before the horse",clue:"place the wheeled carrier ahead of the equine"},
+  {id:471,phrase:"put two and two together",clue:"combine the pair of pairs"},
+  {id:472,phrase:"raining on my parade",clue:"precipitating upon my procession"},
+  {id:473,phrase:"read the riot act",clue:"recite the disorder legislation"},
+  {id:474,phrase:"red herring",clue:"crimson fish"},
+  {id:475,phrase:"rest on your laurels",clue:"recline upon your victory leaves"},
+  {id:476,phrase:"ride the wave",clue:"travel atop the undulation"},
+  {id:477,phrase:"right off the bat",clue:"immediately from the wooden club"},
+  {id:478,phrase:"rise and shine",clue:"elevate and radiate"},
+  {id:479,phrase:"road less traveled",clue:"pathway with fewer journeys"},
+  {id:480,phrase:"roll with the punches",clue:"rotate alongside the fist strikes"},
+  {id:481,phrase:"rough around the edges",clue:"coarse about the perimeter"},
+  {id:482,phrase:"round the clock",clue:"circling the timepiece"},
+  {id:483,phrase:"rub salt in the wound",clue:"massage minerals into the injury"},
+  {id:484,phrase:"run a tight ship",clue:"operate a constricted vessel"},
+  {id:485,phrase:"running on empty",clue:"operating on a depleted tank"},
+  {id:486,phrase:"safe and sound",clue:"secure and unharmed"},
+  {id:487,phrase:"sail close to the wind",clue:"navigate near the air current"},
+  {id:488,phrase:"same old same old",clue:"identical aged identical aged"},
+  {id:489,phrase:"saving grace",clue:"the rescuing divine favor"},
+  {id:490,phrase:"scratch the surface",clue:"scrape the outermost layer"},
+  {id:491,phrase:"see red",clue:"perceive crimson"},
+  {id:492,phrase:"sell like hot cakes",clue:"vend like heated pastries"},
+  {id:493,phrase:"shape up or ship out",clue:"form yourself or depart by vessel"},
+  {id:494,phrase:"shed light on",clue:"release illumination upon"},
+  {id:495,phrase:"ships passing in the night",clue:"vessels traversing during darkness"},
+  {id:496,phrase:"short end of the stick",clue:"brief terminus of the branch"},
+  {id:497,phrase:"shoulder to cry on",clue:"upper joint for weeping upon"},
+  {id:498,phrase:"silver lining",clue:"precious metal interior layer"},
+  {id:499,phrase:"sit tight",clue:"remain firmly seated"},
+  {id:500,phrase:"slap on the wrist",clue:"palm strike upon the forearm joint"},
+  {id:501,phrase:"small fry",clue:"tiny cooked morsels"},
+  {id:502,phrase:"smoke and mirrors",clue:"vapor and reflective glass"},
+  {id:503,phrase:"snap out of it",clue:"break free from the state"},
+  {id:504,phrase:"snowball effect",clue:"frozen sphere accumulation phenomenon"},
+  {id:505,phrase:"spanner in the works",clue:"wrench amid the machinery"},
+  {id:506,phrase:"square meal",clue:"right angled nourishment"},
+  {id:507,phrase:"squeaky wheel gets the grease",clue:"noisy circular roller receives the lubricant"},
+  {id:508,phrase:"stem the tide",clue:"halt the oceanic flow"},
+  {id:509,phrase:"step on someones toes",clue:"tread upon a persons digits"},
+  {id:510,phrase:"stiff upper lip",clue:"rigid superior mouth border"},
+  {id:511,phrase:"stone cold",clue:"rock frigid"},
+  {id:512,phrase:"storm in a teacup",clue:"tempest within a beverage vessel"},
+  {id:513,phrase:"straight and narrow",clue:"linear and slender"},
+  {id:514,phrase:"string along",clue:"cord accompanied"},
+  {id:515,phrase:"swallow your pride",clue:"ingest your self esteem"},
+  {id:516,phrase:"take a back seat",clue:"accept a rear chair"},
+  {id:517,phrase:"take for granted",clue:"accept as permanently provided"},
+  {id:518,phrase:"take the bull by the horns",clue:"seize the bovine by its cranial protrusions"},
+  {id:519,phrase:"taste of your own medicine",clue:"sample of your personal remedy"},
+  {id:520,phrase:"the apple does not fall far from the tree",clue:"the fruit descends near the timber"},
+  {id:521,phrase:"the bigger they are the harder they fall",clue:"the larger they become the more forceful their descent"},
+  {id:522,phrase:"the blind leading the blind",clue:"the sightless guiding the sightless"},
+  {id:523,phrase:"the pot calling the kettle black",clue:"the vessel accusing the boiler of darkness"},
+  {id:524,phrase:"there are plenty of fish in the sea",clue:"abundant aquatic creatures inhabit the ocean"},
+  {id:525,phrase:"third times the charm",clue:"the triple attempt is the magical one"}
+];
+
+// --- State ---
+let game = null;
+const MAX_RAISINS = 5;
+
+// --- localStorage helpers ---
+function getUsed() {
+  try { return JSON.parse(localStorage.getItem('phraisins_used')) || []; }
+  catch { return []; }
+}
+function saveUsed(used) {
+  localStorage.setItem('phraisins_used', JSON.stringify(used));
+}
+function getTotalRaisins() {
+  return parseInt(localStorage.getItem('phraisins_total_raisins')) || 0;
+}
+function saveTotalRaisins(total) {
+  localStorage.setItem('phraisins_total_raisins', JSON.stringify(total));
+}
+
+// --- Encoding ---
+function encode(phrase) {
+  const letters = [...new Set(phrase.toLowerCase().replace(/[^a-z]/g, '').split(''))].sort();
+  const mapping = {};
+  letters.forEach((letter, i) => { mapping[letter] = SYMBOLS[i]; });
+  const encoded = phrase.toLowerCase().split('').map(ch => {
+    if (ch === ' ') return '  ';
+    return mapping[ch] || ch;
+  }).join('');
+  return { encoded, mapping };
+}
+
+// --- Phrase selection ---
+function selectPhrase() {
+  let used = getUsed();
+  if (used.length >= PHRASES.length) {
+    used = [];
+    saveUsed(used);
+  }
+  const available = PHRASES.filter(p => !used.includes(p.id));
+  const pick = available[Math.floor(Math.random() * available.length)];
+  used.push(pick.id);
+  saveUsed(used);
+  return pick;
+}
+
+// --- DOM refs ---
+const cipherEl = document.getElementById('cipher-display');
+const clueEl = document.getElementById('clue-display');
+const hintsEl = document.getElementById('hints-area');
+const feedbackEl = document.getElementById('feedback');
+const guessInput = document.getElementById('guess-input');
+const submitBtn = document.getElementById('submit-btn');
+const hintBtn = document.getElementById('hint-btn');
+const giveupBtn = document.getElementById('giveup-btn');
+const newgameBtn = document.getElementById('newgame-btn');
+const buttonsEl = document.getElementById('buttons');
+const resultEl = document.getElementById('result');
+const inputAreaEl = document.getElementById('input-area');
+const resultRaisinsEl = document.getElementById('result-raisins');
+const resultPhraseEl = document.getElementById('result-phrase');
+const resultMappingEl = document.getElementById('result-mapping');
+const totalRaisinsEl = document.getElementById('total-raisins');
+const stakeRaisinsEl = document.getElementById('stake-raisins');
+
+// --- Raisin display ---
+function updateRaisinDisplay() {
+  totalRaisinsEl.textContent = 'Total Raisins: ' + getTotalRaisins();
+  stakeRaisinsEl.textContent = game ? 'At Stake: ' + game.raisins : '';
+}
+
+function spendRaisin() {
+  game.raisins--;
+  updateRaisinDisplay();
+  if (game.raisins <= 0) {
+    showLoss();
+    return true;
+  }
+  return false;
+}
+
+// --- Game logic ---
+function startGame() {
+  const phraseObj = selectPhrase();
+  const { encoded, mapping } = encode(phraseObj.phrase);
+  const reverseMapping = {};
+  for (const [letter, symbol] of Object.entries(mapping)) {
+    reverseMapping[symbol] = letter;
+  }
+  const letters = Object.keys(mapping);
+  // Shuffle for hint order
+  for (let i = letters.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [letters[i], letters[j]] = [letters[j], letters[i]];
+  }
+  game = {
+    phrase: phraseObj.phrase,
+    clue: phraseObj.clue,
+    encoded,
+    mapping,
+    reverseMapping,
+    unrevealedLetters: letters,
+    revealedHints: [],
+    raisins: MAX_RAISINS,
+    isOver: false
+  };
+  updateRaisinDisplay();
+  cipherEl.textContent = encoded;
+  clueEl.textContent = game.clue;
+  hintsEl.innerHTML = '';
+  feedbackEl.textContent = '';
+  feedbackEl.className = '';
+  resultEl.style.display = 'none';
+  guessInput.value = '';
+  inputAreaEl.classList.remove('hidden');
+  guessInput.disabled = false;
+  submitBtn.disabled = false;
+  hintBtn.classList.remove('hidden');
+  giveupBtn.classList.remove('hidden');
+  newgameBtn.classList.add('hidden');
+  guessInput.focus();
+}
+
+function handleGuess() {
+  if (game.isOver) return;
+  const guess = guessInput.value.trim().toLowerCase();
+  if (!guess) return;
+  if (guess === game.phrase) {
+    showWin();
+  } else {
+    feedbackEl.textContent = 'Incorrect.';
+    feedbackEl.className = 'feedback-wrong';
+    if (!spendRaisin()) {
+      revealHint();
+    }
+    guessInput.value = '';
+    guessInput.focus();
+  }
+}
+
+function revealHint() {
+  if (game.unrevealedLetters.length === 0) return;
+  const letter = game.unrevealedLetters.pop();
+  const symbol = game.mapping[letter];
+  game.revealedHints.push({ symbol, letter });
+  const hint = document.createElement('span');
+  hint.className = 'hint';
+  hint.textContent = `${symbol} = ${letter.toUpperCase()}`;
+  hintsEl.appendChild(hint);
+}
+
+function showWin() {
+  game.isOver = true;
+  const won = game.raisins;
+  saveTotalRaisins(getTotalRaisins() + won);
+  updateRaisinDisplay();
+  feedbackEl.textContent = 'Correct!';
+  feedbackEl.className = 'feedback-correct';
+  resultRaisinsEl.textContent = 'You won ' + won + ' raisin' + (won !== 1 ? 's' : '') + '!';
+  showResult();
+}
+
+function showLoss() {
+  game.isOver = true;
+  game.raisins = 0;
+  updateRaisinDisplay();
+  feedbackEl.textContent = 'The answer was:';
+  feedbackEl.className = 'feedback-wrong';
+  resultRaisinsEl.textContent = 'You won 0 raisins.';
+  showResult();
+}
+
+function showResult() {
+  inputAreaEl.classList.add('hidden');
+  guessInput.disabled = true;
+  submitBtn.disabled = true;
+  hintBtn.classList.add('hidden');
+  giveupBtn.classList.add('hidden');
+  newgameBtn.classList.remove('hidden');
+  resultPhraseEl.textContent = game.phrase;
+  const mappingStr = Object.entries(game.mapping)
+    .sort((a, b) => a[0].localeCompare(b[0]))
+    .map(([letter, symbol]) => `${symbol} = ${letter.toUpperCase()}`)
+    .join('   ');
+  resultMappingEl.textContent = mappingStr;
+  resultEl.style.display = 'block';
+}
+
+// --- Events ---
+submitBtn.addEventListener('click', handleGuess);
+guessInput.addEventListener('keydown', e => {
+  if (e.key === 'Enter') handleGuess();
+});
+hintBtn.addEventListener('click', () => {
+  if (!game.isOver) {
+    if (!spendRaisin()) {
+      revealHint();
+    }
+  }
+});
+giveupBtn.addEventListener('click', () => { if (!game.isOver) showLoss(); });
+newgameBtn.addEventListener('click', startGame);
+
+// --- Init ---
+updateRaisinDisplay();
+startGame();
+</script>
+</body>
+</html>
