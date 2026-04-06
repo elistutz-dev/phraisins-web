@@ -288,7 +288,7 @@
       <defs><radialGradient id="rg2" cx="0.35" cy="0.3" r="0.5"><stop offset="0%" stop-color="#6b3fa0" stop-opacity="0.35"/><stop offset="100%" stop-color="#2d1450" stop-opacity="0"/></radialGradient></defs>
     </svg>
   </div>
-  <div id="subtitle">Guess the phrase and win raisins</div>
+  <div id="subtitle">Guess the phrase and collect raisins</div>
   <div id="raisin-bar">
     <span id="total-raisins"></span>
     <span id="stake-raisins"></span>
@@ -1001,7 +1001,7 @@ function showWin() {
   updateRaisinDisplay();
   feedbackEl.textContent = 'Correct!';
   feedbackEl.className = 'feedback-correct';
-  resultRaisinsEl.textContent = 'You won ' + won + ' raisin' + (won !== 1 ? 's' : '') + '!';
+  resultRaisinsEl.textContent = 'You collected ' + won + ' raisin' + (won !== 1 ? 's' : '') + '!';
   showResult();
 }
 
@@ -1011,7 +1011,7 @@ function showLoss() {
   updateRaisinDisplay();
   feedbackEl.textContent = 'The answer was:';
   feedbackEl.className = 'feedback-wrong';
-  resultRaisinsEl.textContent = 'You won 0 raisins.';
+  resultRaisinsEl.textContent = 'You collected 0 raisins.';
   showResult();
 }
 
