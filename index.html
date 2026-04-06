@@ -1355,8 +1355,8 @@ function showResult() {
   const mappingStr = Object.entries(game.mapping)
     .sort((a, b) => a[0].localeCompare(b[0]))
     .map(([letter, symbol]) => `${symbol} = ${letter.toUpperCase()}`)
-    .join('   ');
-  resultMappingEl.textContent = mappingStr;
+    .join(' &nbsp;');
+  resultMappingEl.innerHTML = mappingStr;
   resultEl.style.display = 'block';
 }
 
