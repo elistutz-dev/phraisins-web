@@ -176,6 +176,7 @@
     box-shadow: 0 2px 8px rgba(224, 151, 106, 0.12);
   }
   #hint-btn { color: #a8b4f0; border-color: rgba(168, 180, 240, 0.25); }
+  #hint-btn:disabled { opacity: 0.35; cursor: default; pointer-events: none; }
   #hint-btn:hover {
     border-color: #a8b4f0;
     background: rgba(168, 180, 240, 0.08);
@@ -913,6 +914,7 @@ const stakeRaisinsEl = document.getElementById('stake-raisins');
 function updateRaisinDisplay() {
   totalRaisinsEl.textContent = 'Total Raisins: ' + getTotalRaisins();
   stakeRaisinsEl.textContent = game ? 'At Stake: ' + game.raisins : '';
+  hintBtn.disabled = game && game.raisins <= 1;
 }
 
 function spendRaisin() {
