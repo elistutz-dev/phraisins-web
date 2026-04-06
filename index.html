@@ -251,6 +251,37 @@
     word-break: break-word;
   }
 
+  /* --- Share --- */
+  #share-btn {
+    display: block;
+    margin: 1.25rem auto 0;
+    color: #a8b4f0;
+    border-color: rgba(168, 180, 240, 0.25);
+  }
+  #share-btn:hover {
+    border-color: #a8b4f0;
+    background: rgba(168, 180, 240, 0.08);
+    box-shadow: 0 2px 8px rgba(168, 180, 240, 0.1);
+  }
+  #share-toast {
+    position: fixed;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--bg-panel);
+    border: 1px solid var(--border-light);
+    color: var(--accent-bright);
+    padding: 0.6rem 1.4rem;
+    border-radius: 6px;
+    font-family: var(--font);
+    font-size: 1rem;
+    opacity: 0;
+    transition: opacity 0.3s;
+    pointer-events: none;
+    z-index: 100;
+  }
+  #share-toast.show { opacity: 1; }
+
   .hidden { display: none !important; }
 
   @media (max-width: 600px) {
@@ -340,8 +371,10 @@
     <div id="result-phrase"></div>
     <div id="result-mapping"></div>
     <div id="result-raisins"></div>
+    <button id="share-btn">SHARE</button>
   </div>
 </div>
+<div id="share-toast" style="opacity:0">Copied!</div>
 <script>
 const SYMBOLS = ['$','#','@','%','&','*','+','=','~','^','!','?','<','>','{','}','[',']','(',')','§','¤','¥','£','ø'];
 
@@ -875,6 +908,7 @@ const PHRASES = [
 
 // --- State ---
 let game = null;
+let lastLevelUp = null;
 const MAX_RAISINS = 5;
 
 const REWARD_LEVELS = [
@@ -967,6 +1001,8 @@ const inputAreaEl = document.getElementById('input-area');
 const resultRaisinsEl = document.getElementById('result-raisins');
 const resultPhraseEl = document.getElementById('result-phrase');
 const resultMappingEl = document.getElementById('result-mapping');
+const shareBtn = document.getElementById('share-btn');
+const shareToast = document.getElementById('share-toast');
 const totalRaisinsEl = document.getElementById('total-raisins');
 const stakeRaisinsEl = document.getElementById('stake-raisins');
 const currentLevelEl = document.getElementById('current-level');
@@ -1077,7 +1113,8 @@ function showWin() {
   feedbackEl.textContent = 'Correct!';
   feedbackEl.className = 'feedback-correct';
   let raisinText = 'You collected ' + won + ' raisin' + (won !== 1 ? 's' : '') + '!';
-  const levelUp = checkLevelUp(totalBefore, totalBefore + won);
+  lastLevelUp = checkLevelUp(totalBefore, totalBefore + won);
+  const levelUp = lastLevelUp;
   if (levelUp) {
     raisinText += '<div id="level-up-message">' + levelUp.phrase + '</div>';
   }
@@ -1088,6 +1125,7 @@ function showWin() {
 function showLoss() {
   game.isOver = true;
   game.raisins = 0;
+  lastLevelUp = null;
   updateRaisinDisplay();
   feedbackEl.textContent = 'The answer was:';
   feedbackEl.className = 'feedback-wrong';
@@ -1111,7 +1149,59 @@ function showResult() {
   resultEl.style.display = 'block';
 }
 
+// --- Share ---
+function buildShareText() {
+  const won = game.raisins;
+  const total = getTotalRaisins();
+  const filled = '\u{1F7E3}'.repeat(won);
+  const empty = '\u26AB'.repeat(MAX_RAISINS - won);
+  let text = 'PHRAISINS\n';
+  text += filled + empty + ' (' + won + '/' + MAX_RAISINS + ')\n';
+  const level = getCurrentLevel(total);
+  text += 'Total: ' + total + ' raisins';
+  if (level) text += ' \u2014 ' + level.label;
+  if (lastLevelUp) text += ' \u{1F389}';
+  text += '\nphraisins.com';
+  return text;
+}
+
+function showToast(msg) {
+  shareToast.textContent = msg || 'Copied!';
+  shareToast.classList.add('show');
+  setTimeout(() => shareToast.classList.remove('show'), 1500);
+}
+
+async function shareResult() {
+  const text = buildShareText();
+  if (navigator.share) {
+    try {
+      await navigator.share({ text });
+      return;
+    } catch (e) {
+      if (e.name === 'AbortError') return;
+    }
+  }
+  if (navigator.clipboard) {
+    try {
+      await navigator.clipboard.writeText(text);
+      showToast('Copied!');
+      return;
+    } catch (e) {}
+  }
+  // Fallback
+  const ta = document.createElement('textarea');
+  ta.value = text;
+  ta.style.position = 'fixed';
+  ta.style.opacity = '0';
+  document.body.appendChild(ta);
+  ta.select();
+  document.execCommand('copy');
+  document.body.removeChild(ta);
+  showToast('Copied!');
+}
+
 // --- Events ---
+shareBtn.addEventListener('click', shareResult);
 submitBtn.addEventListener('click', handleGuess);
 guessInput.addEventListener('keydown', e => {
   if (e.key === 'Enter') handleGuess();
