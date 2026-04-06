@@ -84,7 +84,7 @@
     color: var(--dim);
     font-size: 1.25rem;
     margin-top: -1.5rem;
-    margin-bottom: 2rem;
+    margin-bottom: 2.75rem;
     letter-spacing: 0.1em;
   }
 
@@ -122,6 +122,7 @@
     font-size: 2rem;
     color: var(--accent);
     letter-spacing: 0.15em;
+    word-spacing: 0.5em;
     word-break: break-word;
     line-height: 1.7;
     box-shadow: 0 4px 24px rgba(80, 30, 120, 0.12);
@@ -132,14 +133,14 @@
     text-align: center;
     color: var(--dim);
     margin-top: 1.5rem;
-    margin-bottom: 1rem;
+    margin-bottom: 0.25rem;
     font-size: 1.5rem;
   }
   #clue-display::before { content: 'Clue: '; color: var(--gold); }
 
   /* --- Hints --- */
   #hints-area {
-    margin-bottom: 1.25rem;
+    margin-bottom: 0.75rem;
     min-height: 1.5rem;
   }
   .hint {
@@ -355,7 +356,7 @@
       <defs><radialGradient id="rg2" cx="0.35" cy="0.3" r="0.5"><stop offset="0%" stop-color="#6b3fa0" stop-opacity="0.35"/><stop offset="100%" stop-color="#2d1450" stop-opacity="0"/></radialGradient></defs>
     </svg>
   </div>
-  <div id="subtitle">Guess the phrase and collect raisins</div>
+  <div id="subtitle">Guess the encoded phrase. Achieve grapeness.</div>
   <div id="raisin-bar">
     <div id="total-raisins-wrap">
       <span id="total-raisins"></span>
@@ -386,7 +387,7 @@
 </div>
 <div id="share-toast" style="opacity:0">Copied!</div>
 <script>
-const SYMBOLS = ['$','#','@','%','&','*','+','=','~','^','!','?','<','>','{','}','[',']','(',')','§','¤','¥','£','ø'];
+const SYMBOLS = ['$','#','@','%','&','*','+','÷','~','^','!','?','<','>','{','}','[',']','(',')','§','¤','¥','£','ø'];
 
 const PHRASES = [
   {id:1,phrase:"better late than never",clue:"tardiness is superior to non-existence"},
@@ -1122,7 +1123,7 @@ function showWin() {
   updateRaisinDisplay();
   feedbackEl.textContent = 'Correct!';
   feedbackEl.className = 'feedback-correct';
-  let raisinText = 'You collected ' + won + ' raisin' + (won !== 1 ? 's' : '') + '!';
+  let raisinText = 'You got ' + won + ' raisin' + (won !== 1 ? 's' : '') + '!';
   lastLevelUp = checkLevelUp(totalBefore, totalBefore + won);
   const levelUp = lastLevelUp;
   if (levelUp) {
@@ -1139,7 +1140,7 @@ function showLoss() {
   updateRaisinDisplay();
   feedbackEl.textContent = 'The answer was:';
   feedbackEl.className = 'feedback-wrong';
-  resultRaisinsEl.textContent = 'You collected 0 raisins.';
+  resultRaisinsEl.textContent = 'You got 0 raisins.';
   showResult();
 }
 
