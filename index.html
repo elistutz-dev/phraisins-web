@@ -107,6 +107,11 @@
   #total-raisins-wrap { display: flex; flex-direction: column; }
   #current-level { color: var(--dim); font-size: 0.85rem; margin-top: 0.15rem; }
   #stake-raisins { color: var(--accent); }
+  .streak-message {
+    margin-top: 0.5em;
+    font-weight: bold;
+    color: var(--accent);
+  }
   #level-up-message {
     color: var(--accent-bright);
     font-size: 1.1rem;
@@ -1179,6 +1184,18 @@ function getTotalRaisins() {
 function saveTotalRaisins(total) {
   localStorage.setItem('phraisins_total_raisins', JSON.stringify(total));
 }
+function getStreak() {
+  return parseInt(localStorage.getItem('phraisins_streak')) || 0;
+}
+function saveStreak(n) {
+  localStorage.setItem('phraisins_streak', n);
+}
+function getPerfectStreak() {
+  return parseInt(localStorage.getItem('phraisins_perfect_streak')) || 0;
+}
+function savePerfectStreak(n) {
+  localStorage.setItem('phraisins_perfect_streak', n);
+}
 
 // --- Encoding ---
 function encode(phrase) {
@@ -1346,6 +1363,18 @@ function showWin() {
   if (levelUp) {
     raisinText += '<div id="level-up-message">' + levelUp.phrase + '</div>';
   }
+  const newStreak = getStreak() + 1;
+  saveStreak(newStreak);
+  const isPerfect = (won === MAX_RAISINS);
+  const newPerfectStreak = isPerfect ? getPerfectStreak() + 1 : 0;
+  savePerfectStreak(newPerfectStreak);
+  game.streak = newStreak;
+  game.perfectStreak = newPerfectStreak;
+  if (newPerfectStreak >= 3 && [3, 6, 10].includes(newPerfectStreak)) {
+    raisinText += '<div class="streak-message">You\'re on a streak of perfection \u2014 5/5 for ' + newPerfectStreak + ' in a row!</div>';
+  } else if ([3, 6, 10].includes(newStreak)) {
+    raisinText += '<div class="streak-message">You\'re on a hot streak! \u2014 ' + newStreak + ' in a row</div>';
+  }
   resultRaisinsEl.innerHTML = raisinText;
   showResult();
 }
@@ -1353,6 +1382,10 @@ function showWin() {
 function showLoss() {
   game.isOver = true;
   game.raisins = 0;
+  saveStreak(0);
+  savePerfectStreak(0);
+  game.streak = 0;
+  game.perfectStreak = 0;
   lastLevelUp = null;
   updateRaisinDisplay();
   feedbackEl.textContent = 'The answer was:';
@@ -1389,6 +1422,13 @@ function buildShareText() {
   text += 'Total: ' + total + ' raisins';
   if (level) text += ' \u2014 ' + level.label;
   if (lastLevelUp) text += ' \u{1F389}';
+  const streak = game.streak || 0;
+  const perfectStreak = game.perfectStreak || 0;
+  if (perfectStreak >= 3) {
+    text += '\n5/5 Streak: ' + perfectStreak + ' in a row!';
+  } else if (streak >= 3) {
+    text += '\nStreak: ' + streak + ' in a row';
+  }
   text += '\nphraisins.com';
   return text;
 }
