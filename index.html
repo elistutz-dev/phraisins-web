@@ -1219,11 +1219,19 @@ function encode(phrase) {
 // --- Phrase selection ---
 function selectPhrase() {
   let used = getUsed();
+  const isFirstGame = used.length === 0 && getTotalRaisins() === 0;
   if (used.length >= PHRASES.length) {
     used = [];
     saveUsed(used);
   }
-  const available = PHRASES.filter(p => !used.includes(p.id));
+  let available = PHRASES.filter(p => !used.includes(p.id));
+  if (isFirstGame) {
+    const short = available.filter(p => {
+      const wc = p.phrase.trim().split(/\s+/).length;
+      return wc >= 3 && wc <= 4;
+    });
+    if (short.length > 0) available = short;
+  }
   const pick = available[Math.floor(Math.random() * available.length)];
   used.push(pick.id);
   saveUsed(used);
