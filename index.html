@@ -1483,6 +1483,7 @@ guessInput.addEventListener('keydown', e => {
 });
 hintBtn.addEventListener('click', () => {
   if (!game.isOver) {
+    feedbackEl.textContent = '';
     if (!spendRaisin()) {
       revealHint();
     }
