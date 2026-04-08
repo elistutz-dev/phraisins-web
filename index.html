@@ -404,7 +404,21 @@
 </div>
 <div id="share-toast" style="opacity:0">Copied!</div>
 <script>
-const SYMBOLS = ['$','#','@','%','&','*','+','÷','~','^','!','?','<','>','{','}','[',']','(',')','§','¤','¥','£','ø'];
+const SYMBOL_GROUPS = [
+  { name: 'Punctuation & Brackets', symbols: ['$','#','@','%','&','*','+','~','^','!','?','<','>','{','}','[',']','(',')','|','=',':'] },
+  { name: 'Math & Logic', symbols: ['+','−','×','÷','±','≠','≈','≤','≥','∞','√','∑','∏','∫','∂','∆','∇','∈','∉','∅','⊂','⊃','∧','∨'] },
+  { name: 'Currency & Commerce', symbols: ['$','¢','£','¥','€','₹','₽','₿','¤','%','‰','#','&','@','§','¶','©','®','™','†','‡'] },
+  { name: 'Arrows', symbols: ['←','→','↑','↓','↔','↕','↖','↗','↘','↙','⇐','⇒','⇑','⇓','⇔','⇕','↩','↪','↻','↺','⇠','⇢'] },
+  { name: 'Shapes & Cards', symbols: ['♠','♣','♥','♦','♤','♧','♡','♢','★','☆','●','○','◆','◇','■','□','▲','△','▼','▽','◉','◎'] },
+  { name: 'Musical & Misc', symbols: ['♩','♪','♫','♬','♭','♮','♯','✓','✗','✦','✧','✶','✹','✻','✽','❖','⚡','☀','☁','☂','☃','❄'] },
+  { name: 'Greek Letters', symbols: ['α','β','γ','δ','ε','ζ','η','θ','λ','μ','ν','ξ','π','ρ','σ','τ','φ','χ','ψ','ω','Γ','Δ','Θ','Λ','Σ','Φ','Ψ','Ω'] },
+  { name: 'Chess & Dice', symbols: ['♔','♕','♖','♗','♘','♙','♚','♛','♜','♝','♞','♟','⚀','⚁','⚂','⚃','⚄','⚅','⚐','⚑','⚔','⚖'] },
+  { name: 'Dingbats', symbols: ['✈','✉','✎','✏','✐','✑','✒','✔','✕','✖','✝','✞','✟','✠','✡','✢','✣','✤','✥','✧','✩','✪'] },
+  { name: 'Planets & Alchemy', symbols: ['☉','☽','☿','♀','♁','♂','♃','♄','♅','♆','♇','⚶','⚷','⚸','⚹','⚺','⚻','⚼','☊','☋','☌','☍'] },
+  { name: 'Misc Symbols', symbols: ['☠','☢','☣','⚓','⚒','⚙','⚛','⚜','☮','☯','☸','⚕','⚚','☤','⚘','⚗','☬','☫','☧','⚞','⚟','⚝'] },
+  { name: 'Runes', symbols: ['ᚠ','ᚡ','ᚢ','ᚣ','ᚤ','ᚥ','ᚦ','ᚧ','ᚨ','ᚩ','ᚪ','ᚫ','ᚬ','ᚭ','ᚮ','ᚯ','ᚰ','ᚱ','ᚲ','ᚳ','ᚴ','ᚵ'] },
+];
+let currentSymbols = null;
 
 const PHRASES = [
   {id:1,phrase:"better late than never",clue:"what you say when a friend finally shows up 30 minutes late"},
@@ -1209,7 +1223,7 @@ function savePerfectStreak(n) {
 function encode(phrase) {
   const letters = [...new Set(phrase.toLowerCase().replace(/[^a-z]/g, '').split(''))].sort();
   const mapping = {};
-  letters.forEach((letter, i) => { mapping[letter] = SYMBOLS[i]; });
+  letters.forEach((letter, i) => { mapping[letter] = currentSymbols[i]; });
   const encoded = phrase.toLowerCase().split('').map(ch => {
     if (ch === ' ') return '  ';
     return mapping[ch] || ch;
@@ -1296,6 +1310,8 @@ function spendRaisin() {
 
 // --- Game logic ---
 function startGame() {
+  const group = SYMBOL_GROUPS[Math.floor(Math.random() * SYMBOL_GROUPS.length)];
+  currentSymbols = group.symbols;
   const phraseObj = selectPhrase();
   const { encoded, mapping } = encode(phraseObj.phrase);
   const reverseMapping = {};
