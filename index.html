@@ -419,6 +419,7 @@ const SYMBOL_GROUPS = [
   { name: 'Runes', symbols: ['ᚠ','ᚡ','ᚢ','ᚣ','ᚤ','ᚥ','ᚦ','ᚧ','ᚨ','ᚩ','ᚪ','ᚫ','ᚬ','ᚭ','ᚮ','ᚯ','ᚰ','ᚱ','ᚲ','ᚳ','ᚴ','ᚵ'] },
 ];
 let currentSymbols = null;
+const STARTER_PHRASE_IDS = [94,97,103,104,106,177,182,193,219,284];
 
 const PHRASES = [
   {id:1,phrase:"better late than never",clue:"what you say when a friend finally shows up 30 minutes late"},
@@ -1241,11 +1242,8 @@ function selectPhrase() {
   }
   let available = PHRASES.filter(p => !used.includes(p.id));
   if (isFirstGame) {
-    const short = available.filter(p => {
-      const wc = p.phrase.trim().split(/\s+/).length;
-      return wc >= 3 && wc <= 4;
-    });
-    if (short.length > 0) available = short;
+    const starters = available.filter(p => STARTER_PHRASE_IDS.includes(p.id));
+    if (starters.length > 0) available = starters;
   }
   const pick = available[Math.floor(Math.random() * available.length)];
   used.push(pick.id);
@@ -1310,7 +1308,9 @@ function spendRaisin() {
 
 // --- Game logic ---
 function startGame() {
-  const group = SYMBOL_GROUPS[Math.floor(Math.random() * SYMBOL_GROUPS.length)];
+  const used = getUsed();
+  const isFirstGame = used.length === 0 && getTotalRaisins() === 0;
+  const group = isFirstGame ? SYMBOL_GROUPS[0] : SYMBOL_GROUPS[Math.floor(Math.random() * SYMBOL_GROUPS.length)];
   currentSymbols = group.symbols;
   const phraseObj = selectPhrase();
   const { encoded, mapping } = encode(phraseObj.phrase);
