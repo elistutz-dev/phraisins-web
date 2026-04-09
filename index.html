@@ -1330,13 +1330,17 @@ function animateCipherScramble(encoded, targetEl) {
     const base = Math.floor(6 + (i / chars.length) * (totalIterations - 8));
     return Math.min(base + Math.floor(Math.random() * 3), totalIterations);
   });
-  // Lock container height to final-state height to prevent jitter during scramble
+  // Measure final-text height and first scramble frame height
   setCipherText(targetEl, encoded);
-  targetEl.style.minHeight = targetEl.offsetHeight + 'px';
+  const finalHeight = targetEl.offsetHeight;
   let iteration = 0;
   setCipherText(targetEl, chars.map((ch, i) =>
     isSymbolPos[i] ? currentSymbols[Math.floor(Math.random() * currentSymbols.length)] : ch
   ).join(''));
+  const scrambleHeight = targetEl.offsetHeight;
+  // Lock container to taller of final/scramble heights; overflow hidden as safety net
+  targetEl.style.height = Math.max(finalHeight, scrambleHeight) + 'px';
+  targetEl.style.overflow = 'hidden';
   scrambleTimer = setInterval(() => {
     iteration++;
     let result = '';
@@ -1352,7 +1356,8 @@ function animateCipherScramble(encoded, targetEl) {
       clearInterval(scrambleTimer);
       scrambleTimer = null;
       setCipherText(targetEl, encoded);
-      targetEl.style.minHeight = '';
+      targetEl.style.height = '';
+      targetEl.style.overflow = '';
     }
   }, 110);
 }
