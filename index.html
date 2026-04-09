@@ -1435,7 +1435,7 @@ function spendRaisin() {
 }
 
 // --- Game logic ---
-function startGame() {
+function startGame({ fromNewGame = false } = {}) {
   const used = getUsed();
   const isFirstGame = used.length === 0 && getTotalRaisins() === 0;
   const group = isFirstGame ? SYMBOL_GROUPS[0] : SYMBOL_GROUPS[Math.floor(Math.random() * SYMBOL_GROUPS.length)];
@@ -1478,7 +1478,9 @@ function startGame() {
   hintBtn.classList.remove('hidden');
   giveupBtn.classList.remove('hidden');
   newgameBtn.classList.add('hidden');
-  guessInput.focus();
+  if (!(fromNewGame && window.innerWidth <= 768)) {
+    guessInput.focus();
+  }
 }
 
 function handleGuess() {
@@ -1648,7 +1650,7 @@ hintBtn.addEventListener('click', () => {
   }
 });
 giveupBtn.addEventListener('click', () => { if (!game.isOver) showLoss(); });
-newgameBtn.addEventListener('click', startGame);
+newgameBtn.addEventListener('click', () => startGame({ fromNewGame: true }));
 
 // --- Init ---
 updateRaisinDisplay();
