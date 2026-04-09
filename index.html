@@ -1325,12 +1325,12 @@ if (getTotalRaisins() > 0) {
 function animateCipherScramble(encoded, targetEl) {
   if (scrambleTimer) clearInterval(scrambleTimer);
   const chars = [...encoded];
-  const totalIterations = 27;
+  const totalIterations = 17;
   const symbolSet = new Set(currentSymbols);
   const isSymbolPos = chars.map(ch => symbolSet.has(ch));
   const settleIteration = chars.map((ch, i) => {
     if (!isSymbolPos[i]) return 0;
-    const base = Math.floor(10 + (i / chars.length) * (totalIterations - 12));
+    const base = Math.floor(6 + (i / chars.length) * (totalIterations - 8));
     return Math.min(base + Math.floor(Math.random() * 3), totalIterations);
   });
   let iteration = 0;
@@ -1353,7 +1353,7 @@ function animateCipherScramble(encoded, targetEl) {
       scrambleTimer = null;
       targetEl.textContent = encoded;
     }
-  }, 55);
+  }, 88);
 }
 
 function typewriterReveal(text, targetEl) {
