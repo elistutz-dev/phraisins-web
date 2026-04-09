@@ -1322,7 +1322,7 @@ function setCipherText(el, text) {
 function animateCipherScramble(encoded, targetEl) {
   if (scrambleTimer) clearInterval(scrambleTimer);
   const chars = [...encoded];
-  const totalIterations = 18;
+  const totalIterations = 15;
   const symbolSet = new Set(currentSymbols);
   const isSymbolPos = chars.map(ch => symbolSet.has(ch));
   const settleIteration = chars.map((ch, i) => {
