@@ -164,10 +164,10 @@
     color: var(--accent);
     letter-spacing: 0.15em;
     word-spacing: 0.5em;
-    word-break: break-word;
     line-height: 1.7;
     box-shadow: 0 4px 24px rgba(80, 30, 120, 0.12);
   }
+  .cipher-word { display: inline-block; }
 
   /* --- Clue --- */
   #clue-display {
@@ -1313,6 +1313,12 @@ if (getTotalRaisins() > 0) {
 }
 
 // --- Animations ---
+function setCipherText(el, text) {
+  el.innerHTML = text.split(/  +/).map(w =>
+    '<span class="cipher-word">' + w.replace(/</g, '&lt;') + '</span>'
+  ).join(' ');
+}
+
 function animateCipherScramble(encoded, targetEl) {
   if (scrambleTimer) clearInterval(scrambleTimer);
   const chars = [...encoded];
@@ -1325,9 +1331,9 @@ function animateCipherScramble(encoded, targetEl) {
     return Math.min(base + Math.floor(Math.random() * 3), totalIterations);
   });
   let iteration = 0;
-  targetEl.textContent = chars.map((ch, i) =>
+  setCipherText(targetEl, chars.map((ch, i) =>
     isSymbolPos[i] ? currentSymbols[Math.floor(Math.random() * currentSymbols.length)] : ch
-  ).join('');
+  ).join(''));
   scrambleTimer = setInterval(() => {
     iteration++;
     let result = '';
@@ -1338,11 +1344,11 @@ function animateCipherScramble(encoded, targetEl) {
         result += currentSymbols[Math.floor(Math.random() * currentSymbols.length)];
       }
     }
-    targetEl.textContent = result;
+    setCipherText(targetEl, result);
     if (iteration >= totalIterations) {
       clearInterval(scrambleTimer);
       scrambleTimer = null;
-      targetEl.textContent = encoded;
+      setCipherText(targetEl, encoded);
     }
   }, 110);
 }
