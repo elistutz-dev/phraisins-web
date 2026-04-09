@@ -1268,13 +1268,13 @@ function encode(phrase) {
 // --- Phrase selection ---
 function selectPhrase() {
   let used = getUsed();
-  const isFirstGame = used.length === 0 && getTotalRaisins() === 0;
+  const isStarterGame = used.length <= 1 && getTotalRaisins() <= 5;
   if (used.length >= PHRASES.length) {
     used = [];
     saveUsed(used);
   }
   let available = PHRASES.filter(p => !used.includes(p.id));
-  if (isFirstGame) {
+  if (isStarterGame) {
     const starters = available.filter(p => STARTER_PHRASE_IDS.includes(p.id));
     if (starters.length > 0) available = starters;
   }
@@ -1449,8 +1449,8 @@ function spendRaisin() {
 // --- Game logic ---
 function startGame({ fromNewGame = false } = {}) {
   const used = getUsed();
-  const isFirstGame = used.length === 0 && getTotalRaisins() === 0;
-  const group = isFirstGame ? SYMBOL_GROUPS[0] : SYMBOL_GROUPS[Math.floor(Math.random() * SYMBOL_GROUPS.length)];
+  const isStarterGame = used.length <= 1 && getTotalRaisins() <= 5;
+  const group = isStarterGame ? SYMBOL_GROUPS[0] : SYMBOL_GROUPS[Math.floor(Math.random() * SYMBOL_GROUPS.length)];
   currentSymbols = group.symbols;
   cipherEl.style.setProperty('--sym-scale', group.scale || 1);
   const phraseObj = selectPhrase();
