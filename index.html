@@ -256,7 +256,7 @@
     background: rgba(168, 180, 240, 0.08);
     box-shadow: 0 2px 8px rgba(168, 180, 240, 0.1);
   }
-  #newgame-btn { color: #7cc88a; border-color: rgba(124, 200, 138, 0.25); margin-bottom: 1.25rem; }
+  #newgame-btn { color: #7cc88a; border-color: rgba(124, 200, 138, 0.25); }
   #newgame-btn:hover {
     border-color: #7cc88a;
     background: rgba(124, 200, 138, 0.08);
@@ -316,10 +316,14 @@
     word-break: break-word;
   }
 
-  /* --- Share --- */
+  /* --- Result Actions --- */
+  #result-actions {
+    display: flex;
+    justify-content: center;
+    gap: 0.75rem;
+    margin-top: 1.25rem;
+  }
   #share-btn {
-    display: block;
-    margin: 1.25rem auto 0;
     color: #a8b4f0;
     border-color: rgba(168, 180, 240, 0.25);
   }
@@ -426,7 +430,6 @@
   <div id="cipher-display"></div>
   <div id="clue-display"></div>
   <div id="hints-area"></div>
-  <button id="newgame-btn" class="hidden">NEW GAME</button>
   <div id="feedback"></div>
   <div id="input-area">
     <input type="text" id="guess-input" placeholder="Enter your guess..." autocomplete="off">
@@ -441,7 +444,10 @@
     <div id="result-phrase"></div>
     <div id="result-mapping"></div>
     <div id="result-raisins"></div>
-    <button id="share-btn">SHARE</button>
+    <div id="result-actions">
+      <button id="share-btn">SHARE</button>
+      <button id="newgame-btn" class="hidden">NEW GAME</button>
+    </div>
   </div>
 </div>
 <div id="share-toast" style="opacity:0">Copied!</div>
