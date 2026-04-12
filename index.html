@@ -1614,8 +1614,8 @@ function showResult() {
   typewriterReveal(game.phrase, resultPhraseEl);
   const mappingStr = Object.entries(game.mapping)
     .sort((a, b) => a[0].localeCompare(b[0]))
-    .map(([letter, symbol]) => `${symbol} = ${letter.toUpperCase()}`)
-    .join(' &nbsp;');
+    .map(([letter, symbol]) => `<span style="display:inline-block">${symbol}&nbsp;=&nbsp;${letter.toUpperCase()}</span>`)
+    .join(' ');
   resultMappingEl.innerHTML = mappingStr;
   resultEl.style.display = 'block';
 }
