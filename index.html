@@ -1032,7 +1032,7 @@ const PHRASES = [
   {id:559,phrase:"come apart at the seams",clue:"disintegrate at the stitched junctions"},
   {id:560,phrase:"cook up a storm",clue:"prepare food resembling severe weather"},
   {id:561,phrase:"cross swords",clue:"intersect bladed weapons"},
-  {id:562,phrase:"cry wolf",clue:"vocalize about a large canine predator"},
+  {id:562,phrase:"home sweet home",clue:"sugar between residences"},
   {id:563,phrase:"cut the cord",clue:"sever the flexible rope"},
   {id:564,phrase:"dead as a doornail",clue:"deceased as a door fastener"},
   {id:565,phrase:"dog eat dog",clue:"canine consuming canine"},
@@ -1615,7 +1615,7 @@ function showResult() {
   const mappingStr = Object.entries(game.mapping)
     .sort((a, b) => a[0].localeCompare(b[0]))
     .map(([letter, symbol]) => `<span style="display:inline-block">${symbol}&nbsp;=&nbsp;${letter.toUpperCase()}</span>`)
-    .join(' ');
+    .join(' &nbsp;');
   resultMappingEl.innerHTML = mappingStr;
   resultEl.style.display = 'block';
 }
