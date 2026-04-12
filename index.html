@@ -274,6 +274,15 @@
   .feedback-wrong { color: var(--red); }
   .feedback-correct { color: var(--accent-bright); font-weight: bold; font-size: 1.25rem; }
 
+  /* --- Result Feedback (inside box) --- */
+  #result-feedback {
+    text-align: center;
+    margin-bottom: 1.25rem;
+    font-size: 1.15rem;
+  }
+  #result-feedback.feedback-correct { color: var(--accent-bright); font-weight: bold; font-size: 1.25rem; }
+  #result-feedback.feedback-wrong { color: var(--red); }
+
   /* --- Result --- */
   #result {
     background: var(--bg-panel);
@@ -283,7 +292,7 @@
     display: none;
     box-shadow: 0 4px 24px rgba(80, 30, 120, 0.12);
   }
-  #result h3 { color: var(--gold); margin-bottom: 1rem; font-size: 1.15rem; }
+
   #result-raisins {
     text-align: center;
     color: var(--gold);
@@ -293,7 +302,7 @@
   #result-phrase {
     color: var(--accent);
     font-size: 1.4rem;
-    margin-bottom: 1.25rem;
+    margin-bottom: 1.5rem;
     text-align: center;
   }
   #result-phrase .typewriter-cursor {
@@ -440,7 +449,7 @@
     <button id="giveup-btn">GIVE UP</button>
   </div>
   <div id="result">
-    <h3>DECODED TRANSMISSION</h3>
+    <div id="result-feedback"></div>
     <div id="result-phrase"></div>
     <div id="result-mapping"></div>
     <div id="result-raisins"></div>
@@ -1305,6 +1314,7 @@ const giveupBtn = document.getElementById('giveup-btn');
 const newgameBtn = document.getElementById('newgame-btn');
 const buttonsEl = document.getElementById('buttons');
 const resultEl = document.getElementById('result');
+const resultFeedbackEl = document.getElementById('result-feedback');
 const inputAreaEl = document.getElementById('input-area');
 const resultRaisinsEl = document.getElementById('result-raisins');
 const resultPhraseEl = document.getElementById('result-phrase');
@@ -1496,6 +1506,8 @@ function startGame({ fromNewGame = false } = {}) {
   hintsEl.innerHTML = '';
   feedbackEl.textContent = '';
   feedbackEl.className = '';
+  resultFeedbackEl.textContent = '';
+  resultFeedbackEl.className = '';
   resultEl.style.display = 'none';
   guessInput.value = '';
   inputAreaEl.classList.remove('hidden');
@@ -1544,8 +1556,9 @@ function showWin() {
   saveTotalRaisins(totalBefore + won);
   updateRaisinDisplay();
   instructionsEl.classList.add('hidden');
-  feedbackEl.textContent = 'Correct!';
-  feedbackEl.className = 'feedback-correct';
+  feedbackEl.textContent = '';
+  resultFeedbackEl.textContent = 'Correct!';
+  resultFeedbackEl.className = 'feedback-correct';
   let raisinText = 'You got ' + won + ' raisin' + (won !== 1 ? 's' : '') + '!';
   lastLevelUp = checkLevelUp(totalBefore, totalBefore + won);
   const levelUp = lastLevelUp;
@@ -1581,14 +1594,16 @@ function showLoss() {
   game.perfectStreak = 0;
   lastLevelUp = null;
   updateRaisinDisplay();
-  feedbackEl.textContent = 'The answer was:';
-  feedbackEl.className = 'feedback-wrong';
+  feedbackEl.textContent = '';
+  resultFeedbackEl.textContent = 'The answer was:';
+  resultFeedbackEl.className = 'feedback-wrong';
   resultRaisinsEl.textContent = 'You got 0 raisins.';
   showResult();
 }
 
 function showResult() {
   inputAreaEl.classList.add('hidden');
+  feedbackEl.classList.add('hidden');
   guessInput.disabled = true;
   submitBtn.disabled = true;
   hintBtn.classList.add('hidden');
