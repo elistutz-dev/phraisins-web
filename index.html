@@ -1504,6 +1504,7 @@ function startGame({ fromNewGame = false } = {}) {
   animateCipherScramble(encoded, cipherEl);
   clueEl.textContent = game.clue;
   hintsEl.innerHTML = '';
+  hintsEl.classList.remove('hidden');
   feedbackEl.textContent = '';
   feedbackEl.className = '';
   resultFeedbackEl.textContent = '';
@@ -1604,6 +1605,7 @@ function showLoss() {
 function showResult() {
   inputAreaEl.classList.add('hidden');
   feedbackEl.classList.add('hidden');
+  hintsEl.classList.add('hidden');
   guessInput.disabled = true;
   submitBtn.disabled = true;
   hintBtn.classList.add('hidden');
