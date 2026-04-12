@@ -1570,6 +1570,13 @@ function handleGuess() {
 
 function revealHint() {
   if (game.unrevealedLetters.length === 0) return;
+  if (scrambleTimer) {
+    clearInterval(scrambleTimer);
+    scrambleTimer = null;
+    setCipherText(cipherEl, game.encoded);
+    cipherEl.style.height = '';
+    cipherEl.style.overflow = '';
+  }
   const letter = game.unrevealedLetters.pop();
   const symbol = game.mapping[letter];
   game.revealedHints.push({ symbol, letter });
@@ -1656,6 +1663,14 @@ function showResult() {
   hintBtn.classList.add('hidden');
   giveupBtn.classList.add('hidden');
   newgameBtn.classList.remove('hidden');
+  if (scrambleTimer) {
+    clearInterval(scrambleTimer);
+    scrambleTimer = null;
+  }
+  setCipherText(cipherEl, game.encoded);
+  cipherEl.style.height = '';
+  cipherEl.style.overflow = '';
+  updateCipherDisplay();
   revealAllLetters();
   resultPhraseEl.textContent = '';
   resultMappingEl.innerHTML = '';
