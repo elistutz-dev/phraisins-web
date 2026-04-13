@@ -546,19 +546,10 @@
       margin-bottom: 0.45rem;
       font-size: calc(clamp(1.4rem, 6vw, 2rem) * var(--sym-scale, 1));
       line-height: 1.45;
-      box-shadow: none;
-    }
-    /* When the cipher wraps to exactly two lines on mobile, tighten the
-       inter-line spacing a touch and center the lines vertically. The
-       class is toggled by JS after each (re)render. `align-content:
-       center` is the load-bearing bit — the container's default
-       `stretch` was inflating the gap to fill min-height regardless of
-       row-gap, and also pinned the lines to the top/bottom instead of
-       centering them in the box. */
-    #cipher-display.lines-2 {
-      align-content: center;
-      row-gap: 0.5em;
-      line-height: 1.4;
+      box-shadow:
+        0 6px 28px rgba(80, 30, 120, 0.22),
+        inset 0 0 80px rgba(120, 60, 180, 0.07),
+        inset 0 1px 0 rgba(226, 196, 255, 0.04);
     }
 
     #clue-display {
@@ -1628,20 +1619,6 @@ function setCipherText(el, text) {
   ).join(' ');
 }
 
-// Tag the cipher element with `.lines-2` when words wrap to exactly two
-// rows, so the mobile stylesheet can tighten the inter-line spacing.
-function updateCipherLineCount(el) {
-  const words = el.querySelectorAll('.cipher-word');
-  if (!words.length) {
-    el.classList.remove('lines-2');
-    return;
-  }
-  const tops = new Set();
-  words.forEach(w => tops.add(w.offsetTop));
-  el.classList.toggle('lines-2', tops.size === 2);
-}
-window.addEventListener('resize', () => updateCipherLineCount(cipherEl));
-
 function updateCipherDisplay() {
   const charSpans = cipherEl.querySelectorAll('.cipher-char');
   charSpans.forEach(span => {
@@ -1669,7 +1646,6 @@ function animateCipherScramble(encoded, targetEl) {
   // must invoke this after any layout-affecting DOM updates have been
   // applied, so the measurement reflects the settled play-mode layout.
   setCipherText(targetEl, encoded);
-  updateCipherLineCount(targetEl);
   const finalHeight = targetEl.offsetHeight;
   let iteration = 0;
   setCipherText(targetEl, chars.map((ch, i) =>
@@ -1697,7 +1673,6 @@ function animateCipherScramble(encoded, targetEl) {
       setCipherText(targetEl, encoded);
       targetEl.style.height = '';
       targetEl.style.overflow = '';
-      updateCipherLineCount(targetEl);
     }
   }, 110);
 }
@@ -1907,7 +1882,6 @@ function revealHint() {
     setCipherText(cipherEl, game.encoded);
     cipherEl.style.height = '';
     cipherEl.style.overflow = '';
-    updateCipherLineCount(cipherEl);
   }
   const letter = game.unrevealedLetters.pop();
   const symbol = game.mapping[letter];
@@ -2002,7 +1976,6 @@ function showResult() {
   setCipherText(cipherEl, game.encoded);
   cipherEl.style.height = '';
   cipherEl.style.overflow = '';
-  updateCipherLineCount(cipherEl);
   updateCipherDisplay();
   revealAllLetters();
   resultPhraseEl.textContent = '';
