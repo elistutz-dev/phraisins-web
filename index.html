@@ -140,8 +140,8 @@
   #stake-label { color: var(--accent); font-size: 1rem; letter-spacing: 0.06em; }
   #stake-raisins { display: inline-flex; gap: 0.45rem; align-items: center; }
   .stake-raisin {
-    width: 30px;
-    height: 28px;
+    width: 38px;
+    height: 36px;
     flex-shrink: 0;
     transition: opacity 0.5s ease, transform 0.5s ease, filter 0.5s ease;
     filter: drop-shadow(0 1px 3px rgba(80, 30, 120, 0.4));
@@ -1641,7 +1641,9 @@ function animateCipherScramble(encoded, targetEl) {
     const base = Math.floor(6 + (i / chars.length) * (totalIterations - 8));
     return Math.min(base + Math.floor(Math.random() * 3), totalIterations);
   });
-  // Measure final-text height and first scramble frame height
+  // Measure final-text height and first scramble frame height. Callers
+  // must invoke this after any layout-affecting DOM updates have been
+  // applied, so the measurement reflects the settled play-mode layout.
   setCipherText(targetEl, encoded);
   const finalHeight = targetEl.offsetHeight;
   let iteration = 0;
@@ -1649,7 +1651,8 @@ function animateCipherScramble(encoded, targetEl) {
     isSymbolPos[i] ? currentSymbols[Math.floor(Math.random() * currentSymbols.length)] : ch
   ).join(''));
   const scrambleHeight = targetEl.offsetHeight;
-  // Lock container to taller of final/scramble heights; overflow hidden as safety net
+  // Lock container to taller of final/scramble heights; overflow hidden as
+  // safety net. On mobile, max-height: 30vh still clamps the inline height.
   targetEl.style.height = Math.max(finalHeight, scrambleHeight) + 'px';
   targetEl.style.overflow = 'hidden';
   scrambleTimer = setInterval(() => {
@@ -1826,7 +1829,6 @@ function startGame({ fromNewGame = false } = {}) {
     guessCount: 0
   };
   updateRaisinDisplay();
-  animateCipherScramble(encoded, cipherEl);
   clueEl.textContent = game.clue;
   hintsEl.innerHTML = '';
   hintsEl.classList.remove('hidden');
@@ -1842,6 +1844,12 @@ function startGame({ fromNewGame = false } = {}) {
   hintBtn.classList.remove('hidden');
   giveupBtn.classList.remove('hidden');
   newgameBtn.classList.add('hidden');
+  // Run scramble last — it measures cipher height for its height lock, and
+  // that measurement must happen in the final play-mode layout (clue text
+  // filled, result panel hidden, input area visible). Measuring earlier
+  // would freeze the cipher at a stale flex-allocated size on mobile and
+  // push the page past 100dvh until the animation ends.
+  animateCipherScramble(encoded, cipherEl);
   if (!(fromNewGame && window.innerWidth <= 768)) {
     guessInput.focus();
   }
