@@ -120,7 +120,7 @@
     font-size: inherit;
   }
   /* Desktop: prefix the level name with a dim "Level:" label.
-     The mobile @media block redefines this ::before as the "·" separator. */
+     The mobile @media block suppresses this ::before entirely. */
   #current-level:not(:empty)::before {
     content: 'Level: ';
     color: var(--dim);
@@ -482,14 +482,14 @@
        never wraps mid-phrase. */
     #subtitle span { display: block; }
 
-    /* Raisin counters: stacked & centered under the subtitle.
-       Top line: "Total Raisins: N · Bar Raiser"
+    /* Raisin counters: single row under the subtitle.
+       Top line: "Raisins: N" left-aligned, level name right-aligned.
        Below:    five raisin chips (one fades out per wrong guess / hint). */
     #raisin-bar {
-      /* Centered single row */
-      justify-content: center;
+      /* Raisins count left, level name right, single row */
+      justify-content: space-between;
       align-items: baseline;
-      gap: 1.5rem;
+      gap: 0.75rem;
       flex-wrap: wrap;
       font-size: clamp(1rem, 3.8vw, 1.18rem);
       margin-bottom: 0.55rem;
@@ -497,16 +497,15 @@
       background: none;
       border: none;
       box-shadow: none;
-      text-align: center;
+      text-align: left;
     }
-    #current-level { letter-spacing: 0.04em; }
-    /* Mobile-only middle-dot separator between Total Raisins and the level */
-    #current-level:not(:empty)::before {
-      content: '·';
-      color: var(--dim);
-      margin-right: 1.4rem;
-      opacity: 0.7;
-    }
+    /* Collapse "Total Raisins: N" → "Raisins: N" on mobile so the whole
+       row (count + level name) fits on a single line. */
+    #total-raisins .total-prefix { display: none; }
+    #current-level { letter-spacing: 0.04em; text-align: right; }
+    /* Suppress the desktop "Level: " ::before prefix on mobile — the level
+       name now sits at the far right of the row with no label needed. */
+    #current-level:not(:empty)::before { content: none; }
     #level-up-message { font-size: 0.95rem; margin-top: 0.35rem; }
     #stake-wrap {
       justify-content: center;
@@ -618,6 +617,11 @@
     #result-mapping { font-size: clamp(0.8rem, 3vw, 0.95rem); line-height: 1.7; }
     #result-raisins { font-size: clamp(1rem, 3.6vw, 1.2rem); margin-top: 0.9rem; margin-bottom: 0.9rem; }
     #result-actions { margin-top: 0.9rem; }
+
+    /* Hide the copyright / contact footer on mobile. It's a desktop-only
+       affordance — the 48px top padding created a visible empty strip
+       below the controls when scrolling, so remove the element entirely. */
+    footer { display: none; }
   }
 
   /* ── Short viewports (landscape phones, iPhone SE) ────────────────
@@ -1747,7 +1751,10 @@ function ensureStakeRaisinChips() {
 
 function updateRaisinDisplay() {
   const total = getTotalRaisins();
-  totalRaisinsEl.textContent = 'Total Raisins: ' + total;
+  // Desktop shows "Total Raisins: N"; on mobile the .total-prefix span is
+  // hidden via CSS so the label collapses to "Raisins: N" — short enough to
+  // stay on one line alongside the level name.
+  totalRaisinsEl.innerHTML = '<span class="total-prefix">Total </span>Raisins: ' + total;
 
   ensureStakeRaisinChips();
   if (game) {
