@@ -126,6 +126,10 @@
     color: var(--dim);
     margin-right: 0.3rem;
   }
+  /* When showing the "Next level: N" preview (before the first level is
+     reached), the label is baked into the text itself — suppress the
+     "Level: " prefix so we don't end up with "Level: Next level: 15". */
+  #current-level.next-preview::before { content: none; }
   /* Stake chips: centered above the cipher panel on desktop */
   #stake-wrap {
     display: flex;
@@ -1763,10 +1767,13 @@ function updateRaisinDisplay() {
   const next = getNextLevel(total);
   if (level) {
     currentLevelEl.textContent = level.label;
+    currentLevelEl.classList.remove('next-preview');
   } else if (next) {
-    currentLevelEl.textContent = 'Next: ' + next.threshold;
+    currentLevelEl.textContent = 'Next level: ' + next.threshold;
+    currentLevelEl.classList.add('next-preview');
   } else {
     currentLevelEl.textContent = '';
+    currentLevelEl.classList.remove('next-preview');
   }
 }
 
