@@ -2014,9 +2014,15 @@ function showToast(msg) {
 
 async function shareResult() {
   const text = buildShareText();
-  if (navigator.share) {
+  const shareData = { text, url: 'https://phraisins.com' };
+  // Only attempt navigator.share when the browser confirms it can share this
+  // payload. Some engines (desktop Edge, certain WebViews) expose navigator.share
+  // but reject text-only data, and those rejections otherwise fall through
+  // silently.
+  if (navigator.share && (!navigator.canShare || navigator.canShare(shareData))) {
     try {
-      await navigator.share({ text });
+      await navigator.share(shareData);
+      showToast('Shared!');
       return;
     } catch (e) {
       if (e.name === 'AbortError') return;
