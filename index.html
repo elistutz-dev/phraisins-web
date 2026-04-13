@@ -2014,11 +2014,13 @@ function showToast(msg) {
 
 async function shareResult() {
   const text = buildShareText();
-  const shareData = { text, url: 'https://phraisins.com' };
+  const shareData = { text };
   // Only attempt navigator.share when the browser confirms it can share this
   // payload. Some engines (desktop Edge, certain WebViews) expose navigator.share
-  // but reject text-only data, and those rejections otherwise fall through
-  // silently.
+  // but reject text-only data; canShare gating lets those engines fall through
+  // to the clipboard path instead of failing silently. We intentionally omit
+  // `url` — buildShareText already mentions phraisins.com, and including a url
+  // causes receivers to render a duplicate link plus the site's OG preview.
   if (navigator.share && (!navigator.canShare || navigator.canShare(shareData))) {
     try {
       await navigator.share(shareData);
