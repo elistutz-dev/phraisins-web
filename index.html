@@ -127,9 +127,9 @@
     color: var(--dim);
     margin-right: 0.3rem;
   }
-  /* When showing the "Next level: N" preview (before the first level is
+  /* When showing the "Goal: N" preview (before the first level is
      reached), the label is baked into the text itself — suppress the
-     "Level: " prefix so we don't end up with "Level: Next level: 15". */
+     "Level: " prefix so we don't end up with "Level: Goal: 15". */
   #current-level.next-preview::before { content: none; }
   /* Stake chips: centered above the cipher panel on desktop */
   #stake-wrap {
@@ -1797,7 +1797,7 @@ function updateRaisinDisplay() {
     currentLevelEl.textContent = level.label;
     currentLevelEl.classList.remove('next-preview');
   } else if (next) {
-    currentLevelEl.textContent = 'Next level: ' + next.threshold;
+    currentLevelEl.textContent = 'Goal: ' + next.threshold;
     currentLevelEl.classList.add('next-preview');
   } else {
     currentLevelEl.textContent = '';
