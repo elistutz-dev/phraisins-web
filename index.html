@@ -999,7 +999,7 @@ const PHRASES = [
   {id:258,rank:2,phrase:"snowed under",clue:"buried beneath frozen flakes"},
   {id:259,rank:3,phrase:"spick and span",clue:"pristine and immaculate"},
   {id:260,rank:2,phrase:"stab in the back",clue:"what it feels like when a trusted colleague takes credit for your work"},
-  {id:261,rank:3,phrase:"stand your ground",clue:"maintain your terrain position"},
+  {id:261,rank:2,phrase:"stand your ground",clue:"maintain your terrain position"},
   {id:262,rank:2,phrase:"start from scratch",clue:"begin from absolute zero"},
   {id:263,rank:3,phrase:"steal the spotlight",clue:"pilfer the focused beam"},
   {id:264,rank:2,phrase:"step up to the plate",clue:"what a team member does when the manager calls in sick on launch day"},
@@ -1010,7 +1010,7 @@ const PHRASES = [
   {id:269,rank:2,phrase:"take a rain check",clue:"what you say when declining an invitation but wanting to reschedule"},
   {id:270,rank:2,phrase:"take the cake",clue:"claim the baked dessert"},
   {id:271,rank:2,phrase:"test the waters",clue:"what a company does when it releases a small product before a full launch"},
-  {id:272,rank:2,phrase:"that ship has sailed",clue:"the opportunity has passed and it is too late"},
+  {id:272,rank:3,phrase:"that ship has sailed",clue:"the opportunity has passed and it is too late"},
   {id:273,rank:3,phrase:"the last laugh",clue:"the final chortle"},
   {id:274,rank:1,phrase:"the sky is the limit",clue:"there is no upper limit to what can be achieved"},
   {id:275,rank:1,phrase:"think outside the box",clue:"what a brainstorming facilitator tells the group to do"},
@@ -1363,7 +1363,7 @@ const PHRASES = [
   {id:628,rank:4,phrase:"get your wires crossed",clue:"entangle your electrical conductors"},
   {id:629,rank:3,phrase:"never look a gift horse in the mouth",clue:"don't examine a complimentary equines dental situation"},
   {id:630,rank:3,phrase:"not cut out for it",clue:"not trimmed to the appropriate shape for the task"},
-  {id:631,rank:3,phrase:"off the beaten track",clue:"away from the frequently struck path"},
+  {id:631,rank:2,phrase:"off the beaten track",clue:"away from the frequently struck path"},
   {id:632,rank:3,phrase:"on a tight leash",clue:"attached to a short restraining cord"},
   {id:633,rank:2,phrase:"on tenterhooks",clue:"upon the sharp fabric stretching devices"},
   {id:634,rank:3,phrase:"on the back burner",clue:"upon the rear heating element"},
@@ -1534,6 +1534,12 @@ function getPerfectStreak() {
 function savePerfectStreak(n) {
   localStorage.setItem('phraisins_perfect_streak', n);
 }
+function getLossStreak() {
+  return parseInt(localStorage.getItem('phraisins_loss_streak')) || 0;
+}
+function saveLossStreak(n) {
+  localStorage.setItem('phraisins_loss_streak', n);
+}
 
 // --- Encoding ---
 function encode(phrase) {
@@ -1550,7 +1556,7 @@ function encode(phrase) {
 // --- Phrase selection ---
 function selectPhrase() {
   let used = getUsed();
-  const isStarterGame = used.length <= 1 && getTotalRaisins() <= 5;
+  const isStarterGame = used.length === 0 && getTotalRaisins() <= 5;
   if (used.length >= PHRASES.length) {
     used = [];
     saveUsed(used);
@@ -1559,6 +1565,12 @@ function selectPhrase() {
   if (isStarterGame) {
     const starters = available.filter(p => STARTER_PHRASE_IDS.includes(p.id));
     if (starters.length > 0) available = starters;
+  } else if (getStreak() >= 2) {
+    const hard = available.filter(p => p.rank >= 3);
+    if (hard.length > 0) available = hard;
+  } else if (getLossStreak() >= 2) {
+    const easy = available.filter(p => p.rank <= 2);
+    if (easy.length > 0) available = easy;
   }
   const pick = available[Math.floor(Math.random() * available.length)];
   used.push(pick.id);
@@ -1802,7 +1814,7 @@ function spendRaisin() {
 // --- Game logic ---
 function startGame({ fromNewGame = false } = {}) {
   const used = getUsed();
-  const isStarterGame = used.length <= 1 && getTotalRaisins() <= 5;
+  const isStarterGame = used.length === 0 && getTotalRaisins() <= 5;
   const group = isStarterGame ? SYMBOL_GROUPS[0] : SYMBOL_GROUPS[Math.floor(Math.random() * SYMBOL_GROUPS.length)];
   currentSymbols = group.symbols;
   cipherEl.style.setProperty('--sym-scale', group.scale || 1);
@@ -1908,6 +1920,7 @@ function showWin() {
   }
   const newStreak = getStreak() + 1;
   saveStreak(newStreak);
+  saveLossStreak(0);
   const isPerfect = (won === MAX_RAISINS);
   const newPerfectStreak = isPerfect ? getPerfectStreak() + 1 : 0;
   savePerfectStreak(newPerfectStreak);
@@ -1931,6 +1944,7 @@ function showLoss() {
   game.raisins = 0;
   saveStreak(0);
   savePerfectStreak(0);
+  saveLossStreak(getLossStreak() + 1);
   game.streak = 0;
   game.perfectStreak = 0;
   lastLevelUp = null;
