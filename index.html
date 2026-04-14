@@ -214,7 +214,11 @@
   .cipher-char { display: inline; }
   .cipher-char.revealed {
     text-transform: lowercase;
+    color: var(--gold);
     animation: revealPop 0.35s ease-out;
+  }
+  #cipher-display.game-over .cipher-char.revealed {
+    color: inherit;
   }
   @keyframes revealPop {
     0% { opacity: 0; transform: scale(1.5); }
@@ -1846,6 +1850,7 @@ function startGame({ fromNewGame = false } = {}) {
   clueEl.textContent = game.clue;
   hintsEl.innerHTML = '';
   hintsEl.classList.remove('hidden');
+  cipherEl.classList.remove('game-over');
   feedbackEl.textContent = '';
   feedbackEl.className = '';
   resultFeedbackEl.textContent = '';
@@ -1992,6 +1997,7 @@ function showResult() {
   cipherEl.style.height = '';
   cipherEl.style.overflow = '';
   updateCipherDisplay();
+  cipherEl.classList.add('game-over');
   revealAllLetters();
   resultPhraseEl.textContent = '';
   resultMappingEl.innerHTML = '';
