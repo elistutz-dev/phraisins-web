@@ -2055,7 +2055,7 @@ async function shareResult() {
   if (navigator.clipboard) {
     try {
       await navigator.clipboard.writeText(text);
-      showToast('Copied to clipboard!');
+      if (!isMobile) showToast('Copied to clipboard!');
       return;
     } catch (e) {}
   }
@@ -2068,7 +2068,7 @@ async function shareResult() {
   ta.select();
   document.execCommand('copy');
   document.body.removeChild(ta);
-  showToast('Copied to clipboard!');
+  if (!isMobile) showToast('Copied to clipboard!');
 }
 
 // --- Events ---
