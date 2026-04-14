@@ -1877,7 +1877,7 @@ function handleGuess() {
   if (guess === game.phrase) {
     showWin();
   } else {
-    feedbackEl.textContent = 'Incorrect.';
+    feedbackEl.textContent = 'Try again.';
     feedbackEl.className = 'feedback-wrong';
     if (!spendRaisin()) {
       revealHint();
