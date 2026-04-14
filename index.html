@@ -2042,7 +2042,8 @@ async function shareResult() {
   // to the clipboard path instead of failing silently. We intentionally omit
   // `url` — buildShareText already mentions phraisins.com, and including a url
   // causes receivers to render a duplicate link plus the site's OG preview.
-  if (navigator.share && (!navigator.canShare || navigator.canShare(shareData))) {
+  const isMobile = window.matchMedia('(pointer: coarse)').matches;
+  if (isMobile && navigator.share && (!navigator.canShare || navigator.canShare(shareData))) {
     try {
       await navigator.share(shareData);
       showToast('Shared!');
@@ -2054,7 +2055,7 @@ async function shareResult() {
   if (navigator.clipboard) {
     try {
       await navigator.clipboard.writeText(text);
-      showToast('Copied!');
+      showToast('Copied to clipboard!');
       return;
     } catch (e) {}
   }
@@ -2067,7 +2068,7 @@ async function shareResult() {
   ta.select();
   document.execCommand('copy');
   document.body.removeChild(ta);
-  showToast('Copied!');
+  showToast('Copied to clipboard!');
 }
 
 // --- Events ---
