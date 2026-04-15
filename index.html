@@ -1152,12 +1152,16 @@ function startGame({ fromNewGame = false } = {}) {
   }
 }
 
+function normalizeGuess(s) {
+  return s.trim().toLowerCase().replace(/\s+/g, ' ');
+}
+
 function handleGuess() {
   if (game.isOver) return;
-  const guess = guessInput.value.trim().toLowerCase();
+  const guess = normalizeGuess(guessInput.value);
   if (!guess) return;
   game.guessCount++;
-  if (guess === game.phrase) {
+  if (guess === normalizeGuess(game.phrase)) {
     showWin();
   } else {
     feedbackEl.textContent = 'Try again.';
