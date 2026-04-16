@@ -1099,7 +1099,21 @@ function findPrevCell(fromIndex) {
 }
 function focusCell(index) {
   const input = answerAreaEl.querySelector('.answer-cell[data-index="' + index + '"] input');
-  if (input) { input.focus(); input.select(); }
+  if (input) { input.removeAttribute('readonly'); input.focus(); input.select(); }
+}
+// readonly suppresses the mobile keyboard; we drop it on first tap so typing still works.
+function focusCellQuietly(index) {
+  const input = answerAreaEl.querySelector('.answer-cell[data-index="' + index + '"] input');
+  if (!input) return;
+  input.setAttribute('readonly', 'readonly');
+  input.focus();
+  const unlock = () => {
+    input.removeAttribute('readonly');
+    input.removeEventListener('touchstart', unlock);
+    input.removeEventListener('mousedown', unlock);
+  };
+  input.addEventListener('touchstart', unlock);
+  input.addEventListener('mousedown', unlock);
 }
 
 function highlightSameSymbol(symbol) {
@@ -1270,7 +1284,11 @@ function startGame({ fromNewGame = false } = {}) {
   buildAnswerArea();
   animateCipherScramble(encoded, cipherEl);
 
-  setTimeout(() => focusCell(0), 100);
+  const isMobile = window.matchMedia('(pointer: coarse)').matches;
+  setTimeout(() => {
+    if (fromNewGame && isMobile) focusCellQuietly(0);
+    else focusCell(0);
+  }, 100);
 }
 
 function handleGuess() {
@@ -1473,7 +1491,11 @@ hintBtn.addEventListener('click', () => {
     if (!spendRaisin()) {
       revealHint();
       const next = findNextEmptyCell(-1);
-      if (next !== -1) focusCell(next);
+      if (next !== -1) {
+        const isMobile = window.matchMedia('(pointer: coarse)').matches;
+        if (isMobile) focusCellQuietly(next);
+        else focusCell(next);
+      }
     }
   }
 });
