@@ -30,25 +30,25 @@
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
 <style>
   :root {
-    --bg: #110b1a;
-    --bg-panel: #1c1428;
-    --accent: #e2c4ff;
-    --accent-bright: #f0deff;
+    --bg: #170f24;
+    --bg-panel: #221832;
+    --accent: #eddafc;
+    --accent-bright: #f6ecff;
     --gold: #e8b87a;
     --gold-bright: #f5d4a0;
     --red: #f06060;
-    --text: #ede4d6;
-    --dim: #a99bbe;
-    --border: #362852;
-    --border-light: #4a3870;
+    --text: #f4ede2;
+    --dim: #c4b8d4;
+    --border: #3e3060;
+    --border-light: #544280;
     --font: 'Courier New', Consolas, monospace;
   }
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body {
     background: var(--bg);
     background-image:
-      radial-gradient(ellipse at 20% 0%, rgba(120, 40, 160, 0.1) 0%, transparent 60%),
-      radial-gradient(ellipse at 80% 100%, rgba(90, 30, 120, 0.08) 0%, transparent 50%);
+      radial-gradient(ellipse at 20% 0%, rgba(120, 40, 160, 0.07) 0%, transparent 60%),
+      radial-gradient(ellipse at 80% 100%, rgba(90, 30, 120, 0.05) 0%, transparent 50%);
     color: var(--text);
     font-family: var(--font);
     min-height: 100vh;
@@ -445,9 +445,9 @@
       background-attachment: fixed;
       /* Layered atmospheric glow biased toward the cipher's resting spot */
       background-image:
-        radial-gradient(ellipse 80% 40% at 50% 39%, rgba(120, 60, 180, 0.12) 0%, transparent 70%),
-        radial-gradient(ellipse at 15% 0%, rgba(120, 40, 160, 0.08) 0%, transparent 55%),
-        radial-gradient(ellipse at 85% 100%, rgba(90, 30, 120, 0.10) 0%, transparent 50%);
+        radial-gradient(ellipse 80% 40% at 50% 39%, rgba(120, 60, 180, 0.08) 0%, transparent 70%),
+        radial-gradient(ellipse at 15% 0%, rgba(120, 40, 160, 0.05) 0%, transparent 55%),
+        radial-gradient(ellipse at 85% 100%, rgba(90, 30, 120, 0.06) 0%, transparent 50%);
     }
     #app {
       min-height: 100dvh;
@@ -553,8 +553,8 @@
       line-height: 1.45;
       box-shadow:
         0 6px 28px rgba(80, 30, 120, 0.22),
-        inset 0 0 80px rgba(120, 60, 180, 0.07),
-        inset 0 1px 0 rgba(226, 196, 255, 0.04);
+        inset 0 0 80px rgba(120, 60, 180, 0.04),
+        inset 0 1px 0 rgba(226, 196, 255, 0.02);
     }
 
     #clue-display {
