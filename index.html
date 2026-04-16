@@ -1270,9 +1270,7 @@ function startGame({ fromNewGame = false } = {}) {
   buildAnswerArea();
   animateCipherScramble(encoded, cipherEl);
 
-  if (!(fromNewGame && window.innerWidth <= 768)) {
-    setTimeout(() => focusCell(0), 100);
-  }
+  setTimeout(() => focusCell(0), 100);
 }
 
 function handleGuess() {
