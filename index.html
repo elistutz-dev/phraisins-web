@@ -846,10 +846,14 @@ function selectPhrase() {
     used = [];
     saveUsed(used);
   }
-  let available = PHRASES.filter(p => !used.includes(p.id));
+  const unused = PHRASES.filter(p => !used.includes(p.id));
+  let available = unused.filter(p => p.rank !== 5);
   if (isStarterGame) {
     const starters = available.filter(p => STARTER_PHRASE_IDS.includes(p.id));
     if (starters.length > 0) available = starters;
+  } else if (getStreak() >= 4) {
+    const expert = unused.filter(p => p.rank === 5);
+    if (expert.length > 0) available = expert;
   } else if (getStreak() >= 2) {
     const hard = available.filter(p => p.rank >= 3);
     if (hard.length > 0) available = hard;
@@ -857,6 +861,7 @@ function selectPhrase() {
     const easy = available.filter(p => p.rank <= 2);
     if (easy.length > 0) available = easy;
   }
+  if (available.length === 0) available = unused;
   const pick = available[Math.floor(Math.random() * available.length)];
   used.push(pick.id);
   saveUsed(used);
