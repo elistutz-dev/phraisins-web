@@ -1472,6 +1472,8 @@ hintBtn.addEventListener('click', () => {
     feedbackEl.textContent = '';
     if (!spendRaisin()) {
       revealHint();
+      const next = findNextEmptyCell(-1);
+      if (next !== -1) focusCell(next);
     }
   }
 });
