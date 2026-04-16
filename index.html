@@ -484,6 +484,7 @@
       opacity: 0.85;
       line-height: 1.5;
     }
+    #subtitle.hidden-mobile { display: none !important; }
     /* Mobile only: each sentence on its own line so "Achieve grapeness."
        never wraps mid-phrase. */
     #subtitle span { display: block; }
@@ -538,7 +539,7 @@
     #cipher-display {
       flex: 1 1 auto;
       min-height: clamp(5.5rem, 16vh, 9rem);
-      max-height: 30vh;
+      max-height: 33vh;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -559,7 +560,7 @@
 
     #clue-display {
       font-size: clamp(1.1rem, 4vw, 1.32rem);
-      margin-top: 1.1rem;
+      margin-top: 1.3rem;
       margin-bottom: 0.15rem;
       line-height: 1.35;
     }
@@ -880,6 +881,7 @@ const resultMappingEl = document.getElementById('result-mapping');
 const shareBtn = document.getElementById('share-btn');
 const shareToast = document.getElementById('share-toast');
 const instructionsEl = document.getElementById('instructions');
+const subtitleEl = document.getElementById('subtitle');
 const totalRaisinsEl = document.getElementById('total-raisins');
 const stakeRaisinsEl = document.getElementById('stake-raisins');
 const stakeLabelEl = document.getElementById('stake-label');
@@ -899,6 +901,7 @@ const STAKE_RAISIN_SVG = '<svg class="stake-raisin" viewBox="0 0 52 48" fill="no
 
 // --- Instructions (hide if player has won before) ---
 if (getTotalRaisins() > 0) {
+  subtitleEl.classList.add('hidden-mobile');
   instructionsEl.classList.add('hidden');
 }
 
@@ -1195,6 +1198,7 @@ function showWin() {
   const totalBefore = getTotalRaisins();
   saveTotalRaisins(totalBefore + won);
   updateRaisinDisplay();
+  subtitleEl.classList.add('hidden-mobile');
   instructionsEl.classList.add('hidden');
   feedbackEl.textContent = '';
   resultFeedbackEl.textContent = 'Correct!';
@@ -1236,6 +1240,7 @@ function showLoss() {
   game.perfectStreak = 0;
   lastLevelUp = null;
   updateRaisinDisplay();
+  subtitleEl.classList.add('hidden-mobile');
   feedbackEl.textContent = '';
   resultFeedbackEl.textContent = game.guessCount > 0 ? 'Nice try!' : 'Better luck next time!';
   resultFeedbackEl.className = 'feedback-wrong';
