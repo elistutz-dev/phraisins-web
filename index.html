@@ -1605,7 +1605,7 @@ const TUTORIAL_STEPS = [
   { targets: ['#cipher-display'],              title: 'The puzzle',               body: 'Each symbol represents a letter that makes up a common phrase.' },
   { targets: ['#clue-display'],                title: 'The clue',                 body: "Solve it with the help of the clue." },
   { targets: ['#hint-btn', '#cipher-display'], title: 'Stuck? Use a hint',       body: "Hints reveal a letter \u2014 but each one costs you a raisin.", placement: 'between', onEnter: tutorialDemoHint },
-  { targets: ['#answer-area', '#cipher-display'], title: 'Your answer',           body: "Type letters to guess the phrase. Matching symbols fill in automatically.", onEnter: tutorialDemoSolve },
+  { targets: ['#answer-area', '#cipher-display'], title: 'Your answer',           body: "Type letters to guess the phrase. Matching symbols fill in automatically.", placement: 'between', onEnter: tutorialDemoSolve },
   { targets: ['#score-area'],                  title: "Earn raisins",             body: "Guess correctly to earn raisins! You can't actually eat them, but it will be fun.", cta: 'Start Game' }
 ];
 
