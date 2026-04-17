@@ -752,13 +752,15 @@
     </svg>
   </div>
   <div id="subtitle"><span>Guess the encoded phrase.</span> <span>Achieve grapeness.</span></div>
-  <div id="raisin-bar">
-    <span id="total-raisins"></span>
-    <div id="current-level"></div>
-  </div>
-  <div id="stake-wrap">
-    <span id="stake-label"></span>
-    <div id="stake-raisins"></div>
+  <div id="score-area">
+    <div id="raisin-bar">
+      <span id="total-raisins"></span>
+      <div id="current-level"></div>
+    </div>
+    <div id="stake-wrap">
+      <span id="stake-label"></span>
+      <div id="stake-raisins"></div>
+    </div>
   </div>
   <div id="instructions">These symbols are letters of a common phrase. Solve it using the clue.</div>
   <div id="cipher-display"></div>
@@ -1618,9 +1620,9 @@ const TUTORIAL_STEPS = [
   { targets: [],                               title: 'Welcome to Phraisins!',    body: "Here's how it works \u2014 it'll only take a moment." },
   { targets: ['#cipher-display'],              title: 'The puzzle',               body: 'Each symbol represents a letter that makes up a common phrase.' },
   { targets: ['#clue-display'],                title: 'The clue',                 body: "Solve it with the help of the clue." },
-  { targets: ['#hint-btn', '#cipher-display'], title: 'Stuck? Use a hint',       body: "Hints reveal a letter \u2014 but each one costs you a raisin.", onEnter: tutorialDemoHint },
+  { targets: ['#hint-btn', '#cipher-display'], title: 'Stuck? Use a hint',       body: "Hints reveal a letter \u2014 but each one costs you a raisin.", placement: 'between', onEnter: tutorialDemoHint },
   { targets: ['#answer-area', '#cipher-display'], title: 'Your answer',           body: "Type letters to guess the phrase. Matching symbols fill in automatically.", onEnter: tutorialDemoSolve },
-  { targets: [],                               title: "Earn raisins (but don't eat them)", body: "Guess correctly to earn raisins! You can't actually eat them, but it will be fun.", cta: 'Start Game' }
+  { targets: ['#score-area'],                  title: "Earn raisins (but don't eat them)", body: "Guess correctly to earn raisins! You can't actually eat them, but it will be fun.", cta: 'Start Game' }
 ];
 
 function getTutorialSeen() { return localStorage.getItem('phraisins_tutorial_seen') === 'true'; }
@@ -1682,7 +1684,53 @@ function positionTutorialCallout() {
   const vh = window.innerHeight;
   const vw = window.innerWidth;
   const margin = 16;
-  const top = Math.max(margin, (vh - ch) / 2);
+  const gap = 18;
+
+  const step = TUTORIAL_STEPS[tutorialStepIndex];
+  let top = null;
+
+  if (step && step.placement === 'between' && tutorialSpotlightEls.length >= 2) {
+    const rects = tutorialSpotlightEls
+      .map(el => el.getBoundingClientRect())
+      .filter(r => r.bottom >= 0 && r.top <= vh)
+      .sort((a, b) => a.top - b.top);
+    for (let i = 0; i < rects.length - 1; i++) {
+      const gapStart = rects[i].bottom;
+      const gapEnd = rects[i + 1].top;
+      if (gapEnd - gapStart >= ch + 2 * gap) {
+        top = gapStart + (gapEnd - gapStart - ch) / 2;
+        break;
+      }
+    }
+  }
+
+  let topBound = null, botBound = null;
+  tutorialSpotlightEls.forEach(el => {
+    const r = el.getBoundingClientRect();
+    if (r.bottom < 0 || r.top > vh) return;
+    topBound = topBound === null ? r.top : Math.min(topBound, r.top);
+    botBound = botBound === null ? r.bottom : Math.max(botBound, r.bottom);
+  });
+
+  if (top === null) {
+    if (topBound !== null) {
+      const spaceAbove = topBound;
+      const spaceBelow = vh - botBound;
+      const needed = ch + gap + margin;
+      if (spaceBelow >= needed && spaceBelow >= spaceAbove) {
+        top = botBound + gap;
+      } else if (spaceAbove >= needed) {
+        top = topBound - ch - gap;
+      } else if (spaceBelow >= needed) {
+        top = botBound + gap;
+      } else {
+        top = margin;
+      }
+    } else {
+      top = Math.max(margin, (vh - ch) / 2);
+    }
+  }
+  top = Math.max(margin, Math.min(top, vh - ch - margin));
   callout.style.top = top + 'px';
   if (isMobile) {
     callout.style.left = '';
@@ -1737,7 +1785,7 @@ function endTutorial() {
   tutorialOverlayEl.setAttribute('aria-hidden', 'true');
   document.body.classList.remove('tutorial-active');
   saveTutorialSeen();
-  startGame();
+  startGame({ fromNewGame: true });
 }
 
 function advanceTutorial() {
