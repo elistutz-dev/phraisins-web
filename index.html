@@ -650,6 +650,7 @@
   #tutorial-title {
     color: var(--gold);
     font-size: 1.15rem;
+    font-weight: bold;
     margin-bottom: 0.4rem;
     letter-spacing: 0.04em;
   }
@@ -1605,7 +1606,7 @@ const TUTORIAL_STEPS = [
   { targets: ['#cipher-display'],              title: 'The puzzle',               body: 'Each symbol represents a letter that makes up a common phrase.' },
   { targets: ['#clue-display'],                title: 'The clue',                 body: "Solve it with the help of the clue." },
   { targets: ['#hint-btn', '#cipher-display'], title: 'Stuck? Use a hint',       body: "Hints reveal a letter \u2014 but each one costs you a raisin.", placement: 'between', onEnter: tutorialDemoHint },
-  { targets: ['#answer-area', '#cipher-display'], title: 'Your answer',           body: "Type letters to guess the phrase. Matching symbols fill in automatically.", placement: 'between', onEnter: tutorialDemoSolve },
+  { targets: ['#cipher-display', '#answer-area'], title: 'Your answer',           body: "Type letters to guess the phrase. Matching symbols fill in automatically.", placement: 'over', onEnter: tutorialDemoSolve },
   { targets: ['#score-area'],                  title: "Earn raisins",             body: "Guess correctly to earn raisins! You can't actually eat them, but it will be fun.", cta: 'Start Game' }
 ];
 
@@ -1673,7 +1674,10 @@ function positionTutorialCallout() {
   const step = TUTORIAL_STEPS[tutorialStepIndex];
   let top = null;
 
-  if (step && step.placement === 'between' && tutorialSpotlightEls.length >= 2) {
+  if (step && step.placement === 'over' && tutorialSpotlightEls.length >= 1) {
+    const rect = tutorialSpotlightEls[0].getBoundingClientRect();
+    top = rect.top + (rect.height - ch) / 2;
+  } else if (step && step.placement === 'between' && tutorialSpotlightEls.length >= 2) {
     const rects = tutorialSpotlightEls
       .map(el => el.getBoundingClientRect())
       .filter(r => r.bottom >= 0 && r.top <= vh)
