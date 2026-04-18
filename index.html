@@ -1671,7 +1671,7 @@ function showLoss() {
   resultFeedbackEl.className = 'feedback-wrong';
   const safePhrase = game.phrase.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
   resultRaisinsEl.innerHTML =
-    '<div class="solved-phrase"><span class="answer-label">Answer:</span> ' + safePhrase + '</div>' +
+    '<div class="solved-phrase"><span class="answer-label">Answer:</span>' + safePhrase + '</div>' +
     '<div class="won-caption">You got 0 raisins.</div>';
   showResult();
 }
