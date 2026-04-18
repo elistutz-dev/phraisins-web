@@ -131,14 +131,17 @@
     filter: grayscale(1) blur(1px);
   }
   .streak-message {
-    margin-top: 0.5em;
+    margin-top: 0.9em;
+    line-height: 1.5;
     font-weight: bold;
     color: var(--accent);
   }
+  .nowrap { white-space: nowrap; }
   #level-up-message {
     color: var(--accent-bright);
     font-size: 1.1rem;
-    margin-top: 0.75rem;
+    margin-top: 1rem;
+    line-height: 1.5;
     animation: levelUpGlow 1.5s ease-in-out;
   }
   @keyframes levelUpGlow {
@@ -345,8 +348,8 @@
     background: rgba(168, 180, 240, 0.08);
     box-shadow: 0 2px 8px rgba(168, 180, 240, 0.1);
   }
-  #newgame-btn { color: #7cc88a; border-color: rgba(124, 200, 138, 0.25); }
-  #newgame-btn:hover {
+  #newgame-btn, #newgame-outer-btn { color: #7cc88a; border-color: rgba(124, 200, 138, 0.25); }
+  #newgame-btn:hover, #newgame-outer-btn:hover {
     border-color: #7cc88a;
     background: rgba(124, 200, 138, 0.08);
     box-shadow: 0 2px 8px rgba(124, 200, 138, 0.1);
@@ -374,12 +377,60 @@
 
   /* --- Result --- */
   #result {
+    position: fixed;
+    inset: 0;
+    z-index: 50;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    background: rgba(10, 5, 20, 0.62);
+    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(3px);
+    animation: result-fade 0.22s ease-out;
+  }
+  #result-card {
+    position: relative;
     background: var(--bg-panel);
     border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 1.25rem 2rem;
-    display: none;
-    box-shadow: 0 4px 24px rgba(80, 30, 120, 0.12);
+    border-radius: 10px;
+    padding: 1.75rem 1.75rem;
+    width: 100%;
+    max-width: 420px;
+    max-height: calc(100vh - 2rem);
+    overflow-y: auto;
+    box-shadow: 0 12px 44px rgba(80, 30, 120, 0.38), inset 0 1px 0 rgba(226, 196, 255, 0.05);
+    animation: result-pop 0.32s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  #result-close {
+    position: absolute;
+    top: 0.4rem;
+    right: 0.5rem;
+    width: 1.9rem;
+    height: 1.9rem;
+    padding: 0;
+    background: transparent;
+    border: none;
+    color: var(--dim);
+    font-family: inherit;
+    font-size: 1.5rem;
+    line-height: 1;
+    cursor: pointer;
+    border-radius: 50%;
+    transition: color 0.15s, background 0.15s;
+  }
+  #result-close:hover, #result-close:focus-visible {
+    color: var(--accent-bright);
+    background: rgba(226, 196, 255, 0.08);
+    outline: none;
+  }
+  @keyframes result-fade {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  @keyframes result-pop {
+    from { opacity: 0; transform: scale(0.9) translateY(10px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
   }
   #result-raisins {
     text-align: center;
@@ -388,13 +439,49 @@
     margin-top: 0.75rem;
     margin-bottom: 0.75rem;
   }
+  .solved-phrase {
+    text-align: center;
+    color: var(--accent);
+    font-style: italic;
+    font-size: 1.05rem;
+    margin: 0.6rem 0 1.1rem;
+    letter-spacing: 0.01em;
+  }
+  .won-caption {
+    text-align: center;
+    color: var(--gold);
+    font-size: 1rem;
+    margin-top: 0.45rem;
+    margin-bottom: 0;
+  }
+  #raisin-trophies {
+    display: flex;
+    justify-content: center;
+    gap: 0.4rem;
+    margin: 0.5rem 0 0.55rem;
+  }
+  .raisin-trophy {
+    display: inline-flex;
+    width: 2rem;
+    height: 2rem;
+    opacity: 0;
+    transform: scale(0.4) translateY(6px);
+    animation: raisin-pop 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  }
+  .raisin-trophy svg { width: 100%; height: 100%; }
+  @keyframes raisin-pop {
+    to { opacity: 1; transform: scale(1) translateY(0); }
+  }
+  @media (max-width: 540px) {
+    .raisin-trophy { width: 1.6rem; height: 1.6rem; }
+  }
 
   /* --- Result Actions --- */
   #result-actions {
     display: flex;
     justify-content: center;
     gap: 0.75rem;
-    margin-top: 0.75rem;
+    margin-top: 1.15rem;
   }
   #share-btn {
     color: #a8b4f0;
@@ -577,13 +664,8 @@
     }
     #buttons button { flex: 1 1 auto; }
 
-    #result {
-      padding: clamp(0.95rem, 3.2vw, 1.4rem);
-      margin-top: auto;
-      box-shadow:
-        0 6px 28px rgba(80, 30, 120, 0.22),
-        inset 0 1px 0 rgba(226, 196, 255, 0.04);
-    }
+    #result { padding: 0.75rem; }
+    #result-card { padding: clamp(1rem, 3.6vw, 1.4rem) clamp(1rem, 3.6vw, 1.4rem); }
     #result-raisins { font-size: clamp(1rem, 3.6vw, 1.2rem); margin-top: 0.9rem; margin-bottom: 0.9rem; }
     #result-actions { margin-top: 0.9rem; }
 
@@ -774,13 +856,18 @@
     <button id="giveup-btn">GIVE UP</button>
     <button id="hint-btn">HINT</button>
     <button id="submit-btn">GUESS</button>
+    <button id="reopen-result-btn" class="hidden">RESULTS</button>
+    <button id="newgame-outer-btn" class="hidden">NEW GAME</button>
   </div>
-  <div id="result">
-    <div id="result-feedback"></div>
-    <div id="result-raisins"></div>
-    <div id="result-actions">
-      <button id="share-btn">SHARE</button>
-      <button id="newgame-btn" class="hidden">NEW GAME</button>
+  <div id="result" role="dialog" aria-modal="true" aria-labelledby="result-feedback">
+    <div id="result-card">
+      <button id="result-close" type="button" aria-label="Close">&times;</button>
+      <div id="result-feedback"></div>
+      <div id="result-raisins"></div>
+      <div id="result-actions">
+        <button id="share-btn">SHARE</button>
+        <button id="newgame-btn" class="hidden">NEW GAME</button>
+      </div>
     </div>
   </div>
 </div>
@@ -821,6 +908,19 @@ let game = null;
 let lastLevelUp = null;
 let scrambleTimer = null;
 const MAX_RAISINS = 5;
+
+const WIN_PHRASES = {
+  5: ["Grape job!", "Suntastic!", "Vine-tastic!"],
+  4: ["Fruitful!", "Wine-some!"],
+  3: ["Sweet!", "Juicy!", "Grape-ful!"],
+  2: ["Squeaker!", "Barely ripe!", "Sun-saved!"],
+  1: ["Grape save!", "Salvaged!", "Close one!"]
+};
+
+function pickWinPhrase(won) {
+  const list = WIN_PHRASES[won] || WIN_PHRASES[1];
+  return list[Math.floor(Math.random() * list.length)];
+}
 
 const REWARD_LEVELS = [
   { threshold: 15,  phrase: "Raise a toast!",                            label: "Raisin Toaster" },
@@ -925,6 +1025,9 @@ const resultEl = document.getElementById('result');
 const resultFeedbackEl = document.getElementById('result-feedback');
 const resultRaisinsEl = document.getElementById('result-raisins');
 const shareBtn = document.getElementById('share-btn');
+const resultCloseBtn = document.getElementById('result-close');
+const reopenResultBtn = document.getElementById('reopen-result-btn');
+const newgameOuterBtn = document.getElementById('newgame-outer-btn');
 const shareToast = document.getElementById('share-toast');
 const subtitleEl = document.getElementById('subtitle');
 const totalRaisinsEl = document.getElementById('total-raisins');
@@ -1051,6 +1154,56 @@ function spawnConfetti() {
     container.appendChild(p);
   }
   setTimeout(() => container.remove(), 4500);
+}
+
+function spawnMiniConfetti() {
+  const container = document.createElement('div');
+  container.className = 'confetti-container';
+  document.body.appendChild(container);
+  const anchor = document.getElementById('result-card');
+  let originLeftPct = 50;
+  let originTopPct = 30;
+  if (anchor) {
+    const rect = anchor.getBoundingClientRect();
+    originLeftPct = ((rect.left + rect.width / 2) / window.innerWidth) * 100;
+    originTopPct = Math.max(0, (rect.top / window.innerHeight) * 100 - 4);
+  }
+  const colors = ['#e8b87a', '#f5d4a0', '#e2c4ff', '#f0deff', '#7cc88a', '#a8b4f0'];
+  const shapes = ['50%', '2px'];
+  const raisinSvg = '<svg viewBox="0 0 52 48" fill="none" xmlns="http://www.w3.org/2000/svg">'
+    + '<path d="M26 8c-6-1-12 2-16 8-3 5-4 11-2 16 2 6 7 10 14 11 3 0 6 0 9-2 5-3 9-8 10-14 1-5-1-10-4-14-3-3-7-5-11-5z" fill="#542a78"/>'
+    + '<path d="M14 16c3 4 5 8 4 13" stroke="#381855" stroke-width="1.4" stroke-linecap="round" fill="none" opacity="0.7"/>'
+    + '<path d="M19 12c1 6-1 13-2 18" stroke="#381855" stroke-width="1.2" stroke-linecap="round" fill="none" opacity="0.6"/>'
+    + '<path d="M26 10c0 7-2 14-4 20" stroke="#381855" stroke-width="1.3" stroke-linecap="round" fill="none" opacity="0.65"/>'
+    + '<path d="M32 13c-1 5-3 10-5 15" stroke="#381855" stroke-width="1.1" stroke-linecap="round" fill="none" opacity="0.55"/>'
+    + '<path d="M26 8c0-3 1-5 3-7" stroke="#6b8a3a" stroke-width="2" stroke-linecap="round"/>'
+    + '</svg>';
+  for (let i = 0; i < 10; i++) {
+    const isRaisin = i < 3;
+    const p = document.createElement('div');
+    p.className = 'confetti-particle';
+    p.style.left = (originLeftPct - 12 + Math.random() * 24) + '%';
+    p.style.top = (originTopPct - 6 + Math.random() * 4) + '%';
+    p.style.setProperty('--fall-duration', (1.2 + Math.random() * 0.6) + 's');
+    p.style.setProperty('--delay', (Math.random() * 0.15) + 's');
+    p.style.setProperty('--rotation', (180 + Math.random() * 360) + 'deg');
+    if (isRaisin) {
+      const size = 14 + Math.random() * 6;
+      p.style.width = size + 'px';
+      p.style.height = size + 'px';
+      p.style.background = 'none';
+      p.style.borderRadius = '0';
+      p.innerHTML = raisinSvg;
+    } else {
+      p.style.background = colors[Math.floor(Math.random() * colors.length)];
+      p.style.borderRadius = shapes[Math.floor(Math.random() * shapes.length)];
+      const size = 4 + Math.random() * 4;
+      p.style.width = size + 'px';
+      p.style.height = size + 'px';
+    }
+    container.appendChild(p);
+  }
+  setTimeout(() => container.remove(), 2500);
 }
 
 // --- Raisin display ---
@@ -1385,6 +1538,8 @@ function startGame({ fromNewGame = false, seed = null } = {}) {
   hintBtn.classList.remove('hidden');
   giveupBtn.classList.remove('hidden');
   newgameBtn.classList.add('hidden');
+  reopenResultBtn.classList.add('hidden');
+  newgameOuterBtn.classList.add('hidden');
 
   buildAnswerArea();
   if (seed) {
@@ -1456,9 +1611,17 @@ function showWin() {
     if (cellDiv) setTimeout(() => cellDiv.classList.add('cell-correct'), i * 30);
   });
 
-  resultFeedbackEl.textContent = 'Correct!';
+  resultFeedbackEl.textContent = pickWinPhrase(won);
   resultFeedbackEl.className = 'feedback-correct';
-  let raisinText = 'You got ' + won + ' raisin' + (won !== 1 ? 's' : '') + '!';
+  const raisinLabel = 'You won ' + won + ' raisin' + (won !== 1 ? 's' : '');
+  const safePhrase = game.phrase.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  let raisinText = '<div class="solved-phrase">' + safePhrase + '</div>';
+  raisinText += '<div id="raisin-trophies" role="img" aria-label="' + raisinLabel + '">';
+  for (let i = 0; i < won; i++) {
+    raisinText += '<span class="raisin-trophy" style="animation-delay:' + (i * 80) + 'ms">' + STAKE_RAISIN_SVG + '</span>';
+  }
+  raisinText += '</div>';
+  raisinText += '<div class="won-caption">' + raisinLabel + '</div>';
   lastLevelUp = checkLevelUp(totalBefore, totalBefore + won);
   const levelUp = lastLevelUp;
   if (levelUp) {
@@ -1473,9 +1636,9 @@ function showWin() {
   game.streak = newStreak;
   game.perfectStreak = newPerfectStreak;
   if (newPerfectStreak >= 3 && [3, 6, 10].includes(newPerfectStreak)) {
-    raisinText += '<div class="streak-message">You\'re on a streak of perfection \u2014 5/5 for ' + newPerfectStreak + ' in a row!</div>';
+    raisinText += '<div class="streak-message">You\'re on a streak of perfection<br>5/5 for <span class="nowrap">' + newPerfectStreak + ' in a row!</span></div>';
   } else if ([3, 6, 10].includes(newStreak)) {
-    raisinText += '<div class="streak-message">You\'re on a hot streak! \u2014 ' + newStreak + ' in a row</div>';
+    raisinText += '<div class="streak-message">You\'re on a hot streak!<br><span class="nowrap">' + newStreak + ' in a row</span></div>';
   }
   resultRaisinsEl.innerHTML = raisinText;
   const shouldCelebrate = !!levelUp ||
@@ -1483,6 +1646,7 @@ function showWin() {
     [3, 6, 10].includes(newStreak);
   showResult();
   if (shouldCelebrate) spawnConfetti();
+  else spawnMiniConfetti();
 }
 
 function showLoss() {
@@ -1499,7 +1663,10 @@ function showLoss() {
   feedbackEl.textContent = '';
   resultFeedbackEl.textContent = game.guessCount > 0 ? 'Nice try!' : 'Better luck next time!';
   resultFeedbackEl.className = 'feedback-wrong';
-  resultRaisinsEl.textContent = 'You got 0 raisins.';
+  const safePhrase = game.phrase.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  resultRaisinsEl.innerHTML =
+    '<div class="solved-phrase">' + safePhrase + '</div>' +
+    '<div class="won-caption">You got 0 raisins.</div>';
   showResult();
 }
 
@@ -1544,7 +1711,7 @@ function showResult() {
   cipherEl.classList.add('game-over');
   revealAllLetters();
 
-  resultEl.style.display = 'block';
+  resultEl.style.display = 'flex';
 }
 
 // --- Share ---
@@ -1610,6 +1777,19 @@ hintBtn.addEventListener('click', () => {
 });
 giveupBtn.addEventListener('click', () => { if (!game.isOver) showLoss(); });
 newgameBtn.addEventListener('click', () => startGame({ fromNewGame: true }));
+resultCloseBtn.addEventListener('click', () => {
+  resultEl.style.display = 'none';
+  if (game && game.isOver) {
+    reopenResultBtn.classList.remove('hidden');
+    newgameOuterBtn.classList.remove('hidden');
+  }
+});
+reopenResultBtn.addEventListener('click', () => {
+  resultEl.style.display = 'flex';
+  reopenResultBtn.classList.add('hidden');
+  newgameOuterBtn.classList.add('hidden');
+});
+newgameOuterBtn.addEventListener('click', () => startGame({ fromNewGame: true }));
 setupAnswerNavigation();
 
 // --- First-time tutorial ---
