@@ -60,7 +60,6 @@
   #app {
     max-width: 860px;
     width: 100%;
-    transition: transform 0.22s ease-out;
   }
 
   /* --- Title with raisin graphics --- */
@@ -519,6 +518,12 @@
   #share-toast.show { opacity: 1; }
 
   .hidden { display: none !important; }
+
+  /* Bottom padding while a dash cell is focused in FB/Instagram IAB. Gives
+     the page scroll room so #buttons can sit just above the keyboard and the
+     user can scroll up to see the cipher; toggled via JS, gated on UA so
+     other browsers are untouched. */
+  body.kb-pad { padding-bottom: 60vh; }
 
   /* ─── Mobile ─────────────────────────────────────────────────── */
   @media (max-width: 600px) {
@@ -1382,11 +1387,12 @@ function focusCellQuietly(index) {
   input.addEventListener('mousedown', unlock);
 }
 
-// Facebook/Messenger/Instagram in-app browsers don't auto-scroll the focused
-// input above the on-screen keyboard, and #app is sized to 100dvh on mobile
-// so the document has no scroll room either. Gate the workaround on those UAs
-// and lift #app with a CSS transform — no scrolling required, other browsers
-// stay untouched.
+// Facebook/Messenger/Instagram in-app browsers don't shrink the viewport
+// when the keyboard opens, and #app is sized to 100dvh on mobile so the
+// document has no scroll room either. Under those UAs we temporarily add
+// bottom padding (body.kb-pad) to create scroll room, then scroll so the
+// #buttons row sits just above the keyboard. Answer cells land above the
+// buttons naturally and the user can scroll up to see the cipher.
 function isInAppKbQuirkBrowser() {
   return /FBAN|FBAV|FB_IAB|FB4A|Instagram/i.test(navigator.userAgent || '');
 }
@@ -1395,45 +1401,34 @@ let kbLiftTimers = [];
 
 function liftAppAboveKeyboard() {
   if (!isInAppKbQuirkBrowser()) return;
-  const app = document.getElementById('app');
-  const buttonsEl = document.getElementById('buttons');
-  if (!buttonsEl) return;
-  const apply = () => {
-    const currentLift = parseFloat(app.dataset.kbLift || '0');
-    // Anchor on the buttons row (bottom of #app). Lifting enough for HINT/
-    // GUESS/GIVE UP to clear the keyboard automatically clears the answer
-    // cells too, since they live above the buttons in #app's flex column.
+  document.body.classList.add('kb-pad');
+  const scroll = () => {
+    const buttonsEl = document.getElementById('buttons');
+    if (!buttonsEl) return;
     const rect = buttonsEl.getBoundingClientRect();
-    // rect is in lifted coord space; convert back to at-rest to compute need.
-    const restBottom = rect.bottom + currentLift;
-    // FB IAB keeps visualViewport.height == innerHeight when the keyboard
-    // opens, so we estimate: keyboard + suggestion row covers ~50% of the
-    // viewport.
+    // FB IAB keeps innerHeight constant across keyboard state. Estimate the
+    // keyboard + suggestion row at ~50% of the viewport.
     const safeBottom = window.innerHeight * 0.5;
     const margin = 16;
-    const needed = Math.max(0, restBottom - (safeBottom - margin));
-    app.style.transform = needed > 0 ? 'translateY(-' + needed + 'px)' : '';
-    app.dataset.kbLift = String(needed);
+    const delta = rect.bottom - (safeBottom - margin);
+    if (delta > 0) window.scrollBy(0, delta);
   };
-  // Apply immediately (the at-rest anchor is invariant so timing doesn't
-  // matter) and re-apply across the keyboard animation in case the layout
-  // shifts.
-  apply();
   kbLiftTimers.forEach(clearTimeout);
+  // IMPORTANT: delay the scroll — scrolling synchronously in focusin shifts
+  // the layout before click dispatches, so a tap on an answer cell can land
+  // on #buttons and fire GIVE UP by accident. Body padding added above is
+  // safe because it sits BELOW the content and doesn't shift anything.
   kbLiftTimers = [
-    setTimeout(apply, 150),
-    setTimeout(apply, 400),
-    setTimeout(apply, 800),
+    setTimeout(scroll, 150),
+    setTimeout(scroll, 450),
+    setTimeout(scroll, 900),
   ];
 }
 
 function releaseAppLift() {
   kbLiftTimers.forEach(clearTimeout);
   kbLiftTimers = [];
-  const app = document.getElementById('app');
-  if (!app.dataset.kbLift) return;
-  app.style.transform = '';
-  delete app.dataset.kbLift;
+  document.body.classList.remove('kb-pad');
 }
 
 function highlightSameSymbol(symbol) {
