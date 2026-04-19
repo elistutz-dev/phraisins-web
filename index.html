@@ -1310,7 +1310,7 @@ function buildAnswerArea() {
       const input = document.createElement('input');
       input.type = 'text';
       input.maxLength = 1;
-      input.autocomplete = 'off';
+      input.autocomplete = 'one-time-code';
       input.name = 'phraisin-cell-' + globalIndex;
       input.dataset.index = globalIndex;
       input.setAttribute('autocapitalize', 'off');
