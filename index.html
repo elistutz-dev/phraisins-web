@@ -1398,9 +1398,13 @@ function isInAppKbQuirkBrowser() {
 }
 
 let kbLiftTimers = [];
+let kbPadReleaseTimer = null;
 
 function liftAppAboveKeyboard() {
   if (!isInAppKbQuirkBrowser()) return;
+  // Re-focusing an input within a pending release window: cancel the release
+  // so the pad keeps hanging on.
+  if (kbPadReleaseTimer) { clearTimeout(kbPadReleaseTimer); kbPadReleaseTimer = null; }
   document.body.classList.add('kb-pad');
   const scroll = () => {
     const buttonsEl = document.getElementById('buttons');
@@ -1428,7 +1432,15 @@ function liftAppAboveKeyboard() {
 function releaseAppLift() {
   kbLiftTimers.forEach(clearTimeout);
   kbLiftTimers = [];
-  document.body.classList.remove('kb-pad');
+  if (kbPadReleaseTimer) clearTimeout(kbPadReleaseTimer);
+  // Defer removal. Removing kb-pad synchronously during focusout shrinks
+  // the document, clamps scrollTop to 0, and shifts HINT/NEW GAME/GUESS out
+  // of the touched coord before the click dispatches — so the first tap
+  // misses and the user has to tap again.
+  kbPadReleaseTimer = setTimeout(() => {
+    kbPadReleaseTimer = null;
+    document.body.classList.remove('kb-pad');
+  }, 350);
 }
 
 function highlightSameSymbol(symbol) {
