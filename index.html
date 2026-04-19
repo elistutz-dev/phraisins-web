@@ -1373,9 +1373,32 @@ function focusCellQuietly(index) {
     input.removeAttribute('readonly');
     input.removeEventListener('touchstart', unlock);
     input.removeEventListener('mousedown', unlock);
+    // The tap that unlocks readonly is what triggers the keyboard, and no
+    // fresh focus event will fire — so scroll here too.
+    scrollCellAboveKeyboard(input);
   };
   input.addEventListener('touchstart', unlock);
   input.addEventListener('mousedown', unlock);
+}
+
+// Facebook's in-app browser doesn't auto-scroll the focused input above the
+// on-screen keyboard the way Safari/Chrome mobile do, so we nudge it into view
+// ourselves when a dash cell gains focus.
+function scrollCellAboveKeyboard(input) {
+  if (!window.matchMedia('(pointer: coarse)').matches) return;
+  setTimeout(() => {
+    const rect = input.getBoundingClientRect();
+    const vv = window.visualViewport;
+    const visibleTop = vv ? vv.offsetTop : 0;
+    const visibleHeight = vv ? vv.height : window.innerHeight;
+    // When visualViewport reflects the keyboard we trust it; otherwise assume
+    // the keyboard covers the bottom ~45% of the window.
+    const safeBottom = visibleTop + Math.min(visibleHeight, window.innerHeight * 0.55);
+    const margin = 24;
+    if (rect.bottom > safeBottom - margin) {
+      window.scrollBy({ top: rect.bottom - (safeBottom - margin), behavior: 'smooth' });
+    }
+  }, 300);
 }
 
 function highlightSameSymbol(symbol) {
@@ -1461,6 +1484,7 @@ function setupAnswerNavigation() {
     if (e.target.tagName !== 'INPUT') return;
     const index = parseInt(e.target.dataset.index);
     highlightSameSymbol(game.cells[index].symbol);
+    if (!e.target.hasAttribute('readonly')) scrollCellAboveKeyboard(e.target);
   });
   answerAreaEl.addEventListener('focusout', () => { clearHighlights(); });
 }
