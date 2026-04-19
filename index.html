@@ -519,6 +519,10 @@
 
   .hidden { display: none !important; }
 
+  /* Scroll room for scrolling a focused dash cell above the on-screen keyboard
+     in browsers that don't shrink the viewport (e.g. Facebook's in-app). */
+  body.keyboard-pad { padding-bottom: 55vh; }
+
   /* ─── Mobile ─────────────────────────────────────────────────── */
   @media (max-width: 600px) {
     body {
@@ -1374,7 +1378,8 @@ function focusCellQuietly(index) {
     input.removeEventListener('touchstart', unlock);
     input.removeEventListener('mousedown', unlock);
     // The tap that unlocks readonly is what triggers the keyboard, and no
-    // fresh focus event will fire — so scroll here too.
+    // fresh focus event will fire — so apply padding + scroll here too.
+    document.body.classList.add('keyboard-pad');
     scrollCellAboveKeyboard(input);
   };
   input.addEventListener('touchstart', unlock);
@@ -1382,24 +1387,27 @@ function focusCellQuietly(index) {
 }
 
 // Facebook's in-app browser doesn't auto-scroll the focused input above the
-// on-screen keyboard the way Safari/Chrome mobile do, so we nudge it into view
-// ourselves when a dash cell gains focus.
+// on-screen keyboard the way Safari/Chrome mobile do. We give the page scroll
+// room (body.keyboard-pad) and nudge the focused cell into view ourselves.
 function scrollCellAboveKeyboard(input) {
   if (!window.matchMedia('(pointer: coarse)').matches) return;
-  setTimeout(() => {
+  const nudge = () => {
     const rect = input.getBoundingClientRect();
     const vv = window.visualViewport;
-    const visibleTop = vv ? vv.offsetTop : 0;
-    const visibleHeight = vv ? vv.height : window.innerHeight;
-    // If visualViewport is already shrunk it's reflecting the keyboard — trust
-    // it. Otherwise assume the keyboard covers the bottom ~45% of the window.
-    const safeHeight = visibleHeight < window.innerHeight ? visibleHeight : window.innerHeight * 0.55;
-    const safeBottom = visibleTop + safeHeight;
+    // If visualViewport is shrunk it's keyboard-aware — use it. Otherwise
+    // assume the keyboard covers the bottom half of the window (Android
+    // keyboards with suggestion bars can be large).
+    const safeBottom = vv && vv.height < window.innerHeight
+      ? vv.offsetTop + vv.height
+      : window.innerHeight * 0.5;
     const margin = 24;
-    if (rect.bottom > safeBottom - margin) {
-      window.scrollBy({ top: rect.bottom - (safeBottom - margin), behavior: 'smooth' });
-    }
-  }, 300);
+    const delta = rect.bottom - (safeBottom - margin);
+    if (delta > 0) window.scrollBy(0, delta);
+  };
+  // Try twice — once after the keyboard animates in, and again in case the
+  // browser repositions on its own and undoes our first scroll.
+  setTimeout(nudge, 300);
+  setTimeout(nudge, 700);
 }
 
 function highlightSameSymbol(symbol) {
@@ -1485,9 +1493,18 @@ function setupAnswerNavigation() {
     if (e.target.tagName !== 'INPUT') return;
     const index = parseInt(e.target.dataset.index);
     highlightSameSymbol(game.cells[index].symbol);
-    if (!e.target.hasAttribute('readonly')) scrollCellAboveKeyboard(e.target);
+    if (!e.target.hasAttribute('readonly')) {
+      document.body.classList.add('keyboard-pad');
+      scrollCellAboveKeyboard(e.target);
+    }
   });
-  answerAreaEl.addEventListener('focusout', () => { clearHighlights(); });
+  answerAreaEl.addEventListener('focusout', (e) => {
+    clearHighlights();
+    // Only drop the scroll padding if focus is leaving the answer area.
+    if (!answerAreaEl.contains(e.relatedTarget)) {
+      document.body.classList.remove('keyboard-pad');
+    }
+  });
 }
 
 // --- Hints ---
