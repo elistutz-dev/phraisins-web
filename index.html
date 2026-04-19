@@ -1376,7 +1376,7 @@ function focusCellQuietly(index) {
     input.removeEventListener('mousedown', unlock);
     // The tap that unlocks readonly is what triggers the keyboard, and no
     // fresh focus event will fire — so lift here too.
-    liftAppAboveKeyboard(input);
+    liftAppAboveKeyboard();
   };
   input.addEventListener('touchstart', unlock);
   input.addEventListener('mousedown', unlock);
@@ -1391,29 +1391,45 @@ function isInAppKbQuirkBrowser() {
   return /FBAN|FBAV|FB_IAB|FB4A|Instagram/i.test(navigator.userAgent || '');
 }
 
-function liftAppAboveKeyboard(input) {
+let kbLiftTimers = [];
+
+function liftAppAboveKeyboard() {
   if (!isInAppKbQuirkBrowser()) return;
   const app = document.getElementById('app');
+  const buttonsEl = document.getElementById('buttons');
+  if (!buttonsEl) return;
   const apply = () => {
     const currentLift = parseFloat(app.dataset.kbLift || '0');
-    const rect = input.getBoundingClientRect();
+    // Anchor on the buttons row (bottom of #app). Lifting enough for HINT/
+    // GUESS/GIVE UP to clear the keyboard automatically clears the answer
+    // cells too, since they live above the buttons in #app's flex column.
+    const rect = buttonsEl.getBoundingClientRect();
     // rect is in lifted coord space; convert back to at-rest to compute need.
     const restBottom = rect.bottom + currentLift;
-    // FB IAB leaves visualViewport.height == innerHeight when the keyboard
-    // opens, so we have to estimate: assume it covers the bottom ~45%.
-    const safeBottom = window.innerHeight * 0.55;
-    const margin = 24;
+    // FB IAB keeps visualViewport.height == innerHeight when the keyboard
+    // opens, so we estimate: keyboard + suggestion row covers ~50% of the
+    // viewport.
+    const safeBottom = window.innerHeight * 0.5;
+    const margin = 16;
     const needed = Math.max(0, restBottom - (safeBottom - margin));
     app.style.transform = needed > 0 ? 'translateY(-' + needed + 'px)' : '';
     app.dataset.kbLift = String(needed);
   };
-  // Keyboards animate in; retry to catch the stable state in case the first
-  // measurement lands before layout settles.
-  setTimeout(apply, 300);
-  setTimeout(apply, 700);
+  // Apply immediately (the at-rest anchor is invariant so timing doesn't
+  // matter) and re-apply across the keyboard animation in case the layout
+  // shifts.
+  apply();
+  kbLiftTimers.forEach(clearTimeout);
+  kbLiftTimers = [
+    setTimeout(apply, 150),
+    setTimeout(apply, 400),
+    setTimeout(apply, 800),
+  ];
 }
 
 function releaseAppLift() {
+  kbLiftTimers.forEach(clearTimeout);
+  kbLiftTimers = [];
   const app = document.getElementById('app');
   if (!app.dataset.kbLift) return;
   app.style.transform = '';
@@ -1503,7 +1519,7 @@ function setupAnswerNavigation() {
     if (e.target.tagName !== 'INPUT') return;
     const index = parseInt(e.target.dataset.index);
     highlightSameSymbol(game.cells[index].symbol);
-    if (!e.target.hasAttribute('readonly')) liftAppAboveKeyboard(e.target);
+    if (!e.target.hasAttribute('readonly')) liftAppAboveKeyboard();
   });
   answerAreaEl.addEventListener('focusout', (e) => {
     clearHighlights();
