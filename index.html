@@ -60,6 +60,7 @@
   #app {
     max-width: 860px;
     width: 100%;
+    transition: transform 0.22s ease-out;
   }
 
   /* --- Title with raisin graphics --- */
@@ -1374,32 +1375,49 @@ function focusCellQuietly(index) {
     input.removeEventListener('touchstart', unlock);
     input.removeEventListener('mousedown', unlock);
     // The tap that unlocks readonly is what triggers the keyboard, and no
-    // fresh focus event will fire — so scroll here too.
-    scrollCellAboveKeyboard(input);
+    // fresh focus event will fire — so lift here too.
+    liftAppAboveKeyboard(input);
   };
   input.addEventListener('touchstart', unlock);
   input.addEventListener('mousedown', unlock);
 }
 
-// Facebook's in-app browser doesn't auto-scroll the focused input above the
-// on-screen keyboard the way Safari/Chrome mobile do, so we nudge it into view
-// ourselves when a dash cell gains focus.
-function scrollCellAboveKeyboard(input) {
-  if (!window.matchMedia('(pointer: coarse)').matches) return;
-  setTimeout(() => {
+// Facebook/Messenger/Instagram in-app browsers don't auto-scroll the focused
+// input above the on-screen keyboard, and #app is sized to 100dvh on mobile
+// so the document has no scroll room either. Gate the workaround on those UAs
+// and lift #app with a CSS transform — no scrolling required, other browsers
+// stay untouched.
+function isInAppKbQuirkBrowser() {
+  return /FBAN|FBAV|FB_IAB|FB4A|Instagram/i.test(navigator.userAgent || '');
+}
+
+function liftAppAboveKeyboard(input) {
+  if (!isInAppKbQuirkBrowser()) return;
+  const app = document.getElementById('app');
+  const apply = () => {
+    const currentLift = parseFloat(app.dataset.kbLift || '0');
     const rect = input.getBoundingClientRect();
-    const vv = window.visualViewport;
-    const visibleTop = vv ? vv.offsetTop : 0;
-    const visibleHeight = vv ? vv.height : window.innerHeight;
-    // If visualViewport is already shrunk it's reflecting the keyboard — trust
-    // it. Otherwise assume the keyboard covers the bottom ~45% of the window.
-    const safeHeight = visibleHeight < window.innerHeight ? visibleHeight : window.innerHeight * 0.55;
-    const safeBottom = visibleTop + safeHeight;
+    // rect is in lifted coord space; convert back to at-rest to compute need.
+    const restBottom = rect.bottom + currentLift;
+    // FB IAB leaves visualViewport.height == innerHeight when the keyboard
+    // opens, so we have to estimate: assume it covers the bottom ~45%.
+    const safeBottom = window.innerHeight * 0.55;
     const margin = 24;
-    if (rect.bottom > safeBottom - margin) {
-      window.scrollBy({ top: rect.bottom - (safeBottom - margin), behavior: 'smooth' });
-    }
-  }, 300);
+    const needed = Math.max(0, restBottom - (safeBottom - margin));
+    app.style.transform = needed > 0 ? 'translateY(-' + needed + 'px)' : '';
+    app.dataset.kbLift = String(needed);
+  };
+  // Keyboards animate in; retry to catch the stable state in case the first
+  // measurement lands before layout settles.
+  setTimeout(apply, 300);
+  setTimeout(apply, 700);
+}
+
+function releaseAppLift() {
+  const app = document.getElementById('app');
+  if (!app.dataset.kbLift) return;
+  app.style.transform = '';
+  delete app.dataset.kbLift;
 }
 
 function highlightSameSymbol(symbol) {
@@ -1485,9 +1503,14 @@ function setupAnswerNavigation() {
     if (e.target.tagName !== 'INPUT') return;
     const index = parseInt(e.target.dataset.index);
     highlightSameSymbol(game.cells[index].symbol);
-    if (!e.target.hasAttribute('readonly')) scrollCellAboveKeyboard(e.target);
+    if (!e.target.hasAttribute('readonly')) liftAppAboveKeyboard(e.target);
   });
-  answerAreaEl.addEventListener('focusout', () => { clearHighlights(); });
+  answerAreaEl.addEventListener('focusout', (e) => {
+    clearHighlights();
+    // Drop the lift when focus leaves the answer area entirely — moving
+    // between cells shouldn't bounce #app.
+    if (!answerAreaEl.contains(e.relatedTarget)) releaseAppLift();
+  });
 }
 
 // --- Hints ---
