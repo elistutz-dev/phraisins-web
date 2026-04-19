@@ -1391,9 +1391,10 @@ function scrollCellAboveKeyboard(input) {
     const vv = window.visualViewport;
     const visibleTop = vv ? vv.offsetTop : 0;
     const visibleHeight = vv ? vv.height : window.innerHeight;
-    // When visualViewport reflects the keyboard we trust it; otherwise assume
-    // the keyboard covers the bottom ~45% of the window.
-    const safeBottom = visibleTop + Math.min(visibleHeight, window.innerHeight * 0.55);
+    // If visualViewport is already shrunk it's reflecting the keyboard — trust
+    // it. Otherwise assume the keyboard covers the bottom ~45% of the window.
+    const safeHeight = visibleHeight < window.innerHeight ? visibleHeight : window.innerHeight * 0.55;
+    const safeBottom = visibleTop + safeHeight;
     const margin = 24;
     if (rect.bottom > safeBottom - margin) {
       window.scrollBy({ top: rect.bottom - (safeBottom - margin), behavior: 'smooth' });
