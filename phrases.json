@@ -322,7 +322,7 @@
   {"id": 326, "rank": 3, "phrase": "down the drain", "clue": "where bath water and bad plans both end up"},
   {"id": 327, "rank": 2, "phrase": "drag your feet", "clue": "what someone does when they delay turning in their resignation letter"},
   {"id": 328, "rank": 2, "phrase": "drop the ball", "clue": "what the event planner did when they forgot to book the caterer"},
-  {"id": 329, "rank": 1, "phrase": "dry run", "clue": "moisture free rehearsal"},
+  {"id": 329, "rank": 1, "phrase": "a dry run", "clue": "moisture free rehearsal"},
   {"id": 330, "rank": 3, "phrase": "get your ducks in a row", "clue": "be lined up and ready to quack"},
   {"id": 331, "rank": 3, "phrase": "eat your words", "clue": "consume your vocabulary"},
   {"id": 332, "rank": 2, "phrase": "as you wish", "clue": "what he really meant was, I love you"},
@@ -771,5 +771,6 @@
   {"id": 781, "rank": 5, "phrase": "live long and prosper", "clue": "a Vulcan's two-part farewell blessing"},
   {"id": 782, "rank": 5, "phrase": "the truth is out there", "clue": "answers exist but someone hid them from you"},
   {"id": 783, "rank": 5, "phrase": "a house divided cannot stand", "clue": "Lincoln borrowed a carpenter's structural warning"},
-  {"id": 784, "rank": 5, "phrase": "an eye for an eye", "clue": "the oldest exchange rate for justice"}
+  {"id": 784, "rank": 5, "phrase": "an eye for an eye", "clue": "the oldest exchange rate for justice"},
+  {"id": 785, "rank": 2, "phrase": "six seven", "clue": "what all the kids are saying"}
 ]
