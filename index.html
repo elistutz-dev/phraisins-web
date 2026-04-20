@@ -2114,8 +2114,7 @@ const TUTORIAL_STEPS = [
   { targets: ['#cipher-display'],              title: 'The puzzle',               body: 'Each symbol represents a letter that makes up a common phrase.' },
   { targets: ['#clue-display'],                title: 'The clue',                 body: "Solve it with the help of the clue.", calloutOffset: -9 },
   { targets: ['#hint-btn', '#cipher-display'], title: 'Stuck? Use a hint',       body: "Hints reveal a letter \u2014 but each one costs you a raisin.", placement: 'between', onEnter: tutorialDemoHint },
-  { targets: ['#cipher-display', '#answer-area'], title: 'Your answer',           body: "Type letters to guess the phrase. Matching symbols fill in automatically.", placement: 'over', onEnter: tutorialDemoSolve },
-  { targets: ['#score-area'],                  title: "Earn raisins",             body: "Guess correctly to earn raisins! You can't actually eat them, but it will be fun.", cta: 'Start Game' }
+  { targets: ['#cipher-display', '#answer-area'], title: 'Answer and win',        body: "Guess correctly to earn raisins! You can't eat them, but it will be fun.", positionAnchor: '#score-area', cta: 'Start Game', onEnter: tutorialDemoAnswerAndWin }
 ];
 
 function getTutorialSeen() { return localStorage.getItem('phraisins_tutorial_seen') === 'true'; }
@@ -2124,6 +2123,7 @@ function saveTutorialSeen() { localStorage.setItem('phraisins_tutorial_seen', 't
 let tutorialStepIndex = 0;
 let tutorialSpotlightEls = [];
 let tutorialTimers = [];
+let tutorialActivePlacementOverride = null;
 const tutorialOverlayEl = document.getElementById('tutorial-overlay');
 const tutorialCalloutEl = document.getElementById('tutorial-callout');
 const tutorialTitleEl = document.getElementById('tutorial-title');
@@ -2169,6 +2169,27 @@ function tutorialDemoSolve() {
   });
 }
 
+function tutorialDemoAnswerAndWin() {
+  tutorialDemoSolve();
+  let solveEnd = 500;
+  if (game) {
+    const uniqueLetters = [...new Set(game.phrase.toLowerCase().replace(/[^a-z]/g, '').split(''))];
+    const pendingCount = uniqueLetters.filter(l => {
+      const sym = game.mapping[l];
+      return sym && !game.revealedHints.some(h => h.symbol === sym);
+    }).length;
+    solveEnd = 500 + Math.max(1, pendingCount) * 280;
+  }
+  tutorialTimers.push(setTimeout(() => {
+    clearTutorialSpotlights();
+    const scoreEl = document.querySelector('#score-area');
+    if (scoreEl) {
+      scoreEl.classList.add('tutorial-spotlight');
+      tutorialSpotlightEls.push(scoreEl);
+    }
+  }, solveEnd + 900));
+}
+
 function positionTutorialCallout() {
   const isMobile = window.matchMedia('(max-width: 600px)').matches;
   const callout = tutorialCalloutEl;
@@ -2180,13 +2201,19 @@ function positionTutorialCallout() {
   const gap = 18;
 
   const step = TUTORIAL_STEPS[tutorialStepIndex];
+  const placement = tutorialActivePlacementOverride !== null ? tutorialActivePlacementOverride : (step && step.placement);
+  let anchorEls = tutorialSpotlightEls;
+  if (step && step.positionAnchor) {
+    const anchorEl = document.querySelector(step.positionAnchor);
+    if (anchorEl) anchorEls = [anchorEl];
+  }
   let top = null;
 
-  if (step && step.placement === 'over' && tutorialSpotlightEls.length >= 1) {
-    const rect = tutorialSpotlightEls[0].getBoundingClientRect();
+  if (step && placement === 'over' && anchorEls.length >= 1) {
+    const rect = anchorEls[0].getBoundingClientRect();
     top = rect.top + (rect.height - ch) / 2;
-  } else if (step && step.placement === 'between' && tutorialSpotlightEls.length >= 2) {
-    const rects = tutorialSpotlightEls
+  } else if (step && placement === 'between' && anchorEls.length >= 2) {
+    const rects = anchorEls
       .map(el => el.getBoundingClientRect())
       .filter(r => r.bottom >= 0 && r.top <= vh)
       .sort((a, b) => a.top - b.top);
@@ -2201,7 +2228,7 @@ function positionTutorialCallout() {
   }
 
   let topBound = null, botBound = null;
-  tutorialSpotlightEls.forEach(el => {
+  anchorEls.forEach(el => {
     const r = el.getBoundingClientRect();
     if (r.bottom < 0 || r.top > vh) return;
     topBound = topBound === null ? r.top : Math.min(topBound, r.top);
@@ -2247,6 +2274,7 @@ function renderTutorialStep(i) {
   const step = TUTORIAL_STEPS[i];
   clearTutorialTimers();
   clearTutorialSpotlights();
+  tutorialActivePlacementOverride = null;
   const targets = step.targets || [];
   targets.forEach(sel => {
     const el = document.querySelector(sel);
