@@ -819,7 +819,7 @@
     right: 0;
     bottom: 0;
     padding: 8px 4px calc(10px + env(safe-area-inset-bottom, 0px));
-    background: #0d0815;
+    background: var(--bg);
     border-top: 1px solid var(--border);
     box-shadow: 0 -6px 22px rgba(0, 0, 0, 0.55);
     z-index: 200;
@@ -841,8 +841,8 @@
     flex: 1 1 0;
     min-width: 0;
     height: 54px;
-    background: #7a7a86;
-    color: #fff;
+    background: #4a3a6a;
+    color: var(--text);
     border: none;
     border-radius: 5px;
     font-family: var(--font);
@@ -856,7 +856,7 @@
     transition: background 0.1s ease, transform 0.08s ease;
     -webkit-tap-highlight-color: transparent;
   }
-  .kb-key:active { background: #5a5a66; transform: scale(0.97); }
+  .kb-key:active { background: #32254a; transform: scale(0.97); }
   .kb-key.kb-wide {
     flex: 1.55 1 0;
     font-size: 0.78rem;
