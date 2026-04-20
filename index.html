@@ -1950,9 +1950,11 @@ function showWin() {
   const shouldCelebrate = !!levelUp ||
     (newPerfectStreak >= 3 && [3, 6, 10].includes(newPerfectStreak)) ||
     [3, 6, 10].includes(newStreak);
-  showResult();
-  if (shouldCelebrate) spawnConfetti();
-  else spawnMiniConfetti();
+  showResult(1250);
+  setTimeout(() => {
+    if (shouldCelebrate) spawnConfetti();
+    else spawnMiniConfetti();
+  }, 1250);
 }
 
 function showLoss() {
@@ -1995,7 +1997,7 @@ function revealAllLetters() {
   game.unrevealedLetters = [];
 }
 
-function showResult() {
+function showResult(delay = 1500) {
   hideMobileKeyboardImmediate();
   feedbackEl.classList.add('hidden');
   hintsEl.classList.add('hidden');
@@ -2018,7 +2020,7 @@ function showResult() {
   cipherEl.classList.add('game-over');
   revealAllLetters();
 
-  resultEl.style.display = 'flex';
+  setTimeout(() => { resultEl.style.display = 'flex'; }, delay);
 }
 
 // --- Share ---
