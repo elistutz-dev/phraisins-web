@@ -811,6 +811,62 @@
       width: auto;
     }
   }
+
+  /* --- Mobile on-screen keyboard --- */
+  #mobile-keyboard {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 8px 4px calc(10px + env(safe-area-inset-bottom, 0px));
+    background: #0d0815;
+    border-top: 1px solid var(--border);
+    box-shadow: 0 -6px 22px rgba(0, 0, 0, 0.55);
+    z-index: 200;
+    display: none;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+  }
+  #mobile-keyboard.active { display: block; }
+  .kb-row {
+    display: flex;
+    justify-content: center;
+    gap: 5px;
+    margin-bottom: 6px;
+    padding: 0 4px;
+  }
+  .kb-row:last-child { margin-bottom: 0; }
+  .kb-key {
+    flex: 1 1 0;
+    min-width: 0;
+    height: 54px;
+    background: #7a7a86;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    font-family: var(--font);
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.1s ease, transform 0.08s ease;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .kb-key:active { background: #5a5a66; transform: scale(0.97); }
+  .kb-key.kb-wide {
+    flex: 1.55 1 0;
+    font-size: 0.78rem;
+    letter-spacing: 0.05em;
+  }
+  .kb-key svg { width: 24px; height: 24px; fill: currentColor; }
+  body.mobile-kb-active #app { padding-bottom: 248px; }
+  @media (min-width: 601px) {
+    #mobile-keyboard { display: none !important; }
+  }
 </style>
 </head>
 <body>
@@ -912,6 +968,7 @@ const SYMBOL_GROUPS = [
 ];
 let currentSymbols = null;
 const STARTER_PHRASE_IDS = [97,174,191,199,219,257,270,315,349,361];
+const IS_MOBILE_CUSTOM_KB = window.matchMedia('(pointer: coarse)').matches;
 
 let PHRASES = [];
 
@@ -1313,6 +1370,7 @@ function buildAnswerArea() {
       input.autocomplete = 'off';
       input.dataset.index = globalIndex;
       input.setAttribute('autocapitalize', 'off');
+      if (IS_MOBILE_CUSTOM_KB) input.setAttribute('inputmode', 'none');
 
       cellDiv.appendChild(input);
       wordGroup.appendChild(cellDiv);
@@ -1526,14 +1584,173 @@ function setupAnswerNavigation() {
     if (e.target.tagName !== 'INPUT') return;
     const index = parseInt(e.target.dataset.index);
     highlightSameSymbol(game.cells[index].symbol);
-    if (!e.target.hasAttribute('readonly')) liftAppAboveKeyboard();
+    if (IS_MOBILE_CUSTOM_KB) {
+      showMobileKeyboard();
+    } else if (!e.target.hasAttribute('readonly')) {
+      liftAppAboveKeyboard();
+    }
   });
   answerAreaEl.addEventListener('focusout', (e) => {
     clearHighlights();
     // Drop the lift when focus leaves the answer area entirely — moving
     // between cells shouldn't bounce #app.
-    if (!answerAreaEl.contains(e.relatedTarget)) releaseAppLift();
+    if (!answerAreaEl.contains(e.relatedTarget)) {
+      if (IS_MOBILE_CUSTOM_KB) hideMobileKeyboard();
+      else releaseAppLift();
+    }
   });
+}
+
+// --- Mobile on-screen keyboard ---
+function buildMobileKeyboard() {
+  if (document.getElementById('mobile-keyboard')) return;
+  const kb = document.createElement('div');
+  kb.id = 'mobile-keyboard';
+  kb.setAttribute('role', 'group');
+  kb.setAttribute('aria-label', 'On-screen keyboard');
+  const rows = [
+    ['Q','W','E','R','T','Y','U','I','O','P'],
+    ['A','S','D','F','G','H','J','K','L'],
+    ['ENTER','Z','X','C','V','B','N','M','BACKSPACE']
+  ];
+  const BACKSPACE_SVG = '<svg viewBox="0 0 24 24" aria-hidden="true">'
+    + '<path d="M22 3H7c-.69 0-1.23.35-1.59.88L0 12l5.41 8.12c.36.52.9.88 1.59.88h15c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-3 12.59L17.59 17 14 13.41 10.41 17 9 15.59 12.59 12 9 8.41 10.41 7 14 10.59 17.59 7 19 8.41 15.41 12 19 15.59z"/>'
+    + '</svg>';
+  rows.forEach(row => {
+    const rowEl = document.createElement('div');
+    rowEl.className = 'kb-row';
+    row.forEach(k => {
+      const key = document.createElement('button');
+      key.type = 'button';
+      key.className = 'kb-key';
+      key.tabIndex = -1;
+      if (k === 'ENTER') {
+        key.classList.add('kb-wide');
+        key.dataset.key = 'ENTER';
+        key.textContent = 'ENTER';
+        key.setAttribute('aria-label', 'Submit guess');
+      } else if (k === 'BACKSPACE') {
+        key.classList.add('kb-wide');
+        key.dataset.key = 'BACKSPACE';
+        key.innerHTML = BACKSPACE_SVG;
+        key.setAttribute('aria-label', 'Backspace');
+      } else {
+        key.dataset.key = k;
+        key.textContent = k;
+      }
+      rowEl.appendChild(key);
+    });
+    kb.appendChild(rowEl);
+  });
+  document.body.appendChild(kb);
+
+  // Prevent the key from stealing focus from the active answer cell.
+  kb.addEventListener('mousedown', (e) => {
+    if (e.target.closest('.kb-key')) e.preventDefault();
+  });
+  kb.addEventListener('click', (e) => {
+    const keyEl = e.target.closest('.kb-key');
+    if (!keyEl) return;
+    handleKeyboardKey(keyEl.dataset.key);
+  });
+}
+
+function getFocusedCellIndex() {
+  const inputEl = answerAreaEl.querySelector('.answer-cell input:focus');
+  if (!inputEl) return -1;
+  const idx = parseInt(inputEl.dataset.index);
+  return isNaN(idx) ? -1 : idx;
+}
+function getFirstEditableEmptyIndex() {
+  for (let i = 0; i < game.cells.length; i++) {
+    if (!game.cells[i].isLocked && !game.cells[i].userLetter) return i;
+  }
+  return -1;
+}
+function getLastFilledEditableIndex() {
+  for (let i = game.cells.length - 1; i >= 0; i--) {
+    if (!game.cells[i].isLocked && game.cells[i].userLetter) return i;
+  }
+  return -1;
+}
+
+function handleKeyboardKey(k) {
+  if (!game || game.isOver) return;
+  if (k === 'ENTER') { handleGuess(); return; }
+  if (k === 'BACKSPACE') {
+    let index = getFocusedCellIndex();
+    if (index === -1 || game.cells[index].isLocked) {
+      index = getLastFilledEditableIndex();
+      if (index === -1) return;
+    }
+    const cell = game.cells[index];
+    if (cell && !cell.userLetter) {
+      const prev = findPrevCell(index);
+      if (prev !== -1) {
+        handleCellInput(prev, '');
+        focusCell(prev);
+      }
+    } else {
+      handleCellInput(index, '');
+      focusCell(index);
+    }
+    return;
+  }
+  if (/^[A-Z]$/.test(k)) {
+    let index = getFocusedCellIndex();
+    if (index === -1 || game.cells[index].isLocked) {
+      index = getFirstEditableEmptyIndex();
+      if (index === -1) return;
+    }
+    handleCellInput(index, k.toLowerCase());
+    const nextEmpty = findNextEmptyCell(index);
+    if (nextEmpty !== -1) focusCell(nextEmpty);
+    else focusCell(index);
+  }
+}
+
+let mobileKbReleaseTimer = null;
+
+function showMobileKeyboard() {
+  if (!IS_MOBILE_CUSTOM_KB) return;
+  const kb = document.getElementById('mobile-keyboard');
+  if (!kb || (game && game.isOver)) return;
+  if (mobileKbReleaseTimer) { clearTimeout(mobileKbReleaseTimer); mobileKbReleaseTimer = null; }
+  kb.classList.add('active');
+  document.body.classList.add('mobile-kb-active');
+  requestAnimationFrame(() => {
+    const rect = answerAreaEl.getBoundingClientRect();
+    const kbTop = window.innerHeight - kb.offsetHeight;
+    if (rect.bottom > kbTop - 10) {
+      window.scrollBy({ top: rect.bottom - (kbTop - 16), behavior: 'smooth' });
+    }
+  });
+}
+
+// Defer removal so the pending click on HINT/GIVE UP/GUESS/NEW GAME doesn't
+// miss: synchronous focusout → layout shrink would clamp scroll and pull the
+// button out from under the tap, forcing a second tap. If focus lands back in
+// an answer cell, showMobileKeyboard cancels this timer and the keyboard
+// never visually blinks. Once a click handler has run, it can call the
+// Immediate variant to skip the delay (the click has already dispatched so
+// layout shift no longer matters).
+function hideMobileKeyboard() {
+  const kb = document.getElementById('mobile-keyboard');
+  if (!kb) return;
+  if (mobileKbReleaseTimer) clearTimeout(mobileKbReleaseTimer);
+  mobileKbReleaseTimer = setTimeout(() => {
+    mobileKbReleaseTimer = null;
+    kb.classList.remove('active');
+    document.body.classList.remove('mobile-kb-active');
+  }, 350);
+}
+
+function hideMobileKeyboardImmediate() {
+  const kb = document.getElementById('mobile-keyboard');
+  if (!kb) return;
+  if (mobileKbReleaseTimer) { clearTimeout(mobileKbReleaseTimer); mobileKbReleaseTimer = null; }
+  kb.classList.remove('active');
+  document.body.classList.remove('mobile-kb-active');
 }
 
 // --- Hints ---
@@ -1628,6 +1845,7 @@ function startGame({ fromNewGame = false, seed = null } = {}) {
   const isMobile = window.matchMedia('(pointer: coarse)').matches;
   setTimeout(() => {
     if (seed) return;
+    if (IS_MOBILE_CUSTOM_KB) return; // wait for user tap before showing keyboard
     if (fromNewGame && isMobile) focusCellQuietly(0);
     else focusCell(0);
   }, 100);
@@ -1767,6 +1985,7 @@ function revealAllLetters() {
 }
 
 function showResult() {
+  hideMobileKeyboardImmediate();
   feedbackEl.classList.add('hidden');
   hintsEl.classList.add('hidden');
   submitBtn.classList.add('hidden');
@@ -1846,8 +2065,11 @@ hintBtn.addEventListener('click', () => {
       const next = findNextEmptyCell(-1);
       if (next !== -1) {
         const isMobile = window.matchMedia('(pointer: coarse)').matches;
-        if (isMobile) focusCellQuietly(next);
+        if (IS_MOBILE_CUSTOM_KB) hideMobileKeyboardImmediate();
+        else if (isMobile) focusCellQuietly(next);
         else focusCell(next);
+      } else if (IS_MOBILE_CUSTOM_KB) {
+        hideMobileKeyboardImmediate();
       }
     }
   }
@@ -2077,6 +2299,7 @@ document.addEventListener('keydown', (e) => {
 
 // --- Init ---
 async function init() {
+  buildMobileKeyboard();
   const loadingTimer = setTimeout(() => { clueEl.textContent = 'Loading\u2026'; }, 500);
   try {
     const response = await fetch('phrases.json');
