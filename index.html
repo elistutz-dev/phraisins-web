@@ -2110,11 +2110,11 @@ const TUTORIAL_SEED = {
   clue: "When showing up eventually beats not showing up at all."
 };
 const TUTORIAL_STEPS = [
-  { targets: [],                               title: 'Welcome to Phraisins!',    body: "Here's how it works \u2014 it'll only take a moment." },
+  { targets: [],                               title: 'Welcome to Phraisins!',    body: "Here's how the game works \u2014 it'll only take a moment." },
   { targets: ['#cipher-display'],              title: 'The puzzle',               body: 'Each symbol represents a letter that makes up a common phrase.' },
   { targets: ['#clue-display'],                title: 'The clue',                 body: "Solve it with the help of the clue.", calloutGap: 27 },
   { targets: ['#hint-btn', '#cipher-display'], title: 'Stuck? Use a hint',       body: "Hints reveal a letter \u2014 but each one costs you a raisin.", placement: 'between', onEnter: tutorialDemoHint },
-  { targets: ['#answer-area', '#score-area'], title: 'Answer and win', body: "Guess correctly to earn raisins! You can't eat them, but it will be fun.", placement: 'between', cta: 'Start Game', onEnter: tutorialDemoSolve }
+  { targets: ['#answer-area', '#score-area'], title: 'Answer and win', body: "Guess the phrase and earn raisins! You can't eat them, but it will be fun.", placement: 'between', cta: 'Start Game', onEnter: tutorialDemoSolve }
 ];
 
 function getTutorialSeen() { return localStorage.getItem('phraisins_tutorial_seen') === 'true'; }
