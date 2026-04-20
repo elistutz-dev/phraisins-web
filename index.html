@@ -536,7 +536,7 @@
       min-height: 0;
       background-attachment: fixed;
       background-image:
-        radial-gradient(ellipse 80% 40% at 50% 39%, rgba(120, 60, 180, 0.08) 0%, transparent 70%),
+        radial-gradient(ellipse 80% 40% at 50% 34%, rgba(120, 60, 180, 0.08) 0%, transparent 70%),
         radial-gradient(ellipse at 15% 0%, rgba(120, 40, 160, 0.05) 0%, transparent 55%),
         radial-gradient(ellipse at 85% 100%, rgba(90, 30, 120, 0.06) 0%, transparent 50%);
     }
@@ -591,6 +591,7 @@
       justify-content: center;
       margin-top: 0.55rem;
       margin-bottom: 1.4rem;
+      transform: translateY(3px);
     }
     #stake-raisins { gap: 0.5rem; }
     .stake-raisin {
@@ -724,7 +725,13 @@
     transition: box-shadow 0.25s ease;
   }
   #score-area.tutorial-spotlight {
-    padding: 10px 16px;
+    padding: 10px 16px 4px;
+  }
+  #score-area.tutorial-spotlight #stake-wrap {
+    margin-bottom: 0.5rem;
+  }
+  #clue-display.tutorial-spotlight {
+    padding: 0.275rem 0;
   }
   body.tutorial-active #answer-area input,
   body.tutorial-active #buttons,
@@ -2103,7 +2110,7 @@ const TUTORIAL_SEED = {
 const TUTORIAL_STEPS = [
   { targets: [],                               title: 'Welcome to Phraisins!',    body: "Here's how it works \u2014 it'll only take a moment." },
   { targets: ['#cipher-display'],              title: 'The puzzle',               body: 'Each symbol represents a letter that makes up a common phrase.' },
-  { targets: ['#clue-display'],                title: 'The clue',                 body: "Solve it with the help of the clue." },
+  { targets: ['#clue-display'],                title: 'The clue',                 body: "Solve it with the help of the clue.", calloutOffset: -9 },
   { targets: ['#hint-btn', '#cipher-display'], title: 'Stuck? Use a hint',       body: "Hints reveal a letter \u2014 but each one costs you a raisin.", placement: 'between', onEnter: tutorialDemoHint },
   { targets: ['#cipher-display', '#answer-area'], title: 'Your answer',           body: "Type letters to guess the phrase. Matching symbols fill in automatically.", placement: 'over', onEnter: tutorialDemoSolve },
   { targets: ['#score-area'],                  title: "Earn raisins",             body: "Guess correctly to earn raisins! You can't actually eat them, but it will be fun.", cta: 'Start Game' }
@@ -2216,6 +2223,9 @@ function positionTutorialCallout() {
     } else {
       top = Math.max(margin, (vh - ch) / 2);
     }
+  }
+  if (step && typeof step.calloutOffset === 'number') {
+    top += step.calloutOffset;
   }
   top = Math.max(margin, Math.min(top, vh - ch - margin));
   callout.style.top = top + 'px';
