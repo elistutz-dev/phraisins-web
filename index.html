@@ -379,6 +379,30 @@
   #result-feedback.feedback-correct { color: var(--accent-bright); font-weight: bold; font-size: 1.25rem; }
   #result-feedback.feedback-wrong { color: var(--red); }
 
+  .milestone-badge {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.4rem;
+    margin: 0.25rem 0 1rem;
+    padding: 0.75rem 0.75rem;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 8px;
+  }
+  .milestone-flag { width: 48px; height: auto; }
+  .milestone-title {
+    color: var(--gold);
+    font-weight: bold;
+    font-size: 1.08rem;
+    text-align: center;
+  }
+  .milestone-count {
+    color: var(--accent-bright);
+    font-size: 0.98rem;
+    text-align: center;
+  }
+
   /* --- Result --- */
   #result {
     position: fixed;
@@ -800,6 +824,20 @@
     background: rgba(124, 200, 138, 0.08);
     box-shadow: 0 2px 8px rgba(124, 200, 138, 0.12);
   }
+  #tutorial-flag {
+    display: none;
+    position: absolute;
+    width: 36px;
+    height: auto;
+    top: 1.1rem;
+    right: 1.25rem;
+  }
+  #tutorial-callout.tutorial-welcome #tutorial-flag {
+    display: block;
+  }
+  #tutorial-callout.tutorial-welcome #tutorial-title {
+    padding-right: 3rem;
+  }
   @media (min-width: 601px) {
     #tutorial-callout.tutorial-welcome {
       max-width: 440px;
@@ -808,10 +846,16 @@
     #tutorial-callout.tutorial-welcome #tutorial-title {
       font-size: 1.45rem;
       margin-bottom: 0.6rem;
+      padding-right: 3.5rem;
     }
     #tutorial-callout.tutorial-welcome #tutorial-body {
       font-size: 1.18rem;
       margin-bottom: 1.1rem;
+    }
+    #tutorial-callout.tutorial-welcome #tutorial-flag {
+      top: 1.5rem;
+      right: 1.75rem;
+      width: 44px;
     }
   }
   @media (max-width: 600px) {
@@ -883,36 +927,20 @@
 <body>
 <div id="app">
   <div class="title-row">
-    <svg class="raisin-svg" width="52" height="48" viewBox="0 0 52 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M26 8c-6-1-12 2-16 8-3 5-4 11-2 16 2 6 7 10 14 11 3 0 6 0 9-2 5-3 9-8 10-14 1-5-1-10-4-14-3-3-7-5-11-5z" fill="#542a78"/>
-      <path d="M26 8c-6-1-12 2-16 8-3 5-4 11-2 16 2 6 7 10 14 11 3 0 6 0 9-2 5-3 9-8 10-14 1-5-1-10-4-14-3-3-7-5-11-5z" fill="url(#rg1)"/>
-      <path d="M14 16c3 4 5 8 4 13" stroke="#381855" stroke-width="1.4" stroke-linecap="round" fill="none" opacity="0.7"/>
-      <path d="M19 12c1 6-1 13-2 18" stroke="#381855" stroke-width="1.2" stroke-linecap="round" fill="none" opacity="0.6"/>
-      <path d="M26 10c0 7-2 14-4 20" stroke="#381855" stroke-width="1.3" stroke-linecap="round" fill="none" opacity="0.65"/>
-      <path d="M32 13c-1 5-3 10-5 15" stroke="#381855" stroke-width="1.1" stroke-linecap="round" fill="none" opacity="0.55"/>
-      <path d="M36 18c-2 4-3 9-4 12" stroke="#381855" stroke-width="1" stroke-linecap="round" fill="none" opacity="0.5"/>
-      <path d="M12 22c6-2 14-1 22 1" stroke="#381855" stroke-width="0.9" stroke-linecap="round" fill="none" opacity="0.4"/>
-      <path d="M14 30c5-1 11-2 18 0" stroke="#381855" stroke-width="0.8" stroke-linecap="round" fill="none" opacity="0.35"/>
-      <path d="M20 13c2 5 1 11-1 17" stroke="#703ca0" stroke-width="0.8" stroke-linecap="round" fill="none" opacity="0.5"/>
-      <path d="M26 8c0-3 1-5 3-7" stroke="#6b8a3a" stroke-width="2" stroke-linecap="round"/>
-      <path d="M27 4c2-1 4-1 5 0" stroke="#6b8a3a" stroke-width="1.2" stroke-linecap="round" opacity="0.6"/>
-      <defs><radialGradient id="rg1" cx="0.35" cy="0.3" r="0.5"><stop offset="0%" stop-color="#8050b8" stop-opacity="0.35"/><stop offset="100%" stop-color="#381855" stop-opacity="0"/></radialGradient></defs>
+    <svg class="raisin-svg" width="52" height="48" viewBox="0 0 52 48" xmlns="http://www.w3.org/2000/svg" aria-label="Flag of Israel">
+      <rect x="0" y="0" width="52" height="48" fill="#ffffff"/>
+      <rect x="0" y="6" width="52" height="6" fill="#0038b8"/>
+      <rect x="0" y="36" width="52" height="6" fill="#0038b8"/>
+      <polygon points="26,15 33.8,28.5 18.2,28.5" fill="none" stroke="#0038b8" stroke-width="1.6" stroke-linejoin="miter"/>
+      <polygon points="26,33 33.8,19.5 18.2,19.5" fill="none" stroke="#0038b8" stroke-width="1.6" stroke-linejoin="miter"/>
     </svg>
     <h1>PHRAISINS</h1>
-    <svg class="raisin-svg" width="52" height="48" viewBox="0 0 52 48" fill="none" xmlns="http://www.w3.org/2000/svg" style="transform: scaleX(-1)">
-      <path d="M26 8c-6-1-12 2-16 8-3 5-4 11-2 16 2 6 7 10 14 11 3 0 6 0 9-2 5-3 9-8 10-14 1-5-1-10-4-14-3-3-7-5-11-5z" fill="#542a78"/>
-      <path d="M26 8c-6-1-12 2-16 8-3 5-4 11-2 16 2 6 7 10 14 11 3 0 6 0 9-2 5-3 9-8 10-14 1-5-1-10-4-14-3-3-7-5-11-5z" fill="url(#rg2)"/>
-      <path d="M14 16c3 4 5 8 4 13" stroke="#381855" stroke-width="1.4" stroke-linecap="round" fill="none" opacity="0.7"/>
-      <path d="M19 12c1 6-1 13-2 18" stroke="#381855" stroke-width="1.2" stroke-linecap="round" fill="none" opacity="0.6"/>
-      <path d="M26 10c0 7-2 14-4 20" stroke="#381855" stroke-width="1.3" stroke-linecap="round" fill="none" opacity="0.65"/>
-      <path d="M32 13c-1 5-3 10-5 15" stroke="#381855" stroke-width="1.1" stroke-linecap="round" fill="none" opacity="0.55"/>
-      <path d="M36 18c-2 4-3 9-4 12" stroke="#381855" stroke-width="1" stroke-linecap="round" fill="none" opacity="0.5"/>
-      <path d="M12 22c6-2 14-1 22 1" stroke="#381855" stroke-width="0.9" stroke-linecap="round" fill="none" opacity="0.4"/>
-      <path d="M14 30c5-1 11-2 18 0" stroke="#381855" stroke-width="0.8" stroke-linecap="round" fill="none" opacity="0.35"/>
-      <path d="M20 13c2 5 1 11-1 17" stroke="#703ca0" stroke-width="0.8" stroke-linecap="round" fill="none" opacity="0.5"/>
-      <path d="M26 8c0-3 1-5 3-7" stroke="#6b8a3a" stroke-width="2" stroke-linecap="round"/>
-      <path d="M27 4c2-1 4-1 5 0" stroke="#6b8a3a" stroke-width="1.2" stroke-linecap="round" opacity="0.6"/>
-      <defs><radialGradient id="rg2" cx="0.35" cy="0.3" r="0.5"><stop offset="0%" stop-color="#8050b8" stop-opacity="0.35"/><stop offset="100%" stop-color="#381855" stop-opacity="0"/></radialGradient></defs>
+    <svg class="raisin-svg" width="52" height="48" viewBox="0 0 52 48" xmlns="http://www.w3.org/2000/svg" aria-label="Flag of Israel">
+      <rect x="0" y="0" width="52" height="48" fill="#ffffff"/>
+      <rect x="0" y="6" width="52" height="6" fill="#0038b8"/>
+      <rect x="0" y="36" width="52" height="6" fill="#0038b8"/>
+      <polygon points="26,15 33.8,28.5 18.2,28.5" fill="none" stroke="#0038b8" stroke-width="1.6" stroke-linejoin="miter"/>
+      <polygon points="26,33 33.8,19.5 18.2,19.5" fill="none" stroke="#0038b8" stroke-width="1.6" stroke-linejoin="miter"/>
     </svg>
   </div>
   <div id="subtitle"><span>Guess the encoded phrase.</span> <span>Achieve grapeness.</span></div>
@@ -954,6 +982,13 @@
   <div id="tutorial-backdrop"></div>
 </div>
 <div id="tutorial-callout" class="hidden" role="dialog" aria-live="polite" aria-labelledby="tutorial-title">
+  <svg id="tutorial-flag" viewBox="0 0 52 48" xmlns="http://www.w3.org/2000/svg" aria-label="Flag of Israel">
+    <rect x="0" y="0" width="52" height="48" fill="#ffffff"/>
+    <rect x="0" y="6" width="52" height="6" fill="#0038b8"/>
+    <rect x="0" y="36" width="52" height="6" fill="#0038b8"/>
+    <polygon points="26,15 33.8,28.5 18.2,28.5" fill="none" stroke="#0038b8" stroke-width="1.6" stroke-linejoin="miter"/>
+    <polygon points="26,33 33.8,19.5 18.2,19.5" fill="none" stroke="#0038b8" stroke-width="1.6" stroke-linejoin="miter"/>
+  </svg>
   <div id="tutorial-title"></div>
   <div id="tutorial-body"></div>
   <div id="tutorial-footer">
@@ -1050,6 +1085,11 @@ function getPerfectStreak() { return parseInt(localStorage.getItem('phraisins_pe
 function savePerfectStreak(n) { localStorage.setItem('phraisins_perfect_streak', n); }
 function getLossStreak() { return parseInt(localStorage.getItem('phraisins_loss_streak')) || 0; }
 function saveLossStreak(n) { localStorage.setItem('phraisins_loss_streak', n); }
+function getRank6Won() {
+  try { return JSON.parse(localStorage.getItem('phraisins_rank6_won')) || []; }
+  catch { return []; }
+}
+function saveRank6Won(ids) { localStorage.setItem('phraisins_rank6_won', JSON.stringify(ids)); }
 
 // --- Encoding ---
 function encode(phrase) {
@@ -1066,6 +1106,16 @@ function encode(phrase) {
 // --- Phrase selection ---
 function selectPhrase() {
   let used = getUsed();
+
+  // Israel Independence Day: serve rank 6 phrases first; fall through once all 30 are used. Revert after the event.
+  const unused6 = PHRASES.filter(p => p.rank === 6 && !used.includes(p.id));
+  if (unused6.length > 0) {
+    const pick6 = unused6[Math.floor(Math.random() * unused6.length)];
+    used.push(pick6.id);
+    saveUsed(used);
+    return pick6;
+  }
+
   const isStarterGame = used.length === 0 && getTotalRaisins() <= 5;
   if (used.length >= PHRASES.length) { used = []; saveUsed(used); }
   const unused = PHRASES.filter(p => !used.includes(p.id));
@@ -1813,6 +1863,8 @@ function startGame({ fromNewGame = false, seed = null } = {}) {
     [letters[i], letters[j]] = [letters[j], letters[i]];
   }
   game = {
+    id: phraseObj.id,
+    rank: phraseObj.rank,
     phrase: phraseObj.phrase,
     clue: phraseObj.clue,
     encoded,
@@ -1827,6 +1879,7 @@ function startGame({ fromNewGame = false, seed = null } = {}) {
     symbolToPositions: {},
     symbolToUserLetter: {}
   };
+  newgameBtn.textContent = 'NEW GAME';
   updateRaisinDisplay();
   clueEl.textContent = game.clue;
   hintsEl.innerHTML = '';
@@ -1947,6 +2000,14 @@ function showWin() {
     raisinText += '<div class="streak-message">You\'re on a hot streak!<br><span class="nowrap">' + newStreak + ' in a row</span></div>';
   }
   resultRaisinsEl.innerHTML = raisinText;
+  if (game.rank === 6) {
+    const r6won = getRank6Won();
+    if (!r6won.includes(game.id)) {
+      r6won.push(game.id);
+      saveRank6Won(r6won);
+    }
+  }
+  applyIndependenceMilestone();
   const shouldCelebrate = !!levelUp ||
     (newPerfectStreak >= 3 && [3, 6, 10].includes(newPerfectStreak)) ||
     [3, 6, 10].includes(newStreak);
@@ -1955,6 +2016,35 @@ function showWin() {
     if (shouldCelebrate) spawnConfetti();
     else spawnMiniConfetti();
   }, 1250);
+}
+
+function checkIndependenceMilestone() {
+  if (!game || game.rank !== 6) return null;
+  const rank6Ids = PHRASES.filter(p => p.rank === 6).map(p => p.id);
+  const used = getUsed();
+  if (!rank6Ids.every(id => used.includes(id))) return null;
+  return { total: rank6Ids.length, won: getRank6Won().length };
+}
+
+function independenceMilestoneHtml({ won, total }) {
+  return '<div class="milestone-badge">' +
+    '<svg class="milestone-flag" viewBox="0 0 52 48" xmlns="http://www.w3.org/2000/svg" aria-label="Flag of Israel">' +
+      '<rect x="0" y="0" width="52" height="48" fill="#ffffff"/>' +
+      '<rect x="0" y="6" width="52" height="6" fill="#0038b8"/>' +
+      '<rect x="0" y="36" width="52" height="6" fill="#0038b8"/>' +
+      '<polygon points="26,15 33.8,28.5 18.2,28.5" fill="none" stroke="#0038b8" stroke-width="1.6"/>' +
+      '<polygon points="26,33 33.8,19.5 18.2,19.5" fill="none" stroke="#0038b8" stroke-width="1.6"/>' +
+    '</svg>' +
+    '<div class="milestone-title">Happy Israel Independence Day!</div>' +
+    '<div class="milestone-count">You guessed ' + won + ' out of ' + total + ' correctly!</div>' +
+  '</div>';
+}
+
+function applyIndependenceMilestone() {
+  const m = checkIndependenceMilestone();
+  if (!m) return;
+  resultRaisinsEl.innerHTML = independenceMilestoneHtml(m) + resultRaisinsEl.innerHTML;
+  newgameBtn.textContent = 'MORE PHRASES';
 }
 
 function showLoss() {
@@ -1975,6 +2065,7 @@ function showLoss() {
   resultRaisinsEl.innerHTML =
     '<div class="solved-phrase"><span class="answer-label">Answer:</span>' + safePhrase + '</div>' +
     '<div class="won-caption">You got 0 raisins.</div>';
+  applyIndependenceMilestone();
   showResult();
 }
 
@@ -2106,11 +2197,11 @@ setupAnswerNavigation();
 
 // --- First-time tutorial ---
 const TUTORIAL_SEED = {
-  phrase: 'better late than never',
-  clue: "When showing up eventually beats not showing up at all."
+  phrase: 'land of milk and honey',
+  clue: 'a sweet and creamy country'
 };
 const TUTORIAL_STEPS = [
-  { targets: [],                               title: 'Welcome to Phraisins!',    body: "Here's how the game works \u2014 it'll only take a moment." },
+  { targets: [],                               title: 'Welcome to Phraisins - Israel Independence Day edition',    body: "Here's how the game works \u2014 it'll only take a moment." },
   { targets: ['#cipher-display'],              title: 'The puzzle',               body: 'Each symbol represents a letter that makes up a common phrase.' },
   { targets: ['#clue-display'],                title: 'The clue',                 body: "Solve it with the help of the clue.", calloutGap: 27 },
   { targets: ['#hint-btn', '#cipher-display'], title: 'Stuck? Use a hint',       body: "Hints reveal a letter \u2014 but each one costs you a raisin.", placement: 'between', onEnter: tutorialDemoHint },
