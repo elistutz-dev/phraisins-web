@@ -314,6 +314,28 @@
     opacity: 1;
     border-bottom-color: var(--gold);
   }
+  /* Virtual caret on the first empty cell for touch devices. Mirrors the
+     native caret desktop gets for free, without focusing an input (which
+     would open the keyboard). Hidden whenever an answer input is focused,
+     so the real caret takes over. */
+  @media (pointer: coarse) {
+    .answer-cell.has-virtual-caret { position: relative; }
+    #answer-area:not(:focus-within) .answer-cell.has-virtual-caret::before {
+      content: '';
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 1.5px;
+      height: 1.1em;
+      background: var(--gold);
+      transform: translate(-50%, -58%);
+      animation: virtualCaretBlink 1.06s steps(1) infinite;
+      pointer-events: none;
+    }
+  }
+  @keyframes virtualCaretBlink {
+    50% { opacity: 0; }
+  }
 
   /* --- Buttons --- */
   button {
@@ -1460,6 +1482,7 @@ function handleCellInput(index, letter) {
     const inputEl = answerAreaEl.querySelector('.answer-cell[data-index="' + pos + '"] input');
     if (inputEl) inputEl.value = normalized;
   });
+  updateVirtualCaret();
 }
 
 // --- Navigation helpers ---
@@ -1487,6 +1510,19 @@ function findPrevCell(fromIndex) {
 function focusCell(index) {
   const input = answerAreaEl.querySelector('.answer-cell[data-index="' + index + '"] input');
   if (input) { input.removeAttribute('readonly'); input.focus(); input.select(); }
+}
+// Tags the first empty editable cell so CSS can paint a blinking caret there
+// on touch devices. No-op if we don't need it (e.g. desktop) — the CSS is
+// scoped to `pointer: coarse`, but leaving the class off avoids stray DOM.
+function updateVirtualCaret() {
+  if (!IS_MOBILE_CUSTOM_KB) return;
+  const prev = answerAreaEl.querySelector('.answer-cell.has-virtual-caret');
+  if (prev) prev.classList.remove('has-virtual-caret');
+  if (!game || game.isOver) return;
+  const idx = getFirstEditableEmptyIndex();
+  if (idx === -1) return;
+  const cell = answerAreaEl.querySelector('.answer-cell[data-index="' + idx + '"]');
+  if (cell) cell.classList.add('has-virtual-caret');
 }
 // readonly suppresses the mobile keyboard; we drop it on first tap so typing still works.
 function focusCellQuietly(index) {
@@ -1840,6 +1876,7 @@ function revealHint() {
     if (inputEl) { inputEl.value = letter; inputEl.disabled = true; }
     if (cellDiv) cellDiv.classList.add('locked');
   });
+  updateVirtualCaret();
 }
 
 // --- Game logic ---
@@ -1900,6 +1937,7 @@ function startGame({ fromNewGame = false, seed = null } = {}) {
   newgameOuterBtn.classList.add('hidden');
 
   buildAnswerArea();
+  updateVirtualCaret();
   if (seed) {
     setCipherText(cipherEl, encoded);
   } else {
@@ -1958,6 +1996,7 @@ function handleGuess() {
 
 function showWin() {
   game.isOver = true;
+  updateVirtualCaret();
   const won = game.raisins;
   const totalBefore = getTotalRaisins();
   saveTotalRaisins(totalBefore + won);
@@ -2049,6 +2088,7 @@ function applyIndependenceMilestone() {
 
 function showLoss() {
   game.isOver = true;
+  updateVirtualCaret();
   game.raisins = 0;
   saveStreak(0);
   savePerfectStreak(0);
