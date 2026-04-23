@@ -890,10 +890,8 @@
     -webkit-tap-highlight-color: transparent;
   }
   .kb-key:active { background: #2b223f; transform: scale(0.97); }
-  .kb-key.kb-disabled {
-    opacity: 0.35;
-    pointer-events: none;
-  }
+  .kb-key.kb-disabled { opacity: 0.35; }
+  .kb-key.kb-disabled:active { background: #3f325a; transform: none; }
   .kb-key.kb-wide {
     flex: 1.55 1 0;
     font-size: 0.78rem;
@@ -1739,6 +1737,7 @@ function buildMobileKeyboard() {
   kb.addEventListener('click', (e) => {
     const keyEl = e.target.closest('.kb-key');
     if (!keyEl) return;
+    if (keyEl.classList.contains('kb-disabled')) return;
     handleKeyboardKey(keyEl.dataset.key);
   });
 }
