@@ -903,10 +903,14 @@
     /* Desktop: keep the keyboard inline under the game so users can see which
        keys are grayed out even while typing on a physical keyboard. */
     #clue-display { font-size: 1.35rem; }
+    /* #buttons owns both vertical gaps, so answer-area and keyboard zero
+       their sides and we get guaranteed-symmetric spacing. */
+    #answer-area { margin-bottom: 0; }
+    #buttons { margin-top: 1.25rem; margin-bottom: 1.25rem; }
     #mobile-keyboard {
       position: static;
       display: block;
-      margin: 0.5rem auto 0;
+      margin: 0 auto;
       max-width: 640px;
       padding: 10px 6px;
       background: transparent;
