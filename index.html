@@ -905,9 +905,9 @@
     #subtitle { display: none; }
     #clue-display { font-size: 1.35rem; }
     /* #buttons owns both vertical gaps, so answer-area and keyboard zero
-       their sides and we get guaranteed-symmetric spacing. */
+       their sides — deterministic spacing regardless of margin collapse. */
     #answer-area { margin-bottom: 0; }
-    #buttons { margin-top: 1.25rem; margin-bottom: 1.25rem; }
+    #buttons { margin-top: 1.75rem; margin-bottom: 0.75rem; }
     #mobile-keyboard {
       position: static;
       display: block;
@@ -920,7 +920,7 @@
       z-index: auto;
     }
     .kb-key { height: 48px; font-size: 1rem; }
-    .kb-key[data-key="ENTER"] { font-size: 1.1rem; letter-spacing: 0.1em; }
+    .kb-key[data-key="ENTER"] { font-size: 0.95rem; letter-spacing: 0.1em; }
   }
 </style>
 </head>
