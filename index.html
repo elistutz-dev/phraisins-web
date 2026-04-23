@@ -890,6 +890,10 @@
     -webkit-tap-highlight-color: transparent;
   }
   .kb-key:active { background: #2b223f; transform: scale(0.97); }
+  .kb-key.kb-disabled {
+    opacity: 0.35;
+    pointer-events: none;
+  }
   .kb-key.kb-wide {
     flex: 1.55 1 0;
     font-size: 0.78rem;
@@ -1412,15 +1416,45 @@ function buildAnswerArea() {
 
     answerAreaEl.appendChild(wordGroup);
   });
+  updateKeyboardDisabledState();
 }
 
 // --- Auto-propagation ---
+// Letters locked to a symbol whose auto-fill spans 2+ cells. Typing one of
+// these into a different symbol would overwrite a visible duplicate column,
+// so we gate input and visually disable the on-screen key.
+function getDisabledLetters() {
+  const disabled = new Set();
+  if (!game) return disabled;
+  for (const [symbol, letter] of Object.entries(game.symbolToUserLetter)) {
+    if (!letter) continue;
+    const positions = game.symbolToPositions[symbol] || [];
+    if (positions.length > 1) disabled.add(letter);
+  }
+  return disabled;
+}
+
+function updateKeyboardDisabledState() {
+  const kb = document.getElementById('mobile-keyboard');
+  if (!kb) return;
+  const disabled = getDisabledLetters();
+  kb.querySelectorAll('.kb-key').forEach(keyEl => {
+    const k = keyEl.dataset.key;
+    if (!k || k === 'ENTER' || k === 'BACKSPACE') return;
+    keyEl.classList.toggle('kb-disabled', disabled.has(k.toLowerCase()));
+  });
+}
+
 function handleCellInput(index, letter) {
   const cell = game.cells[index];
-  if (!cell || cell.isLocked || game.isOver) return;
+  if (!cell || cell.isLocked || game.isOver) return false;
 
   const symbol = cell.symbol;
   const normalized = (letter || '').toLowerCase().replace(/[^a-z]/g, '');
+
+  if (normalized && game.symbolToUserLetter[symbol] !== normalized) {
+    if (getDisabledLetters().has(normalized)) return false;
+  }
 
   game.symbolToUserLetter[symbol] = normalized;
 
@@ -1433,6 +1467,8 @@ function handleCellInput(index, letter) {
     if (inputEl) inputEl.value = normalized;
   });
   updateVirtualCaret();
+  updateKeyboardDisabledState();
+  return true;
 }
 
 // --- Navigation helpers ---
@@ -1607,9 +1643,10 @@ function setupAnswerNavigation() {
     }
     if (/^[a-zA-Z]$/.test(e.key)) {
       e.preventDefault();
-      handleCellInput(index, e.key);
-      const nextEmpty = findNextEmptyCell(index);
-      if (nextEmpty !== -1) focusCell(nextEmpty);
+      if (handleCellInput(index, e.key)) {
+        const nextEmpty = findNextEmptyCell(index);
+        if (nextEmpty !== -1) focusCell(nextEmpty);
+      }
     }
   });
 
@@ -1619,9 +1656,13 @@ function setupAnswerNavigation() {
     const index = parseInt(e.target.dataset.index);
     const value = e.target.value;
     if (value) {
-      handleCellInput(index, value.slice(-1));
-      const nextEmpty = findNextEmptyCell(index);
-      if (nextEmpty !== -1) focusCell(nextEmpty);
+      if (handleCellInput(index, value.slice(-1))) {
+        const nextEmpty = findNextEmptyCell(index);
+        if (nextEmpty !== -1) focusCell(nextEmpty);
+      } else {
+        // Browser already wrote the blocked character into the field; revert it.
+        e.target.value = game.cells[index].userLetter || '';
+      }
     } else {
       handleCellInput(index, '');
     }
@@ -1749,10 +1790,11 @@ function handleKeyboardKey(k) {
       index = getFirstEditableEmptyIndex();
       if (index === -1) return;
     }
-    handleCellInput(index, k.toLowerCase());
-    const nextEmpty = findNextEmptyCell(index);
-    if (nextEmpty !== -1) focusCell(nextEmpty);
-    else focusCell(index);
+    if (handleCellInput(index, k.toLowerCase())) {
+      const nextEmpty = findNextEmptyCell(index);
+      if (nextEmpty !== -1) focusCell(nextEmpty);
+      else focusCell(index);
+    }
   }
 }
 
@@ -1827,6 +1869,7 @@ function revealHint() {
     if (cellDiv) cellDiv.classList.add('locked');
   });
   updateVirtualCaret();
+  updateKeyboardDisabledState();
 }
 
 // --- Game logic ---
@@ -2203,6 +2246,7 @@ function tutorialDemoSolve() {
         const inputEl = answerAreaEl.querySelector('.answer-cell[data-index="' + pos + '"] input');
         if (inputEl) inputEl.value = letter;
       });
+      updateKeyboardDisabledState();
     }, delay));
     delay += 280;
   });
