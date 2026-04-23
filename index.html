@@ -1418,12 +1418,12 @@ function buildAnswerArea() {
 }
 
 // --- Auto-propagation ---
-// Letters locked to a symbol whose auto-fill spans 2+ cells. Typing one of
-// these into a different symbol would overwrite a visible duplicate column,
-// so we gate input and visually disable the on-screen key.
+// Gray out letters the user can no longer usefully assign: revealed hints
+// (locked in forever) and letters currently filling a multi-cell symbol.
 function getDisabledLetters() {
   const disabled = new Set();
   if (!game) return disabled;
+  (game.revealedHints || []).forEach(h => disabled.add(h.letter));
   for (const [symbol, letter] of Object.entries(game.symbolToUserLetter)) {
     if (!letter) continue;
     const positions = game.symbolToPositions[symbol] || [];
