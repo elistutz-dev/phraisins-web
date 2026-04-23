@@ -772,5 +772,6 @@
   {"id": 782, "rank": 5, "phrase": "the truth is out there", "clue": "answers exist but someone hid them from you"},
   {"id": 783, "rank": 5, "phrase": "a house divided cannot stand", "clue": "Lincoln borrowed a carpenter's structural warning"},
   {"id": 784, "rank": 5, "phrase": "an eye for an eye", "clue": "the oldest exchange rate for justice"},
-  {"id": 785, "rank": 3, "phrase": "six seven", "clue": "what all the kids are saying"}
+  {"id": 785, "rank": 3, "phrase": "six seven", "clue": "what all the kids are saying"},
+  {"id": 786, "rank": 5, "phrase": "no news is good news", "clue": "lack of updates is a good sign"}
 ]
