@@ -900,7 +900,20 @@
   .kb-key svg { width: 24px; height: 24px; fill: currentColor; }
   body.mobile-kb-active #app { padding-bottom: 248px; }
   @media (min-width: 601px) {
-    #mobile-keyboard { display: none !important; }
+    /* Desktop: keep the keyboard inline under the game so users can see which
+       keys are grayed out even while typing on a physical keyboard. */
+    #mobile-keyboard {
+      position: static;
+      display: block;
+      margin: 1.25rem auto 0;
+      max-width: 640px;
+      padding: 10px 6px;
+      background: transparent;
+      border-top: none;
+      box-shadow: none;
+      z-index: auto;
+    }
+    .kb-key { height: 48px; font-size: 1rem; }
   }
 </style>
 </head>
@@ -1728,7 +1741,9 @@ function buildMobileKeyboard() {
     });
     kb.appendChild(rowEl);
   });
-  document.body.appendChild(kb);
+  // Inside #app so the desktop static-positioned variant sits within the
+  // centered game container; mobile's position:fixed ignores the parent.
+  document.getElementById('app').appendChild(kb);
 
   // Prevent the key from stealing focus from the active answer cell.
   kb.addEventListener('mousedown', (e) => {
