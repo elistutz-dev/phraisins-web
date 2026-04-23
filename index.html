@@ -958,7 +958,7 @@
     <button id="hint-btn">HINT</button>
     <button id="submit-btn">GUESS</button>
     <button id="reopen-result-btn" class="hidden">RESULTS</button>
-    <button id="newgame-outer-btn" class="hidden">NEW GAME</button>
+    <button id="newgame-outer-btn" class="hidden">NEXT PUZZLE</button>
   </div>
   <div id="result" role="dialog" aria-modal="true" aria-labelledby="result-feedback">
     <div id="result-card">
@@ -967,7 +967,7 @@
       <div id="result-raisins"></div>
       <div id="result-actions">
         <button id="share-btn">SHARE</button>
-        <button id="newgame-btn" class="hidden">NEW GAME</button>
+        <button id="newgame-btn" class="hidden">NEXT PUZZLE</button>
       </div>
     </div>
   </div>
@@ -1539,7 +1539,7 @@ function releaseAppLift() {
   kbLiftTimers = [];
   if (kbPadReleaseTimer) clearTimeout(kbPadReleaseTimer);
   // Defer removal. Removing kb-pad synchronously during focusout shrinks
-  // the document, clamps scrollTop to 0, and shifts HINT/NEW GAME/GUESS out
+  // the document, clamps scrollTop to 0, and shifts HINT/NEXT PUZZLE/GUESS out
   // of the touched coord before the click dispatches — so the first tap
   // misses and the user has to tap again.
   kbPadReleaseTimer = setTimeout(() => {
@@ -1774,7 +1774,7 @@ function showMobileKeyboard() {
   });
 }
 
-// Defer removal so the pending click on HINT/GIVE UP/GUESS/NEW GAME doesn't
+// Defer removal so the pending click on HINT/GIVE UP/GUESS/NEXT PUZZLE doesn't
 // miss: synchronous focusout → layout shrink would clamp scroll and pull the
 // button out from under the tap, forcing a second tap. If focus lands back in
 // an answer cell, showMobileKeyboard cancels this timer and the keyboard
