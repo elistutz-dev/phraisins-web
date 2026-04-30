@@ -136,6 +136,50 @@
     font-weight: bold;
     color: var(--accent);
   }
+  .daily-summary {
+    margin-top: 1.1rem;
+    padding-top: 0.9rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
+    color: var(--gold);
+    font-size: 0.95rem;
+    line-height: 1.5;
+  }
+  .daily-summary-title {
+    font-weight: bold;
+    color: var(--accent);
+    margin-bottom: 0.45rem;
+    letter-spacing: 0.02em;
+  }
+  .daily-summary-row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.6rem;
+    margin: 0.2rem 0;
+  }
+  .daily-summary-label {
+    color: var(--dim);
+    min-width: 4.2em;
+    text-align: right;
+  }
+  .daily-summary-pips {
+    letter-spacing: 0.05em;
+  }
+  .daily-summary-score {
+    color: var(--dim);
+    min-width: 2.4em;
+    text-align: left;
+  }
+  .daily-summary-total {
+    margin-top: 0.65rem;
+    color: var(--gold);
+    font-weight: bold;
+  }
+  .daily-summary-message {
+    margin-top: 0.7rem;
+    color: var(--accent-bright);
+    font-style: italic;
+  }
   .nowrap { white-space: nowrap; }
   #level-up-message {
     color: var(--accent-bright);
@@ -1032,6 +1076,7 @@ let game = null;
 let lastLevelUp = null;
 let scrambleTimer = null;
 const MAX_RAISINS = 5;
+const DAILY_GAME_LIMIT = 3;
 
 const WIN_PHRASES = {
   5: ["Grape job!", "Suntastic!"],
@@ -1096,6 +1141,45 @@ function getPerfectStreak() { return parseInt(localStorage.getItem('phraisins_pe
 function savePerfectStreak(n) { localStorage.setItem('phraisins_perfect_streak', n); }
 function getLossStreak() { return parseInt(localStorage.getItem('phraisins_loss_streak')) || 0; }
 function saveLossStreak(n) { localStorage.setItem('phraisins_loss_streak', n); }
+function getTodayKey() {
+  const d = new Date();
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return y + '-' + m + '-' + day;
+}
+function getDailyStats() {
+  const today = getTodayKey();
+  try {
+    const raw = JSON.parse(localStorage.getItem('phraisins_daily_stats'));
+    if (raw && raw.date === today && Array.isArray(raw.games)) return raw;
+  } catch {}
+  return { date: today, games: [] };
+}
+function saveDailyStats(stats) { localStorage.setItem('phraisins_daily_stats', JSON.stringify(stats)); }
+function recordDailyGame(result) {
+  const stats = getDailyStats();
+  stats.games.push(result);
+  saveDailyStats(stats);
+  return stats;
+}
+function isDailyLimitReached() { return getDailyStats().games.length >= DAILY_GAME_LIMIT; }
+function buildDailySummaryHTML() {
+  const stats = getDailyStats();
+  const games = stats.games;
+  const totalToday = games.reduce((sum, g) => sum + (g.won || 0), 0);
+  let html = '<div class="daily-summary"><div class="daily-summary-title">Today’s recap</div>';
+  games.forEach((g, i) => {
+    const won = g.won || 0;
+    const filled = '\u{1F347}'.repeat(won);
+    const empty = '⚫'.repeat(MAX_RAISINS - won);
+    html += '<div class="daily-summary-row"><span class="daily-summary-label">Game ' + (i + 1) + '</span><span class="daily-summary-pips">' + filled + empty + '</span><span class="daily-summary-score">' + won + '/' + MAX_RAISINS + '</span></div>';
+  });
+  html += '<div class="daily-summary-total">' + totalToday + ' raisin' + (totalToday !== 1 ? 's' : '') + ' earned today</div>';
+  html += '<div class="daily-summary-message">Come back tomorrow to play again!</div>';
+  html += '</div>';
+  return html;
+}
 
 // --- Encoding ---
 function encode(phrase) {
@@ -2051,6 +2135,10 @@ function showWin() {
   } else if ([3, 6, 10].includes(newStreak)) {
     raisinText += '<div class="streak-message">You\'re on a hot streak!<br><span class="nowrap">' + newStreak + ' in a row</span></div>';
   }
+  recordDailyGame({ won, perfect: isPerfect, lost: false });
+  if (isDailyLimitReached()) {
+    raisinText += buildDailySummaryHTML();
+  }
   resultRaisinsEl.innerHTML = raisinText;
   const shouldCelebrate = !!levelUp ||
     (newPerfectStreak >= 3 && [3, 6, 10].includes(newPerfectStreak)) ||
@@ -2078,9 +2166,14 @@ function showLoss() {
   resultFeedbackEl.textContent = game.guessCount > 0 ? 'Nice try!' : 'Better luck next time!';
   resultFeedbackEl.className = 'feedback-wrong';
   const safePhrase = game.phrase.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-  resultRaisinsEl.innerHTML =
+  recordDailyGame({ won: 0, perfect: false, lost: true });
+  let lossHTML =
     '<div class="solved-phrase"><span class="answer-label">Answer:</span>' + safePhrase + '</div>' +
     '<div class="won-caption">You got 0 raisins.</div>';
+  if (isDailyLimitReached()) {
+    lossHTML += buildDailySummaryHTML();
+  }
+  resultRaisinsEl.innerHTML = lossHTML;
   showResult();
 }
 
@@ -2111,7 +2204,8 @@ function showResult(delay = 1500) {
   submitBtn.disabled = true;
   hintBtn.classList.add('hidden');
   giveupBtn.classList.add('hidden');
-  newgameBtn.classList.remove('hidden');
+  if (!isDailyLimitReached()) newgameBtn.classList.remove('hidden');
+  else newgameBtn.classList.add('hidden');
 
   answerAreaEl.querySelectorAll('input').forEach(input => { input.disabled = true; });
 
@@ -2130,7 +2224,28 @@ function showResult(delay = 1500) {
 }
 
 // --- Share ---
+function buildDailyShareText() {
+  const stats = getDailyStats();
+  const games = stats.games;
+  const total = getTotalRaisins();
+  const todayRaisins = games.reduce((sum, g) => sum + (g.won || 0), 0);
+  let text = 'PHRAISINS — daily recap\n';
+  games.forEach(g => {
+    const won = g.won || 0;
+    const filled = '\u{1F347}'.repeat(won);
+    const empty = '⚫'.repeat(MAX_RAISINS - won);
+    text += filled + empty + ' (' + won + '/' + MAX_RAISINS + ')\n';
+  });
+  text += 'Today: ' + todayRaisins + ' raisin' + (todayRaisins !== 1 ? 's' : '') + '\n';
+  const level = getCurrentLevel(total);
+  text += 'Total: ' + total + ' raisins';
+  if (level) text += ' — ' + level.label;
+  text += '\nphraisins.com';
+  return text;
+}
+
 function buildShareText() {
+  if (isDailyLimitReached()) return buildDailyShareText();
   const won = game.raisins;
   const total = getTotalRaisins();
   const filled = '\u{1F347}'.repeat(won);
@@ -2199,7 +2314,7 @@ resultCloseBtn.addEventListener('click', () => {
   resultEl.style.display = 'none';
   if (game && game.isOver) {
     reopenResultBtn.classList.remove('hidden');
-    newgameOuterBtn.classList.remove('hidden');
+    if (!isDailyLimitReached()) newgameOuterBtn.classList.remove('hidden');
   }
 });
 reopenResultBtn.addEventListener('click', () => {
@@ -2207,6 +2322,25 @@ reopenResultBtn.addEventListener('click', () => {
   reopenResultBtn.classList.add('hidden');
   newgameOuterBtn.classList.add('hidden');
 });
+function showDailyLimitScreen() {
+  hideMobileKeyboardImmediate();
+  feedbackEl.classList.add('hidden');
+  hintsEl.classList.add('hidden');
+  submitBtn.classList.add('hidden');
+  submitBtn.disabled = true;
+  hintBtn.classList.add('hidden');
+  giveupBtn.classList.add('hidden');
+  newgameBtn.classList.add('hidden');
+  newgameOuterBtn.classList.add('hidden');
+  reopenResultBtn.classList.add('hidden');
+  answerAreaEl.classList.add('hidden');
+  cipherEl.textContent = '';
+  clueEl.textContent = '';
+  resultFeedbackEl.textContent = 'That’s a wrap for today!';
+  resultFeedbackEl.className = 'feedback-correct';
+  resultRaisinsEl.innerHTML = buildDailySummaryHTML();
+  resultEl.style.display = 'flex';
+}
 newgameOuterBtn.addEventListener('click', () => startGame({ fromNewGame: true }));
 setupAnswerNavigation();
 
@@ -2441,6 +2575,10 @@ async function init() {
   clearTimeout(loadingTimer);
   updateRaisinDisplay();
   if (getTotalRaisins() > 0 || getUsed().length > 0) saveTutorialSeen();
+  if (isDailyLimitReached()) {
+    showDailyLimitScreen();
+    return;
+  }
   if (!getTutorialSeen()) {
     startGame({ seed: TUTORIAL_SEED });
     showTutorial();
