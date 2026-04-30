@@ -1164,6 +1164,33 @@ function recordDailyGame(result) {
   return stats;
 }
 function isDailyLimitReached() { return getDailyStats().games.length >= DAILY_GAME_LIMIT; }
+function saveInProgressGame() {
+  if (!game || game.isOver || !game.phraseId) return;
+  const data = {
+    date: getTodayKey(),
+    phraseId: game.phraseId,
+    symbols: currentSymbols,
+    scale: game.symScale,
+    revealedSymbols: game.revealedHints.map(h => h.symbol),
+    cellLetters: game.cells.map(c => c.isLocked ? '' : (c.userLetter || '')),
+    raisins: game.raisins,
+    guessCount: game.guessCount
+  };
+  try { localStorage.setItem('phraisins_in_progress', JSON.stringify(data)); } catch {}
+}
+function clearInProgressGame() {
+  try { localStorage.removeItem('phraisins_in_progress'); } catch {}
+}
+function loadInProgressGame() {
+  try {
+    const raw = JSON.parse(localStorage.getItem('phraisins_in_progress'));
+    if (!raw || raw.date !== getTodayKey() || !Array.isArray(raw.symbols)) {
+      if (raw) clearInProgressGame();
+      return null;
+    }
+    return raw;
+  } catch { return null; }
+}
 function getLastPlayedPhrase() {
   const used = getUsed();
   if (!used.length || !PHRASES.length) return null;
@@ -1479,6 +1506,7 @@ function spendRaisin() {
     showLoss();
     return true;
   }
+  saveInProgressGame();
   return false;
 }
 
@@ -1590,6 +1618,7 @@ function handleCellInput(index, letter) {
   });
   updateVirtualCaret();
   updateKeyboardDisabledState();
+  saveInProgressGame();
   return true;
 }
 
@@ -1995,16 +2024,30 @@ function revealHint() {
   });
   updateVirtualCaret();
   updateKeyboardDisabledState();
+  saveInProgressGame();
 }
 
 // --- Game logic ---
-function startGame({ fromNewGame = false, seed = null } = {}) {
-  const used = getUsed();
-  const isStarterGame = seed ? true : (used.length === 0 && getTotalRaisins() <= 5);
-  const group = isStarterGame ? SYMBOL_GROUPS[0] : SYMBOL_GROUPS[Math.floor(Math.random() * SYMBOL_GROUPS.length)];
-  currentSymbols = group.symbols;
-  cipherEl.style.setProperty('--sym-scale', group.scale || 1);
-  const phraseObj = seed || selectPhrase();
+function startGame({ fromNewGame = false, seed = null, restored = null } = {}) {
+  let phraseObj, symScale;
+  if (restored) {
+    const found = PHRASES.find(p => p.id === restored.phraseId);
+    if (!found) {
+      clearInProgressGame();
+      return startGame({ fromNewGame });
+    }
+    phraseObj = found;
+    currentSymbols = restored.symbols;
+    symScale = restored.scale || 1;
+  } else {
+    const used = getUsed();
+    const isStarterGame = seed ? true : (used.length === 0 && getTotalRaisins() <= 5);
+    const group = isStarterGame ? SYMBOL_GROUPS[0] : SYMBOL_GROUPS[Math.floor(Math.random() * SYMBOL_GROUPS.length)];
+    currentSymbols = group.symbols;
+    symScale = group.scale || 1;
+    phraseObj = seed || selectPhrase();
+  }
+  cipherEl.style.setProperty('--sym-scale', symScale);
   const wordCount = phraseObj.phrase.trim().split(/\s+/).length;
   cipherEl.style.setProperty('--len-scale', wordCount <= 4 ? 1.3 : 1);
   const { encoded, mapping } = encode(phraseObj.phrase);
@@ -2018,6 +2061,8 @@ function startGame({ fromNewGame = false, seed = null } = {}) {
     [letters[i], letters[j]] = [letters[j], letters[i]];
   }
   game = {
+    phraseId: phraseObj.id || null,
+    symScale,
     phrase: phraseObj.phrase,
     clue: phraseObj.clue,
     encoded,
@@ -2052,20 +2097,53 @@ function startGame({ fromNewGame = false, seed = null } = {}) {
   newgameOuterBtn.classList.add('hidden');
 
   buildAnswerArea();
+
+  if (restored) {
+    (restored.revealedSymbols || []).forEach(sym => {
+      const letter = game.reverseMapping[sym];
+      if (!letter) return;
+      const idx = game.unrevealedLetters.indexOf(letter);
+      if (idx !== -1) game.unrevealedLetters.splice(idx, 1);
+      game.revealedHints.push({ symbol: sym, letter });
+      game.symbolToUserLetter[sym] = letter;
+      (game.symbolToPositions[sym] || []).forEach(pos => {
+        const cell = game.cells[pos];
+        cell.userLetter = letter;
+        cell.isLocked = true;
+        const cellDiv = answerAreaEl.querySelector('.answer-cell[data-index="' + pos + '"]');
+        const inputEl = cellDiv && cellDiv.querySelector('input');
+        if (inputEl) { inputEl.value = letter; inputEl.disabled = true; }
+        if (cellDiv) cellDiv.classList.add('locked');
+      });
+    });
+    (restored.cellLetters || []).forEach((letter, idx) => {
+      if (!letter) return;
+      const cell = game.cells[idx];
+      if (!cell || cell.isLocked) return;
+      handleCellInput(idx, letter);
+    });
+    game.raisins = typeof restored.raisins === 'number' ? restored.raisins : MAX_RAISINS;
+    game.guessCount = restored.guessCount || 0;
+    updateRaisinDisplay();
+  }
+
   updateVirtualCaret();
-  if (seed) {
+  if (seed || restored) {
     setCipherText(cipherEl, encoded);
+    if (restored) updateCipherDisplay();
   } else {
     animateCipherScramble(encoded, cipherEl);
   }
 
   const isMobile = window.matchMedia('(pointer: coarse)').matches;
   setTimeout(() => {
-    if (seed) return;
+    if (seed || restored) return;
     if (IS_MOBILE_CUSTOM_KB) return; // wait for user tap before showing keyboard
     if (fromNewGame && isMobile) focusCellQuietly(0);
     else focusCell(0);
   }, 100);
+
+  saveInProgressGame();
 }
 
 function handleGuess() {
@@ -2106,11 +2184,13 @@ function handleGuess() {
     if (!spendRaisin()) {
       revealHint();
     }
+    saveInProgressGame();
   }
 }
 
 function showWin() {
   game.isOver = true;
+  clearInProgressGame();
   updateVirtualCaret();
   const won = game.raisins;
   const totalBefore = getTotalRaisins();
@@ -2170,6 +2250,7 @@ function showWin() {
 
 function showLoss() {
   game.isOver = true;
+  clearInProgressGame();
   updateVirtualCaret();
   game.raisins = 0;
   saveStreak(0);
@@ -2599,7 +2680,14 @@ async function init() {
   updateRaisinDisplay();
   if (getTotalRaisins() > 0 || getUsed().length > 0) saveTutorialSeen();
   if (isDailyLimitReached()) {
+    clearInProgressGame();
     showDailyLimitScreen();
+    return;
+  }
+  const inProgress = loadInProgressGame();
+  if (inProgress) {
+    saveTutorialSeen();
+    startGame({ restored: inProgress });
     return;
   }
   if (!getTutorialSeen()) {
