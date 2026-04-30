@@ -891,8 +891,13 @@
     color: var(--text);
     font-family: var(--font);
     text-align: center;
+    animation: welcomeFadeIn 0.35s ease-out;
   }
   #welcome-dialog.hidden { display: none; }
+  @keyframes welcomeFadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
   #welcome-title {
     color: var(--gold);
     font-size: 1.45rem;
