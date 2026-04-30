@@ -1205,6 +1205,12 @@
       left: 0.5rem;
       width: 2.15rem;
       height: 2.15rem;
+      background: transparent;
+      border: none;
+    }
+    #menu-btn:hover, #menu-btn:focus-visible {
+      background: transparent;
+      box-shadow: none;
     }
     .menu-bar { width: 0.95rem; }
     #menu-dropdown {
@@ -3080,7 +3086,7 @@ function showHistoryModal() {
 
 function showAboutModal() {
   const html =
-    '<p>Phraisins was designed by Eli Stutz for your enjoyment.</p>' +
+    '<p>Phraisins was designed by Eli&nbsp;Stutz for your enjoyment.</p>' +
     '<p><a href="https://elistutz.wordpress.com/contact-info/" target="_blank" rel="noopener">Contact Eli</a></p>';
   openInfoModal('About', html);
 }
