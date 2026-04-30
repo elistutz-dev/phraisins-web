@@ -2959,7 +2959,12 @@ function endTutorial() {
   tutorialOverlayEl.setAttribute('aria-hidden', 'true');
   document.body.classList.remove('tutorial-active');
   saveTutorialSeen();
-  startGame({ fromNewGame: true });
+  if (isDailyLimitReached()) {
+    clearInProgressGame();
+    showDailyLimitScreen();
+  } else {
+    startGame({ fromNewGame: true });
+  }
 }
 
 function advanceTutorial() {
