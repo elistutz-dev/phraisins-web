@@ -425,6 +425,7 @@
     box-shadow: 0 2px 8px rgba(124, 200, 138, 0.1);
   }
   #buttons { display: flex; gap: 0.75rem; margin-bottom: 1.5rem; justify-content: center; }
+  body.app-loading #buttons { visibility: hidden; }
 
   /* --- Feedback --- */
   #feedback {
@@ -968,7 +969,7 @@
   }
 </style>
 </head>
-<body>
+<body class="app-loading">
 <div id="app">
   <div class="title-row">
     <svg class="raisin-svg" width="52" height="48" viewBox="0 0 52 48" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -2143,6 +2144,11 @@ function startGame({ fromNewGame = false, seed = null, restored = null } = {}) {
     else focusCell(0);
   }, 100);
 
+  // Append keyboard once content has been laid out so the static-positioned
+  // desktop variant doesn't briefly render above its final spot.
+  buildMobileKeyboard();
+  updateKeyboardDisabledState();
+  document.body.classList.remove('app-loading');
   saveInProgressGame();
 }
 
@@ -2422,6 +2428,7 @@ reopenResultBtn.addEventListener('click', () => {
   newgameOuterBtn.classList.add('hidden');
 });
 function showDailyLimitScreen() {
+  document.body.classList.remove('app-loading');
   hideMobileKeyboardImmediate();
   feedbackEl.classList.add('hidden');
   hintsEl.classList.add('hidden');
@@ -2664,7 +2671,6 @@ document.addEventListener('keydown', (e) => {
 
 // --- Init ---
 async function init() {
-  buildMobileKeyboard();
   const loadingTimer = setTimeout(() => { clueEl.textContent = 'Loading\u2026'; }, 500);
   try {
     const response = await fetch('phrases.json');
