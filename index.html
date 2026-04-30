@@ -867,24 +867,87 @@
     background: rgba(124, 200, 138, 0.08);
     box-shadow: 0 2px 8px rgba(124, 200, 138, 0.12);
   }
-  @media (min-width: 601px) {
-    #tutorial-callout.tutorial-welcome {
-      max-width: 440px;
-      padding: 1.5rem 1.75rem 1.25rem;
-    }
-    #tutorial-callout.tutorial-welcome #tutorial-title {
-      font-size: 1.45rem;
-      margin-bottom: 0.6rem;
-    }
-    #tutorial-callout.tutorial-welcome #tutorial-body {
-      font-size: 1.18rem;
-      margin-bottom: 1.1rem;
-    }
-  }
   @media (max-width: 600px) {
     #tutorial-callout {
       left: 1rem !important;
       right: 1rem;
+      max-width: none;
+      width: auto;
+    }
+  }
+  #welcome-dialog {
+    position: fixed;
+    z-index: 502;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    background: var(--bg-panel);
+    border: 1px solid var(--gold);
+    border-radius: 8px;
+    padding: 1.5rem 1.75rem 1.25rem;
+    box-shadow: 0 4px 24px rgba(80, 30, 120, 0.45);
+    max-width: 440px;
+    width: calc(100vw - 2rem);
+    color: var(--text);
+    font-family: var(--font);
+    text-align: center;
+  }
+  #welcome-dialog.hidden { display: none; }
+  #welcome-title {
+    color: var(--gold);
+    font-size: 1.45rem;
+    font-weight: bold;
+    margin-bottom: 0.6rem;
+    letter-spacing: 0.04em;
+  }
+  #welcome-body {
+    color: var(--accent-bright);
+    font-size: 1.18rem;
+    line-height: 1.45;
+    margin-bottom: 1.25rem;
+  }
+  #welcome-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+  }
+  #welcome-buttons button {
+    flex: 1;
+    min-width: 120px;
+    border-radius: 6px;
+    padding: 0.6rem 1rem;
+    font-family: var(--font);
+    font-size: 0.98rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
+  }
+  #welcome-play {
+    color: #7cc88a;
+    border: 1px solid rgba(124, 200, 138, 0.35);
+    background: var(--bg-panel);
+  }
+  #welcome-play:hover {
+    border-color: #7cc88a;
+    background: rgba(124, 200, 138, 0.08);
+    box-shadow: 0 2px 8px rgba(124, 200, 138, 0.12);
+  }
+  #welcome-how-to {
+    color: var(--gold);
+    border: 1px solid rgba(232, 184, 122, 0.35);
+    background: var(--bg-panel);
+  }
+  #welcome-how-to:hover {
+    border-color: var(--gold);
+    background: rgba(232, 184, 122, 0.08);
+    box-shadow: 0 2px 8px rgba(232, 184, 122, 0.12);
+  }
+  @media (max-width: 600px) {
+    #welcome-dialog {
+      left: 1rem;
+      right: 1rem;
+      transform: translateY(-50%);
       max-width: none;
       width: auto;
     }
@@ -1048,6 +1111,14 @@
   <div id="tutorial-footer">
     <div id="tutorial-dots"></div>
     <button id="tutorial-next" type="button">Next</button>
+  </div>
+</div>
+<div id="welcome-dialog" class="hidden" role="dialog" aria-labelledby="welcome-title">
+  <div id="welcome-title">Welcome to Phraisins!</div>
+  <div id="welcome-body">Guess the hidden phrase and win raisins. Ready to achieve grapeness?</div>
+  <div id="welcome-buttons">
+    <button id="welcome-play" type="button">Play Now</button>
+    <button id="welcome-how-to" type="button">How to Play</button>
   </div>
 </div>
 <div id="share-toast">Copied!</div>
@@ -2461,7 +2532,6 @@ const TUTORIAL_SEED = {
   clue: "When showing up eventually beats not showing up at all."
 };
 const TUTORIAL_STEPS = [
-  { targets: [],                               title: 'Welcome to Phraisins!',    body: "Here's how the game works \u2014 it'll only take a moment." },
   { targets: ['#cipher-display'],              title: 'The puzzle',               body: 'Each symbol represents a letter that makes up a common phrase.' },
   { targets: ['#clue-display'],                title: 'The clue',                 body: "Solve it with the help of the clue.", calloutGap: 27 },
   { targets: ['#hint-btn', '#cipher-display'], title: 'Stuck? Use a hint',       body: "Hints reveal a letter \u2014 but each one costs you a raisin.", placement: 'between', onEnter: tutorialDemoHint },
@@ -2620,7 +2690,6 @@ function renderTutorialStep(i) {
   ).join('');
   tutorialNextBtn.textContent = step.cta || 'Next';
   tutorialNextBtn.classList.toggle('tutorial-cta', !!step.cta);
-  tutorialCalloutEl.classList.toggle('tutorial-welcome', i === 0);
   requestAnimationFrame(() => positionTutorialCallout());
   if (typeof step.onEnter === 'function') step.onEnter();
 }
@@ -2655,6 +2724,38 @@ function advanceTutorial() {
 }
 
 tutorialNextBtn.addEventListener('click', advanceTutorial);
+
+const welcomeDialogEl = document.getElementById('welcome-dialog');
+const welcomePlayBtn = document.getElementById('welcome-play');
+const welcomeHowToBtn = document.getElementById('welcome-how-to');
+
+function showWelcomeDialog() {
+  document.body.classList.add('tutorial-active');
+  tutorialOverlayEl.classList.remove('hidden');
+  tutorialOverlayEl.setAttribute('aria-hidden', 'false');
+  welcomeDialogEl.classList.remove('hidden');
+}
+
+function hideWelcomeDialog() {
+  welcomeDialogEl.classList.add('hidden');
+}
+
+welcomePlayBtn.addEventListener('click', () => {
+  hideWelcomeDialog();
+  tutorialOverlayEl.classList.add('hidden');
+  tutorialOverlayEl.setAttribute('aria-hidden', 'true');
+  document.body.classList.remove('tutorial-active');
+  saveTutorialSeen();
+});
+
+welcomeHowToBtn.addEventListener('click', () => {
+  hideWelcomeDialog();
+  if (game && game.phraseId) {
+    saveUsed(getUsed().filter(id => id !== game.phraseId));
+  }
+  startGame({ seed: TUTORIAL_SEED });
+  showTutorial();
+});
 function repositionActiveCallout() {
   if (tutorialOverlayEl.classList.contains('hidden')) return;
   positionTutorialCallout();
@@ -2662,7 +2763,7 @@ function repositionActiveCallout() {
 window.addEventListener('resize', repositionActiveCallout);
 window.addEventListener('scroll', repositionActiveCallout, { passive: true });
 document.addEventListener('keydown', (e) => {
-  if (tutorialOverlayEl.classList.contains('hidden')) return;
+  if (tutorialCalloutEl.classList.contains('hidden')) return;
   if (e.key === 'Enter' || e.key === ' ' || e.key === 'ArrowRight') {
     e.preventDefault();
     advanceTutorial();
@@ -2697,8 +2798,9 @@ async function init() {
     return;
   }
   if (!getTutorialSeen()) {
-    startGame({ seed: TUTORIAL_SEED });
-    showTutorial();
+    startGame();
+    document.body.classList.add('tutorial-active');
+    setTimeout(showWelcomeDialog, 2500);
   } else {
     startGame();
   }
