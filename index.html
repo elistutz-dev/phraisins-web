@@ -1474,7 +1474,7 @@ function getHistory() {
 }
 function recordHistory(entry) {
   const history = getHistory();
-  history.push(entry);
+  history.push({ ts: Date.now(), ...entry });
   if (history.length > HISTORY_LIMIT) history.splice(0, history.length - HISTORY_LIMIT);
   try { localStorage.setItem('phraisins_history', JSON.stringify(history)); } catch {}
 }
@@ -3074,7 +3074,10 @@ function showHistoryModal() {
   if (!history.length) {
     html = '<div class="history-empty">No puzzles yet — go solve one!</div>';
   } else {
-    const rows = history.slice().reverse().map(h => {
+    const ordered = history
+      .map((h, i) => ({ h, i }))
+      .sort((a, b) => (b.h.ts || 0) - (a.h.ts || 0) || b.i - a.i);
+    const rows = ordered.map(({ h }) => {
       const won = h.won || 0;
       const filled = '\u{1F347}'.repeat(won);
       const empty = '⚫'.repeat(Math.max(0, MAX_RAISINS - won));
