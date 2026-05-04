@@ -1681,6 +1681,17 @@ function recordMay4Game({ won, raisins }) {
   saveMay4State(s);
   return s;
 }
+function ensureMay4Initialized() {
+  if (!MAY_THE_4TH_EVENT) return;
+  if (localStorage.getItem('phraisins_may4_initialized') === 'true') return;
+  try { localStorage.removeItem('phraisins_in_progress'); } catch {}
+  const eventIds = new Set(
+    PHRASES.filter(p => p.event === MAY4_EVENT_TAG).map(p => p.id)
+  );
+  const used = getUsed().filter(id => !eventIds.has(id));
+  saveUsed(used);
+  try { localStorage.setItem('phraisins_may4_initialized', 'true'); } catch {}
+}
 const HISTORY_LIMIT = 200;
 function getHistory() {
   try { return JSON.parse(localStorage.getItem('phraisins_history')) || []; }
@@ -3451,6 +3462,7 @@ async function init() {
   updateRaisinDisplay();
   if (getTotalRaisins() > 0 || getUsed().length > 0) saveTutorialSeen();
   if (MAY_THE_4TH_EVENT) {
+    ensureMay4Initialized();
     const inProgress = loadInProgressGame();
     if (inProgress) {
       startGame({ restored: inProgress });
