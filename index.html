@@ -3119,8 +3119,7 @@ document.getElementById('menu-about').addEventListener('click', () => { closeMen
 async function init() {
   const loadingTimer = setTimeout(() => { clueEl.textContent = 'Loading\u2026'; }, 500);
   try {
-    const phrasesUrl = MAY_THE_4TH_EVENT ? 'phrases.json?v=may4' : 'phrases.json';
-    const response = await fetch(phrasesUrl, { cache: 'no-cache' });
+    const response = await fetch('phrases.json');
     if (!response.ok) throw new Error('HTTP ' + response.status);
     PHRASES = await response.json();
   } catch (err) {
