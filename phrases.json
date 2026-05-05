@@ -698,7 +698,7 @@
   {"id": 708, "rank": 2, "phrase": "red flag", "clue": "raise a flying warning"},
   {"id": 709, "rank": 2, "phrase": "binge watch", "clue": "overindulge in timepiece observation"},
   {"id": 710, "rank": 2, "phrase": "read the room", "clue": "peruse the enclosed space"},
-  {"id": 711, "rank": 2, "phrase": "may the force be with you", "clue": "let the energy accompany your person"},
+  {"id": 711, "rank": 5, "event": "maythe4th", "phrase": "may the force be with you", "clue": "a parting blessing invoking unseen energy"},
   {"id": 712, "rank": 2, "phrase": "life is like a box of chocolates", "clue": "existence resembles a container of cocoa confections"},
   {"id": 713, "rank": 2, "phrase": "theres no place like home", "clue": "what Dorothy realized in the end"},
   {"id": 714, "rank": 2, "phrase": "show me the money", "clue": "display the currency in my direction"},
@@ -806,6 +806,5 @@
   {"id": 816, "rank": 5, "event": "maythe4th", "phrase": "hello there", "clue": "a cheerful greeting before a high-ground duel"},
   {"id": 817, "rank": 5, "event": "maythe4th", "phrase": "so uncivilized", "clue": "the older knight's verdict on a discarded blaster"},
   {"id": 818, "rank": 5, "event": "maythe4th", "phrase": "size matters not", "clue": "an ancient pointy-eared teacher dismisses physical scale"},
-  {"id": 819, "rank": 5, "event": "maythe4th", "phrase": "great kid dont get cocky", "clue": "a veteran pilot warns a rookie celebrating prematurely"},
-  {"id": 820, "rank": 5, "event": "maythe4th", "phrase": "i am your father", "clue": "the cinematic paternity reveal that shocked a generation"}
+  {"id": 819, "rank": 5, "event": "maythe4th", "phrase": "great kid dont get cocky", "clue": "a veteran pilot warns a rookie celebrating prematurely"}
 ]
