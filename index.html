@@ -71,7 +71,6 @@
     margin-bottom: 2.5rem;
   }
   .raisin-svg { flex-shrink: 0; }
-  .title-saber { width: 26px; height: 60px; flex-shrink: 0; }
   h1 {
     color: var(--gold);
     font-family: var(--font);
@@ -585,7 +584,7 @@
     opacity: 0;
     transition: opacity 0.3s;
     pointer-events: none;
-    z-index: 600;
+    z-index: 100;
   }
   #share-toast.show { opacity: 1; }
 
@@ -623,10 +622,6 @@
       width: clamp(28px, 8vw, 44px);
       height: clamp(26px, 7.2vw, 40px);
       filter: drop-shadow(0 2px 6px rgba(80, 30, 120, 0.5));
-    }
-    .title-saber {
-      width: clamp(18px, 5vw, 26px);
-      height: clamp(46px, 12vw, 60px);
     }
     h1 {
       font-size: clamp(1.85rem, 8.5vw, 2.55rem);
@@ -765,7 +760,6 @@
     #app { padding: 0.7rem 1rem 0.7rem; }
     .title-row { margin-bottom: 0.1rem; }
     .raisin-svg { width: clamp(24px, 7vw, 36px); height: clamp(22px, 6.2vw, 32px); }
-    .title-saber { width: clamp(16px, 4.5vw, 22px); height: clamp(40px, 10vw, 50px); }
     h1 { font-size: clamp(1.6rem, 7.5vw, 2.1rem); }
     #subtitle { margin-bottom: 0.4rem; font-size: 0.74rem; }
     #raisin-bar { margin-bottom: 0.4rem; gap: 0.35rem; }
@@ -909,26 +903,10 @@
   }
   #welcome-title {
     color: var(--gold);
-    font-size: 1.25rem;
+    font-size: 1.45rem;
     font-weight: bold;
     margin-bottom: 0.6rem;
     letter-spacing: 0.04em;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.55rem;
-    line-height: 1.25;
-  }
-  .welcome-title-text { flex: 1 1 auto; min-width: 0; text-align: center; }
-  .lightsaber {
-    flex-shrink: 0;
-    filter: drop-shadow(0 0 4px currentColor);
-  }
-  .lightsaber-blue { color: #4ec9ff; }
-  .lightsaber-red  { color: #ff5050; }
-  @media (max-width: 460px) {
-    #welcome-title { font-size: 1.05rem; gap: 0.4rem; }
-    .lightsaber { width: 11px; height: 40px; }
   }
   #welcome-body {
     color: var(--accent-bright);
@@ -981,126 +959,6 @@
       max-width: none;
       width: auto;
     }
-  }
-
-  /* --- May the 4th finale modal (temporary) --- */
-  #may4-finale {
-    position: fixed;
-    inset: 0;
-    z-index: 510;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 1rem;
-    background: rgba(10, 5, 20, 0.65);
-    backdrop-filter: blur(3px);
-    -webkit-backdrop-filter: blur(3px);
-    animation: result-fade 0.25s ease-out;
-  }
-  #may4-finale.hidden { display: none; }
-  #may4-finale-card {
-    background: var(--bg-panel);
-    border: 1px solid var(--gold);
-    border-radius: 10px;
-    padding: 1.6rem 1.6rem 1.4rem;
-    width: 100%;
-    max-width: 460px;
-    box-shadow: 0 4px 38px rgba(80, 30, 120, 0.45), inset 0 1px 0 rgba(226, 196, 255, 0.05);
-    text-align: center;
-    animation: result-pop 0.32s cubic-bezier(0.34, 1.56, 0.64, 1);
-  }
-  #may4-finale-title {
-    color: var(--gold);
-    font-size: 1.35rem;
-    font-weight: bold;
-    margin-bottom: 1rem;
-    letter-spacing: 0.04em;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.55rem;
-    line-height: 1.25;
-  }
-  #may4-finale-last {
-    margin-bottom: 1rem;
-    padding-bottom: 0.9rem;
-    border-bottom: 1px solid var(--border);
-  }
-  #may4-finale-last:empty { display: none; }
-  .may4-last-status {
-    font-size: 1.05rem;
-    font-weight: bold;
-    margin-bottom: 0.35rem;
-  }
-  .may4-last-status.correct { color: #7cc88a; }
-  .may4-last-status.wrong { color: var(--red); }
-  .may4-last-phrase {
-    color: var(--accent);
-    font-style: italic;
-    font-size: 1rem;
-  }
-  #may4-finale-score {
-    color: var(--accent-bright);
-    font-size: 1.6rem;
-    font-weight: bold;
-    margin-bottom: 0.8rem;
-  }
-  #may4-finale-score-label {
-    color: var(--dim);
-    font-size: 0.95rem;
-    font-weight: normal;
-    font-style: italic;
-    margin-bottom: 0.2rem;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-  }
-  #may4-finale-message {
-    color: var(--gold-bright);
-    font-style: italic;
-    font-size: 1.1rem;
-    margin-bottom: 1.4rem;
-    line-height: 1.4;
-  }
-  #may4-finale-actions {
-    display: flex;
-    justify-content: center;
-    gap: 0.75rem;
-    flex-wrap: wrap;
-  }
-  #may4-finale-actions button {
-    flex: 1;
-    min-width: 130px;
-    border-radius: 6px;
-    padding: 0.65rem 1rem;
-    font-family: var(--font);
-    font-size: 0.98rem;
-    font-weight: bold;
-    cursor: pointer;
-    background: var(--bg-panel);
-    transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
-  }
-  #may4-finale-continue {
-    color: #7cc88a;
-    border: 1px solid rgba(124, 200, 138, 0.35);
-  }
-  #may4-finale-continue:hover {
-    border-color: #7cc88a;
-    background: rgba(124, 200, 138, 0.08);
-    box-shadow: 0 2px 8px rgba(124, 200, 138, 0.12);
-  }
-  #may4-finale-share {
-    color: #a8b4f0;
-    border: 1px solid rgba(168, 180, 240, 0.35);
-  }
-  #may4-finale-share:hover {
-    border-color: #a8b4f0;
-    background: rgba(168, 180, 240, 0.08);
-    box-shadow: 0 2px 8px rgba(168, 180, 240, 0.12);
-  }
-  @media (max-width: 460px) {
-    #may4-finale-title { font-size: 1.1rem; gap: 0.4rem; }
-    #may4-finale-score { font-size: 1.35rem; }
-    #may4-finale-message { font-size: 1rem; }
   }
 
   /* --- Mobile on-screen keyboard --- */
@@ -1411,24 +1269,36 @@
 </div>
 <div id="app">
   <div class="title-row">
-    <svg class="lightsaber lightsaber-blue title-saber" viewBox="0 0 16 60" aria-hidden="true">
-      <rect x="3" y="4" width="10" height="40" rx="5" fill="currentColor" opacity="0.32"/>
-      <rect x="6" y="6" width="4" height="38" rx="2" fill="currentColor"/>
-      <rect x="7" y="7" width="2" height="36" rx="1" fill="#ffffff" opacity="0.9"/>
-      <rect x="5" y="44" width="6" height="12" fill="#9a9a9a"/>
-      <rect x="5" y="47" width="6" height="1.5" fill="#3a3a3a"/>
-      <rect x="5" y="50" width="6" height="1.5" fill="#3a3a3a"/>
-      <rect x="6" y="55" width="4" height="2" fill="#6a6a6a"/>
+    <svg class="raisin-svg" width="52" height="48" viewBox="0 0 52 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M26 8c-6-1-12 2-16 8-3 5-4 11-2 16 2 6 7 10 14 11 3 0 6 0 9-2 5-3 9-8 10-14 1-5-1-10-4-14-3-3-7-5-11-5z" fill="#542a78"/>
+      <path d="M26 8c-6-1-12 2-16 8-3 5-4 11-2 16 2 6 7 10 14 11 3 0 6 0 9-2 5-3 9-8 10-14 1-5-1-10-4-14-3-3-7-5-11-5z" fill="url(#rg1)"/>
+      <path d="M14 16c3 4 5 8 4 13" stroke="#381855" stroke-width="1.4" stroke-linecap="round" fill="none" opacity="0.7"/>
+      <path d="M19 12c1 6-1 13-2 18" stroke="#381855" stroke-width="1.2" stroke-linecap="round" fill="none" opacity="0.6"/>
+      <path d="M26 10c0 7-2 14-4 20" stroke="#381855" stroke-width="1.3" stroke-linecap="round" fill="none" opacity="0.65"/>
+      <path d="M32 13c-1 5-3 10-5 15" stroke="#381855" stroke-width="1.1" stroke-linecap="round" fill="none" opacity="0.55"/>
+      <path d="M36 18c-2 4-3 9-4 12" stroke="#381855" stroke-width="1" stroke-linecap="round" fill="none" opacity="0.5"/>
+      <path d="M12 22c6-2 14-1 22 1" stroke="#381855" stroke-width="0.9" stroke-linecap="round" fill="none" opacity="0.4"/>
+      <path d="M14 30c5-1 11-2 18 0" stroke="#381855" stroke-width="0.8" stroke-linecap="round" fill="none" opacity="0.35"/>
+      <path d="M20 13c2 5 1 11-1 17" stroke="#703ca0" stroke-width="0.8" stroke-linecap="round" fill="none" opacity="0.5"/>
+      <path d="M26 8c0-3 1-5 3-7" stroke="#6b8a3a" stroke-width="2" stroke-linecap="round"/>
+      <path d="M27 4c2-1 4-1 5 0" stroke="#6b8a3a" stroke-width="1.2" stroke-linecap="round" opacity="0.6"/>
+      <defs><radialGradient id="rg1" cx="0.35" cy="0.3" r="0.5"><stop offset="0%" stop-color="#8050b8" stop-opacity="0.35"/><stop offset="100%" stop-color="#381855" stop-opacity="0"/></radialGradient></defs>
     </svg>
     <h1>PHRAISINS</h1>
-    <svg class="lightsaber lightsaber-red title-saber" viewBox="0 0 16 60" aria-hidden="true">
-      <rect x="3" y="4" width="10" height="40" rx="5" fill="currentColor" opacity="0.32"/>
-      <rect x="6" y="6" width="4" height="38" rx="2" fill="currentColor"/>
-      <rect x="7" y="7" width="2" height="36" rx="1" fill="#ffffff" opacity="0.9"/>
-      <rect x="5" y="44" width="6" height="12" fill="#9a9a9a"/>
-      <rect x="5" y="47" width="6" height="1.5" fill="#3a3a3a"/>
-      <rect x="5" y="50" width="6" height="1.5" fill="#3a3a3a"/>
-      <rect x="6" y="55" width="4" height="2" fill="#6a6a6a"/>
+    <svg class="raisin-svg" width="52" height="48" viewBox="0 0 52 48" fill="none" xmlns="http://www.w3.org/2000/svg" style="transform: scaleX(-1)">
+      <path d="M26 8c-6-1-12 2-16 8-3 5-4 11-2 16 2 6 7 10 14 11 3 0 6 0 9-2 5-3 9-8 10-14 1-5-1-10-4-14-3-3-7-5-11-5z" fill="#542a78"/>
+      <path d="M26 8c-6-1-12 2-16 8-3 5-4 11-2 16 2 6 7 10 14 11 3 0 6 0 9-2 5-3 9-8 10-14 1-5-1-10-4-14-3-3-7-5-11-5z" fill="url(#rg2)"/>
+      <path d="M14 16c3 4 5 8 4 13" stroke="#381855" stroke-width="1.4" stroke-linecap="round" fill="none" opacity="0.7"/>
+      <path d="M19 12c1 6-1 13-2 18" stroke="#381855" stroke-width="1.2" stroke-linecap="round" fill="none" opacity="0.6"/>
+      <path d="M26 10c0 7-2 14-4 20" stroke="#381855" stroke-width="1.3" stroke-linecap="round" fill="none" opacity="0.65"/>
+      <path d="M32 13c-1 5-3 10-5 15" stroke="#381855" stroke-width="1.1" stroke-linecap="round" fill="none" opacity="0.55"/>
+      <path d="M36 18c-2 4-3 9-4 12" stroke="#381855" stroke-width="1" stroke-linecap="round" fill="none" opacity="0.5"/>
+      <path d="M12 22c6-2 14-1 22 1" stroke="#381855" stroke-width="0.9" stroke-linecap="round" fill="none" opacity="0.4"/>
+      <path d="M14 30c5-1 11-2 18 0" stroke="#381855" stroke-width="0.8" stroke-linecap="round" fill="none" opacity="0.35"/>
+      <path d="M20 13c2 5 1 11-1 17" stroke="#703ca0" stroke-width="0.8" stroke-linecap="round" fill="none" opacity="0.5"/>
+      <path d="M26 8c0-3 1-5 3-7" stroke="#6b8a3a" stroke-width="2" stroke-linecap="round"/>
+      <path d="M27 4c2-1 4-1 5 0" stroke="#6b8a3a" stroke-width="1.2" stroke-linecap="round" opacity="0.6"/>
+      <defs><radialGradient id="rg2" cx="0.35" cy="0.3" r="0.5"><stop offset="0%" stop-color="#8050b8" stop-opacity="0.35"/><stop offset="100%" stop-color="#381855" stop-opacity="0"/></radialGradient></defs>
     </svg>
   </div>
   <div id="subtitle"><span>Guess the encoded phrase.</span> <span>Achieve grapeness.</span></div>
@@ -1478,63 +1348,11 @@
   </div>
 </div>
 <div id="welcome-dialog" class="hidden" role="dialog" aria-labelledby="welcome-title">
-  <div id="welcome-title">
-    <svg class="lightsaber lightsaber-blue" viewBox="0 0 16 60" width="14" height="50" aria-hidden="true">
-      <rect x="3" y="4" width="10" height="40" rx="5" fill="currentColor" opacity="0.32"/>
-      <rect x="6" y="6" width="4" height="38" rx="2" fill="currentColor"/>
-      <rect x="7" y="7" width="2" height="36" rx="1" fill="#ffffff" opacity="0.9"/>
-      <rect x="5" y="44" width="6" height="12" fill="#9a9a9a"/>
-      <rect x="5" y="47" width="6" height="1.5" fill="#3a3a3a"/>
-      <rect x="5" y="50" width="6" height="1.5" fill="#3a3a3a"/>
-      <rect x="6" y="55" width="4" height="2" fill="#6a6a6a"/>
-    </svg>
-    <span class="welcome-title-text">Welcome to Phraisins - May the 4th Edition</span>
-    <svg class="lightsaber lightsaber-red" viewBox="0 0 16 60" width="14" height="50" aria-hidden="true">
-      <rect x="3" y="4" width="10" height="40" rx="5" fill="currentColor" opacity="0.32"/>
-      <rect x="6" y="6" width="4" height="38" rx="2" fill="currentColor"/>
-      <rect x="7" y="7" width="2" height="36" rx="1" fill="#ffffff" opacity="0.9"/>
-      <rect x="5" y="44" width="6" height="12" fill="#9a9a9a"/>
-      <rect x="5" y="47" width="6" height="1.5" fill="#3a3a3a"/>
-      <rect x="5" y="50" width="6" height="1.5" fill="#3a3a3a"/>
-      <rect x="6" y="55" width="4" height="2" fill="#6a6a6a"/>
-    </svg>
-  </div>
+  <div id="welcome-title">Welcome to Phraisins!</div>
   <div id="welcome-body">Guess the hidden phrase and win raisins. Ready to achieve grapeness?</div>
   <div id="welcome-buttons">
     <button id="welcome-play" type="button">Play Now</button>
     <button id="welcome-how-to" type="button">How to Play</button>
-  </div>
-</div>
-<div id="may4-finale" class="hidden" role="dialog" aria-modal="true" aria-labelledby="may4-finale-title">
-  <div id="may4-finale-card">
-    <div id="may4-finale-title">
-      <svg class="lightsaber lightsaber-blue" viewBox="0 0 16 60" width="14" height="50" aria-hidden="true">
-        <rect x="3" y="4" width="10" height="40" rx="5" fill="currentColor" opacity="0.32"/>
-        <rect x="6" y="6" width="4" height="38" rx="2" fill="currentColor"/>
-        <rect x="7" y="7" width="2" height="36" rx="1" fill="#ffffff" opacity="0.9"/>
-        <rect x="5" y="44" width="6" height="12" fill="#9a9a9a"/>
-        <rect x="5" y="47" width="6" height="1.5" fill="#3a3a3a"/>
-        <rect x="5" y="50" width="6" height="1.5" fill="#3a3a3a"/>
-        <rect x="6" y="55" width="4" height="2" fill="#6a6a6a"/>
-      </svg>
-      <span class="welcome-title-text">Happy May the 4th</span>
-      <svg class="lightsaber lightsaber-red" viewBox="0 0 16 60" width="14" height="50" aria-hidden="true">
-        <rect x="3" y="4" width="10" height="40" rx="5" fill="currentColor" opacity="0.32"/>
-        <rect x="6" y="6" width="4" height="38" rx="2" fill="currentColor"/>
-        <rect x="7" y="7" width="2" height="36" rx="1" fill="#ffffff" opacity="0.9"/>
-        <rect x="5" y="44" width="6" height="12" fill="#9a9a9a"/>
-        <rect x="5" y="47" width="6" height="1.5" fill="#3a3a3a"/>
-        <rect x="5" y="50" width="6" height="1.5" fill="#3a3a3a"/>
-        <rect x="6" y="55" width="4" height="2" fill="#6a6a6a"/>
-      </svg>
-    </div>
-    <div id="may4-finale-last"></div>
-    <div id="may4-finale-score"></div>
-    <div id="may4-finale-message"></div>
-    <div id="may4-finale-actions">
-      <button id="may4-finale-continue" type="button">Continue Playing</button>
-      <button id="may4-finale-share" type="button">Share Results</button>
-    </div>
   </div>
 </div>
 <div id="share-toast">Copied!</div>
@@ -1565,12 +1383,6 @@ let lastLevelUp = null;
 let scrambleTimer = null;
 const MAX_RAISINS = 5;
 const DAILY_GAME_LIMIT = 3;
-
-// --- May the 4th Edition (temporary, revertable) ---
-const MAY_THE_4TH_EVENT = true;
-const MAY4_GOAL = 20;
-const MAY4_EVENT_TAG = 'maythe4th';
-let pendingMay4Finale = false;
 
 const WIN_PHRASES = {
   5: ["Grape job!", "Suntastic!"],
@@ -1657,30 +1469,7 @@ function recordDailyGame(result) {
   saveDailyStats(stats);
   return stats;
 }
-function isDailyLimitReached() {
-  if (MAY_THE_4TH_EVENT) return false;
-  return getDailyStats().games.length >= DAILY_GAME_LIMIT;
-}
-function getMay4State() {
-  try {
-    const raw = JSON.parse(localStorage.getItem('phraisins_may4_state'));
-    if (raw && typeof raw === 'object') {
-      return Object.assign({ played: 0, won: 0, totalRaisins: 0, finaleSeen: false }, raw);
-    }
-  } catch {}
-  return { played: 0, won: 0, totalRaisins: 0, finaleSeen: false };
-}
-function saveMay4State(state) {
-  try { localStorage.setItem('phraisins_may4_state', JSON.stringify(state)); } catch {}
-}
-function recordMay4Game({ won, raisins }) {
-  const s = getMay4State();
-  s.played += 1;
-  if (won) s.won += 1;
-  s.totalRaisins += (raisins || 0);
-  saveMay4State(s);
-  return s;
-}
+function isDailyLimitReached() { return getDailyStats().games.length >= DAILY_GAME_LIMIT; }
 const HISTORY_LIMIT = 200;
 function getHistory() {
   try { return JSON.parse(localStorage.getItem('phraisins_history')) || []; }
@@ -1769,15 +1558,6 @@ function encode(phrase) {
 // --- Phrase selection ---
 function selectPhrase() {
   let used = getUsed();
-  if (MAY_THE_4TH_EVENT && getMay4State().played < MAY4_GOAL) {
-    const eventPool = PHRASES.filter(p => p.event === MAY4_EVENT_TAG && !used.includes(p.id));
-    if (eventPool.length > 0) {
-      const pick = eventPool[Math.floor(Math.random() * eventPool.length)];
-      used.push(pick.id);
-      saveUsed(used);
-      return pick;
-    }
-  }
   const isStarterGame = used.length === 0 && getTotalRaisins() <= 5;
   if (used.length >= PHRASES.length) { used = []; saveUsed(used); }
   const unused = PHRASES.filter(p => !used.includes(p.id));
@@ -2602,7 +2382,6 @@ function startGame({ fromNewGame = false, seed = null, restored = null } = {}) {
     symScale,
     phrase: phraseObj.phrase,
     clue: phraseObj.clue,
-    event: phraseObj.event || null,
     encoded,
     mapping,
     reverseMapping,
@@ -2777,10 +2556,6 @@ function showWin() {
     raisinText += '<div class="streak-message">You\'re on a hot streak!<br><span class="nowrap">' + newStreak + ' in a row</span></div>';
   }
   recordDailyGame({ won, perfect: isPerfect, lost: false });
-  if (MAY_THE_4TH_EVENT && game.event === MAY4_EVENT_TAG) {
-    const s = recordMay4Game({ won: 1, raisins: won });
-    if (s.played >= MAY4_GOAL && !s.finaleSeen) pendingMay4Finale = true;
-  }
   if (game.phraseId) {
     recordHistory({ date: getTodayKey(), phrase: game.phrase, won, perfect: isPerfect, lost: false });
   }
@@ -2816,10 +2591,6 @@ function showLoss() {
   resultFeedbackEl.className = 'feedback-wrong';
   const safePhrase = game.phrase.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
   recordDailyGame({ won: 0, perfect: false, lost: true });
-  if (MAY_THE_4TH_EVENT && game.event === MAY4_EVENT_TAG) {
-    const s = recordMay4Game({ won: 0, raisins: 0 });
-    if (s.played >= MAY4_GOAL && !s.finaleSeen) pendingMay4Finale = true;
-  }
   if (game.phraseId) {
     recordHistory({ date: getTodayKey(), phrase: game.phrase, won: 0, perfect: false, lost: true });
   }
@@ -2876,13 +2647,7 @@ function showResult(delay = 1500) {
   cipherEl.classList.add('game-over');
   revealAllLetters();
 
-  setTimeout(() => {
-    if (pendingMay4Finale) {
-      showMay4Finale();
-    } else {
-      resultEl.style.display = 'flex';
-    }
-  }, delay);
+  setTimeout(() => { resultEl.style.display = 'flex'; }, delay);
 }
 
 // --- Share ---
@@ -2950,79 +2715,6 @@ async function shareResult() {
   if (!isMobile) showToast('Copied to clipboard!');
 }
 
-// --- May the 4th finale ---
-const may4FinaleEl = document.getElementById('may4-finale');
-const may4FinaleScoreEl = document.getElementById('may4-finale-score');
-const may4FinaleMessageEl = document.getElementById('may4-finale-message');
-const may4FinaleContinueBtn = document.getElementById('may4-finale-continue');
-const may4FinaleShareBtn = document.getElementById('may4-finale-share');
-
-function buildMay4ShareText() {
-  const s = getMay4State();
-  const message = s.won > 14 ? 'The Force is strong with you' : 'Do or do not, there is no try';
-  let text = 'PHRAISINS — May the 4th Edition\n';
-  text += s.won + '/' + MAY4_GOAL + ' phrases solved ✨\n';
-  text += message + '\nphraisins.com';
-  return text;
-}
-
-async function shareMay4Result() {
-  const text = buildMay4ShareText();
-  const shareData = { text };
-  const isMobile = window.matchMedia('(pointer: coarse)').matches;
-  if (isMobile && navigator.share && (!navigator.canShare || navigator.canShare(shareData))) {
-    try { await navigator.share(shareData); showToast('Shared!'); return; }
-    catch (e) { if (e.name === 'AbortError') return; }
-  }
-  if (navigator.clipboard) {
-    try { await navigator.clipboard.writeText(text); if (!isMobile) showToast('Copied to clipboard!'); return; }
-    catch (e) {}
-  }
-  const ta = document.createElement('textarea');
-  ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
-  document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta);
-  if (!isMobile) showToast('Copied to clipboard!');
-}
-
-function showMay4Finale() {
-  const s = getMay4State();
-  s.finaleSeen = true;
-  saveMay4State(s);
-  pendingMay4Finale = false;
-  const lastEl = document.getElementById('may4-finale-last');
-  if (game && game.isOver && game.event === MAY4_EVENT_TAG) {
-    const won = game.raisins > 0;
-    const safePhrase = String(game.phrase || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-    if (won) {
-      lastEl.innerHTML =
-        '<div class="may4-last-status correct">Solved! +' + game.raisins +
-        ' raisin' + (game.raisins !== 1 ? 's' : '') + '</div>' +
-        '<div class="may4-last-phrase">"' + safePhrase + '"</div>';
-    } else {
-      lastEl.innerHTML =
-        '<div class="may4-last-status wrong">Missed it.</div>' +
-        '<div class="may4-last-phrase">The phrase was "' + safePhrase + '"</div>';
-    }
-  } else {
-    lastEl.innerHTML = '';
-  }
-  may4FinaleScoreEl.innerHTML =
-    '<div id="may4-finale-score-label">Final score</div>' +
-    s.won + ' / ' + MAY4_GOAL;
-  may4FinaleMessageEl.textContent = s.won > 14
-    ? 'The Force is strong with you'
-    : 'Do or do not, there is no try';
-  may4FinaleEl.classList.remove('hidden');
-}
-function hideMay4Finale() { may4FinaleEl.classList.add('hidden'); }
-
-may4FinaleContinueBtn.addEventListener('click', () => {
-  hideMay4Finale();
-  document.body.classList.remove('tutorial-active');
-  startGame({ fromNewGame: true });
-});
-may4FinaleShareBtn.addEventListener('click', shareMay4Result);
-
 // --- Events ---
 shareBtn.addEventListener('click', shareResult);
 submitBtn.addEventListener('click', handleGuess);
@@ -3044,17 +2736,9 @@ hintBtn.addEventListener('click', () => {
   }
 });
 giveupBtn.addEventListener('click', () => { if (!game.isOver) showLoss(); });
-newgameBtn.addEventListener('click', () => {
-  if (pendingMay4Finale) {
-    resultEl.style.display = 'none';
-    showMay4Finale();
-    return;
-  }
-  startGame({ fromNewGame: true });
-});
+newgameBtn.addEventListener('click', () => startGame({ fromNewGame: true }));
 resultCloseBtn.addEventListener('click', () => {
   resultEl.style.display = 'none';
-  if (pendingMay4Finale) { showMay4Finale(); return; }
   if ((game && game.isOver) || isDailyLimitReached()) {
     reopenResultBtn.classList.remove('hidden');
     if (!isDailyLimitReached()) newgameOuterBtn.classList.remove('hidden');
@@ -3090,10 +2774,7 @@ function showDailyLimitScreen() {
   resultRaisinsEl.innerHTML = buildDailySummaryHTML();
   resultEl.style.display = 'flex';
 }
-newgameOuterBtn.addEventListener('click', () => {
-  if (pendingMay4Finale) { showMay4Finale(); return; }
-  startGame({ fromNewGame: true });
-});
+newgameOuterBtn.addEventListener('click', () => startGame({ fromNewGame: true }));
 setupAnswerNavigation();
 
 // --- First-time tutorial ---
@@ -3451,25 +3132,6 @@ async function init() {
   clearTimeout(loadingTimer);
   updateRaisinDisplay();
   if (getTotalRaisins() > 0 || getUsed().length > 0) saveTutorialSeen();
-  if (MAY_THE_4TH_EVENT) {
-    const inProgress = loadInProgressGame();
-    if (inProgress) {
-      startGame({ restored: inProgress });
-      return;
-    }
-    const may4State = getMay4State();
-    if (may4State.played >= MAY4_GOAL && !may4State.finaleSeen) {
-      startGame();
-      showMay4Finale();
-    } else if (!may4State.finaleSeen) {
-      startGame();
-      document.body.classList.add('tutorial-active');
-      setTimeout(showWelcomeDialog, 800);
-    } else {
-      startGame();
-    }
-    return;
-  }
   if (isDailyLimitReached()) {
     clearInProgressGame();
     showDailyLimitScreen();
