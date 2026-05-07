@@ -82,8 +82,8 @@
   {
     "id": 9,
     "lines": [
-      "I am the clothes,",
-      "That disappear.",
+      "I am the cloak,",
+      "That disappears.",
       "When new I'm white,",
       "When old I'm clear.",
       "What am I?"
@@ -279,10 +279,11 @@
   {
     "id": 28,
     "lines": [
-      "I see through mountains,",
-      "I feel through night.",
-      "I hear the silence,",
-      "I shed the light.",
+      "White in the North,",
+      "Black or brown in the rest,",
+      "I stand tall in the West,",
+      "And just to get by,",
+      "In the winter I lie.",
       "What am I?"
     ]
   },
@@ -469,7 +470,7 @@
     "lines": [
       "Ever far,",
       "From seeing eye.",
-      "I close the door,",
+      "I shut the door,",
       "Of low on high.",
       "What am I?"
     ]
@@ -607,7 +608,7 @@
   {
     "id": 60,
     "lines": [
-      "So black a name,",
+      "So dark a name,",
       "Though often green.",
       "You paint me white,",
       "Then wipe me clean.",
@@ -923,11 +924,10 @@
   {
     "id": 90,
     "lines": [
-      "Eyes without sight,",
-      "And head without mind.",
-      "Man by man made,",
-      "Yet lord of his kind.",
-      "What is it?"
+      "Who wears no clothes but pants when it's hot,",
+      "He's the best one you've got.",
+      "Where you go he goes,",
+      "And sees with his nose?"
     ]
   }
 ]
