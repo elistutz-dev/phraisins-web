@@ -569,6 +569,25 @@
     background: rgba(168, 180, 240, 0.08);
     box-shadow: 0 2px 8px rgba(168, 180, 240, 0.1);
   }
+  #riddle-btn {
+    color: var(--gold);
+    border-color: rgba(232, 184, 122, 0.25);
+  }
+  #riddle-btn:hover {
+    border-color: var(--gold);
+    background: rgba(232, 184, 122, 0.08);
+    box-shadow: 0 2px 8px rgba(232, 184, 122, 0.1);
+  }
+  .riddle-text {
+    font-style: italic;
+    text-align: center;
+    color: var(--accent);
+    font-size: 1.05rem;
+    line-height: 1.5;
+    letter-spacing: 0.01em;
+  }
+  .riddle-text p { margin: 0 0 0.75rem; }
+  .riddle-text p:last-child { margin-bottom: 0; }
   #share-toast {
     position: fixed;
     bottom: 2rem;
@@ -1331,6 +1350,7 @@
       <div id="result-raisins"></div>
       <div id="result-actions">
         <button id="share-btn">SHARE</button>
+        <button id="riddle-btn" class="hidden">TRY A RIDDLE</button>
         <button id="newgame-btn" class="hidden">NEXT PUZZLE</button>
       </div>
     </div>
@@ -1376,6 +1396,7 @@ const STARTER_PHRASE_IDS = [97,174,191,199,219,257,270,315,349,361];
 const IS_MOBILE_CUSTOM_KB = window.matchMedia('(pointer: coarse)').matches;
 
 let PHRASES = [];
+let RIDDLES = [];
 
 // --- State ---
 let game = null;
@@ -1597,6 +1618,7 @@ const resultEl = document.getElementById('result');
 const resultFeedbackEl = document.getElementById('result-feedback');
 const resultRaisinsEl = document.getElementById('result-raisins');
 const shareBtn = document.getElementById('share-btn');
+const riddleBtn = document.getElementById('riddle-btn');
 const resultCloseBtn = document.getElementById('result-close');
 const reopenResultBtn = document.getElementById('reopen-result-btn');
 const newgameOuterBtn = document.getElementById('newgame-outer-btn');
@@ -2633,6 +2655,8 @@ function showResult(delay = 1500) {
   giveupBtn.classList.add('hidden');
   if (!isDailyLimitReached()) newgameBtn.classList.remove('hidden');
   else newgameBtn.classList.add('hidden');
+  if (isDailyLimitReached() && RIDDLES.length) riddleBtn.classList.remove('hidden');
+  else riddleBtn.classList.add('hidden');
 
   answerAreaEl.querySelectorAll('input').forEach(input => { input.disabled = true; });
 
@@ -2715,8 +2739,46 @@ async function shareResult() {
   if (!isMobile) showToast('Copied to clipboard!');
 }
 
+function getSeenRiddleIds() {
+  try { return JSON.parse(localStorage.getItem('phraisins_riddles_seen')) || []; }
+  catch { return []; }
+}
+function saveSeenRiddleIds(ids) {
+  try { localStorage.setItem('phraisins_riddles_seen', JSON.stringify(ids)); } catch {}
+}
+function getDailyRiddle() {
+  const today = getTodayKey();
+  const validIds = new Set(RIDDLES.map(r => r.id));
+  try {
+    const raw = JSON.parse(localStorage.getItem('phraisins_riddle_today'));
+    if (raw && raw.date === today && validIds.has(raw.id)) {
+      const found = RIDDLES.find(r => r.id === raw.id);
+      if (found) return found;
+    }
+  } catch {}
+  let seen = getSeenRiddleIds().filter(id => validIds.has(id));
+  if (seen.length >= RIDDLES.length) seen = [];
+  const pool = RIDDLES.filter(r => !seen.includes(r.id));
+  const riddle = pool[Math.floor(Math.random() * pool.length)];
+  seen.push(riddle.id);
+  saveSeenRiddleIds(seen);
+  try { localStorage.setItem('phraisins_riddle_today', JSON.stringify({ date: today, id: riddle.id })); } catch {}
+  return riddle;
+}
+
+function showRiddleModal() {
+  if (!RIDDLES.length) return;
+  const riddle = getDailyRiddle();
+  const lines = (riddle && riddle.lines) ? riddle.lines : [];
+  const html = '<div class="riddle-text">' +
+    lines.map(line => '<p>' + escapeHTML(line) + '</p>').join('') +
+    '</div>';
+  openInfoModal('Riddle', html);
+}
+
 // --- Events ---
 shareBtn.addEventListener('click', shareResult);
+riddleBtn.addEventListener('click', showRiddleModal);
 submitBtn.addEventListener('click', handleGuess);
 hintBtn.addEventListener('click', () => {
   if (!game.isOver) {
@@ -2762,6 +2824,7 @@ function showDailyLimitScreen() {
   newgameOuterBtn.classList.add('hidden');
   reopenResultBtn.classList.add('hidden');
   answerAreaEl.classList.add('hidden');
+  if (RIDDLES.length) riddleBtn.classList.remove('hidden');
   const lastPhrase = getLastPlayedPhrase();
   if (lastPhrase) {
     paintSolvedCipher(lastPhrase);
@@ -3129,6 +3192,17 @@ async function init() {
     return;
   }
   clearTimeout(loadingTimer);
+  fetch('riddles.json')
+    .then(r => r.ok ? r.json() : Promise.reject(new Error('HTTP ' + r.status)))
+    .then(data => {
+      if (Array.isArray(data)) {
+        RIDDLES = data;
+        if (isDailyLimitReached() && resultEl.style.display === 'flex') {
+          riddleBtn.classList.remove('hidden');
+        }
+      }
+    })
+    .catch(err => console.error('Failed to load riddles:', err));
   updateRaisinDisplay();
   if (getTotalRaisins() > 0 || getUsed().length > 0) saveTutorialSeen();
   if (isDailyLimitReached()) {
