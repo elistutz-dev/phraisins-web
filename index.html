@@ -2818,6 +2818,7 @@ resultCloseBtn.addEventListener('click', () => {
     if (!isDailyLimitReached()) newgameOuterBtn.classList.remove('hidden');
   }
 });
+resultEl.addEventListener('click', (e) => { if (e.target === resultEl) resultCloseBtn.click(); });
 reopenResultBtn.addEventListener('click', () => {
   resultEl.style.display = 'flex';
   reopenResultBtn.classList.add('hidden');
