@@ -1358,7 +1358,7 @@
       <div id="result-raisins"></div>
       <div id="result-actions">
         <button id="share-btn">SHARE</button>
-        <button id="riddle-btn" class="hidden">TRY A RIDDLE</button>
+        <button id="riddle-btn" class="hidden">BONUS RIDDLE</button>
         <button id="newgame-btn" class="hidden">NEXT PUZZLE</button>
       </div>
     </div>
@@ -2781,10 +2781,10 @@ function showRiddleModal() {
   const html = '<div class="riddle-text">' +
     lines.map(line => '<p>' + escapeHTML(line) + '</p>').join('') +
     '</div>';
-  openInfoModal('Riddle', html);
+  openInfoModal('Vintage Riddle', html);
   infoModalTitleEl.innerHTML =
     '<span class="riddle-q riddle-q-l" aria-hidden="true">?</span>' +
-    'Riddle' +
+    'Vintage Riddle' +
     '<span class="riddle-q riddle-q-r" aria-hidden="true">?</span>';
 }
 
