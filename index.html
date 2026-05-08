@@ -2832,7 +2832,7 @@ function showRiddleModal() {
   const yesterday = getYesterdayRiddle();
   const yesterdayLink = yesterday
     ? '<div class="riddle-yesterday-link"><a href="#" id="riddle-yesterday-link">Answer to yesterday’s riddle</a></div>'
-    : '<div class="riddle-yesterday-link riddle-yesterday-note">Answer will appear tomorrow</div>';
+    : '<div class="riddle-yesterday-link riddle-yesterday-note">Answer revealed tomorrow</div>';
   const html = '<div class="riddle-text">' +
     lines.map(line => '<p>' + escapeHTML(line) + '</p>').join('') +
     '</div>' + yesterdayLink;
