@@ -2790,7 +2790,18 @@ function getSeenRiddleIds() {
 function saveSeenRiddleIds(ids) {
   try { localStorage.setItem('phraisins_riddles_seen', JSON.stringify(ids)); } catch {}
 }
+function rolloverRiddleIfNeeded() {
+  const today = getTodayKey();
+  try {
+    const raw = JSON.parse(localStorage.getItem('phraisins_riddle_today'));
+    if (raw && raw.date && raw.date !== today && raw.id != null) {
+      localStorage.setItem('phraisins_riddle_yesterday', JSON.stringify(raw));
+    }
+  } catch {}
+}
+
 function getDailyRiddle() {
+  rolloverRiddleIfNeeded();
   const today = getTodayKey();
   const validIds = new Set(RIDDLES.map(r => r.id));
   try {
@@ -2798,9 +2809,6 @@ function getDailyRiddle() {
     if (raw && raw.date === today && validIds.has(raw.id)) {
       const found = RIDDLES.find(r => r.id === raw.id);
       if (found) return found;
-    }
-    if (raw && raw.date && raw.date !== today && validIds.has(raw.id)) {
-      try { localStorage.setItem('phraisins_riddle_yesterday', JSON.stringify(raw)); } catch {}
     }
   } catch {}
   let seen = getSeenRiddleIds().filter(id => validIds.has(id));
@@ -2815,6 +2823,7 @@ function getDailyRiddle() {
 
 function getYesterdayRiddle() {
   if (!RIDDLES.length) return null;
+  rolloverRiddleIfNeeded();
   try {
     const raw = JSON.parse(localStorage.getItem('phraisins_riddle_yesterday'));
     if (raw && raw.id != null) {
