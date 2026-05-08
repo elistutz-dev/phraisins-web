@@ -588,6 +588,31 @@
   }
   .riddle-text p { margin: 0 0 0.75rem; }
   .riddle-text p:last-child { margin-bottom: 0; }
+  .riddle-answer {
+    margin-top: 1.25rem !important;
+    font-style: normal;
+    color: var(--gold-bright, #f5c451);
+  }
+  .riddle-answer-label { font-weight: 600; }
+  .riddle-yesterday-link {
+    margin-top: 2rem;
+    text-align: center;
+    font-size: 0.92rem;
+    line-height: 1.2;
+  }
+  .riddle-yesterday-link a {
+    color: rgba(255, 255, 255, 0.55);
+    text-decoration: underline;
+    font-style: normal;
+    letter-spacing: 0;
+  }
+  .riddle-yesterday-link a:hover, .riddle-yesterday-link a:focus-visible {
+    color: var(--gold-bright, #f5c451);
+  }
+  .riddle-yesterday-note {
+    color: rgba(255, 255, 255, 0.55);
+    font-style: normal;
+  }
   .riddle-q { color: #8050b8; font-weight: 400; line-height: 1; vertical-align: middle; display: inline-block; font-family: Georgia, 'Times New Roman', serif; font-style: italic; font-size: 1.9em; }
   .riddle-q-l { margin-right: 1.1em; }
   .riddle-q-r { margin-left: 0.9em; }
@@ -1295,6 +1320,7 @@
 <div id="menu-dropdown" class="hidden" role="menu" aria-labelledby="menu-btn">
   <button class="menu-item" id="menu-how-to" type="button" role="menuitem">How to play</button>
   <button class="menu-item" id="menu-history" type="button" role="menuitem">My puzzle history</button>
+  <button class="menu-item" id="menu-riddle-answer" type="button" role="menuitem">Riddle answer</button>
   <button class="menu-item" id="menu-about" type="button" role="menuitem">About</button>
 </div>
 <div id="info-modal" role="dialog" aria-modal="true" aria-labelledby="info-modal-title">
@@ -2773,6 +2799,9 @@ function getDailyRiddle() {
       const found = RIDDLES.find(r => r.id === raw.id);
       if (found) return found;
     }
+    if (raw && raw.date && raw.date !== today && validIds.has(raw.id)) {
+      try { localStorage.setItem('phraisins_riddle_yesterday', JSON.stringify(raw)); } catch {}
+    }
   } catch {}
   let seen = getSeenRiddleIds().filter(id => validIds.has(id));
   if (seen.length >= RIDDLES.length) seen = [];
@@ -2784,18 +2813,57 @@ function getDailyRiddle() {
   return riddle;
 }
 
+function getYesterdayRiddle() {
+  if (!RIDDLES.length) return null;
+  try {
+    const raw = JSON.parse(localStorage.getItem('phraisins_riddle_yesterday'));
+    if (raw && raw.id != null) {
+      const found = RIDDLES.find(r => r.id === raw.id);
+      if (found) return found;
+    }
+  } catch {}
+  return null;
+}
+
 function showRiddleModal() {
   if (!RIDDLES.length) return;
   const riddle = getDailyRiddle();
   const lines = (riddle && riddle.lines) ? riddle.lines : [];
+  const yesterday = getYesterdayRiddle();
+  const yesterdayLink = yesterday
+    ? '<div class="riddle-yesterday-link"><a href="#" id="riddle-yesterday-link">Answer to yesterday’s riddle</a></div>'
+    : '<div class="riddle-yesterday-link riddle-yesterday-note">Answer tomorrow</div>';
   const html = '<div class="riddle-text">' +
     lines.map(line => '<p>' + escapeHTML(line) + '</p>').join('') +
-    '</div>';
+    '</div>' + yesterdayLink;
   openInfoModal('Riddle', html);
   infoModalTitleEl.innerHTML =
     '<span class="riddle-q riddle-q-l" aria-hidden="true">?</span>' +
     'Riddle' +
     '<span class="riddle-q riddle-q-r" aria-hidden="true">?</span>';
+  const linkEl = document.getElementById('riddle-yesterday-link');
+  if (linkEl) {
+    linkEl.addEventListener('click', (e) => {
+      e.preventDefault();
+      showYesterdayRiddleModal();
+    });
+  }
+}
+
+function showYesterdayRiddleModal() {
+  const riddle = getYesterdayRiddle();
+  let bodyHtml;
+  if (!riddle) {
+    bodyHtml = '<div class="riddle-text"><p>No previous riddle yet — check back tomorrow!</p></div>';
+  } else {
+    const lines = riddle.lines || [];
+    const linesHtml = lines.map(line => '<p>' + escapeHTML(line) + '</p>').join('');
+    const answerHtml = riddle.answer
+      ? '<p class="riddle-answer"><span class="riddle-answer-label">Answer:</span> ' + escapeHTML(riddle.answer) + '</p>'
+      : '';
+    bodyHtml = '<div class="riddle-text">' + linesHtml + answerHtml + '</div>';
+  }
+  openInfoModal('Yesterday’s Riddle', bodyHtml);
 }
 
 // --- Events ---
@@ -3199,6 +3267,7 @@ function startHowToFromMenu() {
 
 document.getElementById('menu-how-to').addEventListener('click', () => { closeMenu(); startHowToFromMenu(); });
 document.getElementById('menu-history').addEventListener('click', () => { closeMenu(); showHistoryModal(); });
+document.getElementById('menu-riddle-answer').addEventListener('click', () => { closeMenu(); showYesterdayRiddleModal(); });
 document.getElementById('menu-about').addEventListener('click', () => { closeMenu(); showAboutModal(); });
 
 // --- Init ---

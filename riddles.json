@@ -7,7 +7,8 @@
       "Yet all the world",
       "Is seen by me.",
       "What am I?"
-    ]
+    ],
+    "answer": "sun"
   },
   {
     "id": 2,
@@ -17,7 +18,8 @@
       "When wind blows hard,",
       "I'm white on top.",
       "What am I?"
-    ]
+    ],
+    "answer": "wave"
   },
   {
     "id": 3,
@@ -27,17 +29,20 @@
       "'Til finally I,",
       "Am no longer wet.",
       "What am I?"
-    ]
+    ],
+    "answer": "mirage"
   },
   {
     "id": 4,
     "lines": [
-      "Silver jaws,",
-      "That close and lock.",
-      "Biting teeth,",
-      "That never talk.",
+      "I lie still in the dark,",
+      "In my tight little bed,",
+      "Where I work 'til I've died,",
+      "With a bump on my head,",
+      "And that's just my positive side.",
       "What am I?"
-    ]
+    ],
+    "answer": "battery"
   },
   {
     "id": 5,
@@ -47,7 +52,8 @@
       "When hate is stirred,",
       "I may appear.",
       "What am I?"
-    ]
+    ],
+    "answer": "tears"
   },
   {
     "id": 6,
@@ -57,7 +63,8 @@
       "Born again,",
       "Heated twice.",
       "What am I?"
-    ]
+    ],
+    "answer": "glass"
   },
   {
     "id": 7,
@@ -67,7 +74,8 @@
       "Fearful, the cries,",
       "Of those who don't know.",
       "What is it?"
-    ]
+    ],
+    "answer": "comet"
   },
   {
     "id": 8,
@@ -77,7 +85,8 @@
       "Future sons,",
       "In open sight.",
       "What am I?"
-    ]
+    ],
+    "answer": "strawberry"
   },
   {
     "id": 9,
@@ -87,7 +96,8 @@
       "When new I'm white,",
       "When old I'm clear.",
       "What am I?"
-    ]
+    ],
+    "answer": "snow"
   },
   {
     "id": 10,
@@ -97,7 +107,8 @@
       "Home in blackness,",
       "Path precise.",
       "What am I?"
-    ]
+    ],
+    "answer": "Earth"
   },
   {
     "id": 11,
@@ -107,7 +118,8 @@
       "From water grown,",
       "From ceiling hung.",
       "What am I?"
-    ]
+    ],
+    "answer": "stalactite"
   },
   {
     "id": 12,
@@ -117,7 +129,8 @@
       "I am always being followed,",
       "When you reach me I am gone.",
       "What am I?"
-    ]
+    ],
+    "answer": "future"
   },
   {
     "id": 13,
@@ -129,7 +142,8 @@
       "On water I float free,",
       "But fire feeds on me.",
       "What am I?"
-    ]
+    ],
+    "answer": "olive oil"
   },
   {
     "id": 14,
@@ -139,7 +153,8 @@
       "In the caves that I find,",
       "I leave silver behind.",
       "What am I?"
-    ]
+    ],
+    "answer": "dentist"
   },
   {
     "id": 15,
@@ -148,7 +163,8 @@
       "The box of a baby is awesome in size,",
       "And heads that are buried are destined to rise.",
       "What is it?"
-    ]
+    ],
+    "answer": "ostrich"
   },
   {
     "id": 16,
@@ -158,7 +174,8 @@
       "Windows or shades,",
       "They come in two.",
       "What are they?"
-    ]
+    ],
+    "answer": "eyes"
   },
   {
     "id": 17,
@@ -168,7 +185,8 @@
       "You did get rid of a pest,",
       "So I guess you must be blessed.",
       "What is it?"
-    ]
+    ],
+    "answer": "sneeze"
   },
   {
     "id": 18,
@@ -182,7 +200,8 @@
       "I leave behind",
       "New life instead.",
       "What am I?"
-    ]
+    ],
+    "answer": "salmon"
   },
   {
     "id": 19,
@@ -192,7 +211,8 @@
       "Seen the best,",
       "On summer nights.",
       "What am I?"
-    ]
+    ],
+    "answer": "space"
   },
   {
     "id": 20,
@@ -204,7 +224,8 @@
       "Then drenched in white,",
       "And brought to your lips.",
       "What am I?"
-    ]
+    ],
+    "answer": "cereal"
   },
   {
     "id": 21,
@@ -214,7 +235,8 @@
       "I'm a mouth in disguise,",
       "Yet I do not talk.",
       "What am I?"
-    ]
+    ],
+    "answer": "quicksand"
   },
   {
     "id": 22,
@@ -224,7 +246,8 @@
       "I move with speed,",
       "A killing hand.",
       "What am I?"
-    ]
+    ],
+    "answer": "tornado"
   },
   {
     "id": 23,
@@ -235,7 +258,8 @@
       "I give life,",
       "I burn hotter.",
       "What am I?"
-    ]
+    ],
+    "answer": "blood"
   },
   {
     "id": 24,
@@ -245,7 +269,8 @@
       "The trap I lay,",
       "Is home in guise.",
       "What am I?"
-    ]
+    ],
+    "answer": "spider"
   },
   {
     "id": 25,
@@ -255,7 +280,8 @@
       "My colours win,",
       "When dark has lost.",
       "What am I?"
-    ]
+    ],
+    "answer": "rainbow"
   },
   {
     "id": 26,
@@ -265,7 +291,8 @@
       "It has been said,",
       "My count is nine.",
       "What am I?"
-    ]
+    ],
+    "answer": "cat"
   },
   {
     "id": 27,
@@ -275,7 +302,8 @@
       "If I am what you desire,",
       "Then you must have my aid.",
       "What am I?"
-    ]
+    ],
+    "answer": "tongs"
   },
   {
     "id": 28,
@@ -286,7 +314,8 @@
       "And just to get by,",
       "In the winter I lie.",
       "What am I?"
-    ]
+    ],
+    "answer": "bear"
   },
   {
     "id": 29,
@@ -296,7 +325,8 @@
       "When night has come,",
       "I'm cold at last.",
       "What am I?"
-    ]
+    ],
+    "answer": "desert"
   },
   {
     "id": 30,
@@ -306,7 +336,8 @@
       "In storm, a place,",
       "That you will seek.",
       "What am I?"
-    ]
+    ],
+    "answer": "island"
   },
   {
     "id": 31,
@@ -316,7 +347,8 @@
       "Of nine I look the hottest,",
       "I shrink when heat has passed.",
       "What am I?"
-    ]
+    ],
+    "answer": "mercury"
   },
   {
     "id": 32,
@@ -326,7 +358,8 @@
       "Yet when I have awoken,",
       "My wrath doth know no bound.",
       "What am I?"
-    ]
+    ],
+    "answer": "volcano"
   },
   {
     "id": 33,
@@ -338,7 +371,8 @@
       "Inward wind,",
       "Comes outward hotter.",
       "What am I?"
-    ]
+    ],
+    "answer": "mouth"
   },
   {
     "id": 34,
@@ -348,7 +382,8 @@
       "My will once bent,",
       "By blazing sun.",
       "What am I?"
-    ]
+    ],
+    "answer": "clock"
   },
   {
     "id": 35,
@@ -358,7 +393,8 @@
       "I point to where,",
       "Lost light is found.",
       "What am I?"
-    ]
+    ],
+    "answer": "East"
   },
   {
     "id": 36,
@@ -368,7 +404,8 @@
       "Half on left,",
       "And half on right.",
       "What are they?"
-    ]
+    ],
+    "answer": "fingernails"
   },
   {
     "id": 37,
@@ -378,7 +415,8 @@
       "When sleeping eyes are woken,",
       "It's wise to think of me.",
       "What am I?"
-    ]
+    ],
+    "answer": "breakfast"
   },
   {
     "id": 38,
@@ -392,7 +430,8 @@
       "So much the more,",
       "The less you know.",
       "What am I?"
-    ]
+    ],
+    "answer": "fear"
   },
   {
     "id": 39,
@@ -402,7 +441,8 @@
       "Struck, but not bruised,",
       "But once is it used.",
       "What is it?"
-    ]
+    ],
+    "answer": "match"
   },
   {
     "id": 40,
@@ -414,7 +454,8 @@
       "So best take me back,",
       "Before I get black.",
       "What am I?"
-    ]
+    ],
+    "answer": "marshmallow"
   },
   {
     "id": 41,
@@ -424,7 +465,8 @@
       "Yet none who live know what they've saved,",
       "'Till bell is tolled and grove is graved.",
       "What am I?"
-    ]
+    ],
+    "answer": "life"
   },
   {
     "id": 42,
@@ -434,7 +476,8 @@
       "Where I will pass,",
       "No life shall stand.",
       "What am I?"
-    ]
+    ],
+    "answer": "lava"
   },
   {
     "id": 43,
@@ -444,7 +487,8 @@
       "I shrink by night,",
       "By night I grow.",
       "What am I?"
-    ]
+    ],
+    "answer": "moon"
   },
   {
     "id": 44,
@@ -454,7 +498,8 @@
       "From empty holes that I will fill,",
       "In turn I will be fed.",
       "What am I?"
-    ]
+    ],
+    "answer": "clouds"
   },
   {
     "id": 45,
@@ -464,7 +509,8 @@
       "The sun by day,",
       "The moon by night.",
       "What am I?"
-    ]
+    ],
+    "answer": "eclipse"
   },
   {
     "id": 46,
@@ -474,7 +520,8 @@
       "I shut the door,",
       "Of low on high.",
       "What am I?"
-    ]
+    ],
+    "answer": "horizon"
   },
   {
     "id": 47,
@@ -484,7 +531,8 @@
       "When I am old I may rise from my grave,",
       "To fall once again to the ground.",
       "What am I?"
-    ]
+    ],
+    "answer": "plant"
   },
   {
     "id": 48,
@@ -494,7 +542,8 @@
       "To find the key,",
       "Through me you walk.",
       "What am I?"
-    ]
+    ],
+    "answer": "maze"
   },
   {
     "id": 49,
@@ -504,7 +553,8 @@
       "If I am a prize,",
       "The ring-wearer wins.",
       "What am I?"
-    ]
+    ],
+    "answer": "marriage"
   },
   {
     "id": 50,
@@ -514,7 +564,8 @@
       "Once inside you're sure to see,",
       "Who has trouble leaving me.",
       "What am I?"
-    ]
+    ],
+    "answer": "haunted house"
   },
   {
     "id": 51,
@@ -524,7 +575,8 @@
       "When light of day does darkness match,",
       "My time is come, my day is here.",
       "What am I?"
-    ]
+    ],
+    "answer": "equinox"
   },
   {
     "id": 52,
@@ -534,7 +586,8 @@
       "Hangs without crime.",
       "Dark as its clime.",
       "What is it?"
-    ]
+    ],
+    "answer": "bat"
   },
   {
     "id": 53,
@@ -544,7 +597,8 @@
       "A human weight,",
       "Within my keep.",
       "What am I?"
-    ]
+    ],
+    "answer": "shoes"
   },
   {
     "id": 54,
@@ -554,7 +608,8 @@
       "For backward glance,",
       "A fate divine.",
       "What am I?"
-    ]
+    ],
+    "answer": "salt"
   },
   {
     "id": 55,
@@ -564,7 +619,8 @@
       "No true disease,",
       "This sickness sweet.",
       "What am I?"
-    ]
+    ],
+    "answer": "love"
   },
   {
     "id": 56,
@@ -574,7 +630,8 @@
       "I lie between sound, and over sight,",
       "Though housed in dark, I give you light.",
       "What am I?"
-    ]
+    ],
+    "answer": "mind"
   },
   {
     "id": 57,
@@ -584,7 +641,8 @@
       "Cuts never bled,",
       "All diamonds are red.",
       "What am I?"
-    ]
+    ],
+    "answer": "cards"
   },
   {
     "id": 58,
@@ -594,7 +652,8 @@
       "The thoughts that I save,",
       "Live on past the grave.",
       "What am I?"
-    ]
+    ],
+    "answer": "book"
   },
   {
     "id": 59,
@@ -604,7 +663,8 @@
       "Sometimes more known,",
       "Once you are dead.",
       "What am I?"
-    ]
+    ],
+    "answer": "name"
   },
   {
     "id": 60,
@@ -614,7 +674,8 @@
       "You paint me white,",
       "Then wipe me clean.",
       "What am I?"
-    ]
+    ],
+    "answer": "blackboard"
   },
   {
     "id": 61,
@@ -624,7 +685,8 @@
       "Holds still in its keep,",
       "The moment that dies.",
       "What is it?"
-    ]
+    ],
+    "answer": "photograph"
   },
   {
     "id": 62,
@@ -634,7 +696,8 @@
       "Behind my back the sun will stay.",
       "I lighten night and darken day.",
       "What am I?"
-    ]
+    ],
+    "answer": "storm"
   },
   {
     "id": 63,
@@ -644,7 +707,8 @@
       "No crown in place,",
       "Yet I am king.",
       "What am I?"
-    ]
+    ],
+    "answer": "lion"
   },
   {
     "id": 64,
@@ -654,7 +718,8 @@
       "And though my death does make me dark,",
       "It makes me stronger yet.",
       "What am I?"
-    ]
+    ],
+    "answer": "star"
   },
   {
     "id": 65,
@@ -664,7 +729,8 @@
       "All kinds you see,",
       "Though one walks free.",
       "What is it?"
-    ]
+    ],
+    "answer": "zoo"
   },
   {
     "id": 66,
@@ -674,7 +740,8 @@
       "All man I killed,",
       "But one who knew.",
       "What am I?"
-    ]
+    ],
+    "answer": "Sphinx"
   },
   {
     "id": 67,
@@ -684,7 +751,8 @@
       "Call my number,",
       "When I've stopped.",
       "What am I?"
-    ]
+    ],
+    "answer": "dice"
   },
   {
     "id": 68,
@@ -694,7 +762,8 @@
       "Called the more wise,",
       "For words that I lack.",
       "What am I?"
-    ]
+    ],
+    "answer": "owl"
   },
   {
     "id": 69,
@@ -704,7 +773,8 @@
       "No wind in my sail,",
       "There's death in my smile.",
       "What am I?"
-    ]
+    ],
+    "answer": "shark"
   },
   {
     "id": 70,
@@ -714,7 +784,8 @@
       "A charming find,",
       "When there are four.",
       "What am I?"
-    ]
+    ],
+    "answer": "clover"
   },
   {
     "id": 71,
@@ -724,7 +795,8 @@
       "A Joseph's coat,",
       "For feed or flight.",
       "What am I?"
-    ]
+    ],
+    "answer": "chameleon"
   },
   {
     "id": 72,
@@ -734,7 +806,8 @@
       "Said to give us,",
       "Future sight.",
       "What are they?"
-    ]
+    ],
+    "answer": "constellations"
   },
   {
     "id": 73,
@@ -748,7 +821,8 @@
       "I am the place,",
       "Where fingers call.",
       "What am I?"
-    ]
+    ],
+    "answer": "telephone"
   },
   {
     "id": 74,
@@ -758,7 +832,8 @@
       "Then hearing what you cannot see,",
       "I'll take you far away from me.",
       "What am I?"
-    ]
+    ],
+    "answer": "radio"
   },
   {
     "id": 75,
@@ -772,7 +847,8 @@
       "Don't be like me,",
       "And you may lead.",
       "What am I?"
-    ]
+    ],
+    "answer": "sheep"
   },
   {
     "id": 76,
@@ -782,7 +858,8 @@
       "When top is browned,",
       "I rise again.",
       "What am I?"
-    ]
+    ],
+    "answer": "bread"
   },
   {
     "id": 77,
@@ -792,7 +869,8 @@
       "My strength set free,",
       "On sea or plain.",
       "What am I?"
-    ]
+    ],
+    "answer": "wind"
   },
   {
     "id": 78,
@@ -802,7 +880,8 @@
       "The tired and the broken",
       "May rest on my shoulders.",
       "What am I?"
-    ]
+    ],
+    "answer": "roads"
   },
   {
     "id": 79,
@@ -812,7 +891,8 @@
       "In me you sat,",
       "When it was hot.",
       "What am I?"
-    ]
+    ],
+    "answer": "shadow"
   },
   {
     "id": 80,
@@ -822,7 +902,8 @@
       "A lock to put,",
       "On final bed.",
       "What is it?"
-    ]
+    ],
+    "answer": "nail"
   },
   {
     "id": 81,
@@ -832,7 +913,8 @@
       "I swallowed a liar,",
       "And carried him through.",
       "What am I?"
-    ]
+    ],
+    "answer": "whale"
   },
   {
     "id": 82,
@@ -842,7 +924,8 @@
       "Or pull me so I upward leap,",
       "And rob me of my precious sleep.",
       "What am I?"
-    ]
+    ],
+    "answer": "yo-yo"
   },
   {
     "id": 83,
@@ -856,7 +939,8 @@
       "Though under hand,",
       "I'm over line.",
       "What am I?"
-    ]
+    ],
+    "answer": "signature"
   },
   {
     "id": 84,
@@ -866,7 +950,8 @@
       "On me they will crash,",
       "Before they can land.",
       "What am I?"
-    ]
+    ],
+    "answer": "umbrella"
   },
   {
     "id": 85,
@@ -876,7 +961,8 @@
       "I'm only so black,",
       "For light that I lack.",
       "What am I?"
-    ]
+    ],
+    "answer": "cave"
   },
   {
     "id": 86,
@@ -886,7 +972,8 @@
       "On my face a dawning darkness,",
       "When the summer days are far.",
       "What am I?"
-    ]
+    ],
+    "answer": "Arctic"
   },
   {
     "id": 87,
@@ -900,7 +987,8 @@
       "Who will in time,",
       "No lustre lack.",
       "What am I?"
-    ]
+    ],
+    "answer": "pearl"
   },
   {
     "id": 88,
@@ -910,7 +998,8 @@
       "Four walls make one grave,",
       "Where rulers do lie.",
       "What is it?"
-    ]
+    ],
+    "answer": "pyramid"
   },
   {
     "id": 89,
@@ -920,7 +1009,8 @@
       "Words can't stop me,",
       "Nothing can.",
       "What am I?"
-    ]
+    ],
+    "answer": "sound"
   },
   {
     "id": 90,
@@ -929,6 +1019,7 @@
       "He's the best one you've got.",
       "Where you go he goes,",
       "And sees with his nose?"
-    ]
+    ],
+    "answer": "dog"
   }
 ]
