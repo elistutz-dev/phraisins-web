@@ -2854,12 +2854,12 @@ function showRiddleModal() {
   if (linkEl) {
     linkEl.addEventListener('click', (e) => {
       e.preventDefault();
-      showYesterdayRiddleModal();
+      showYesterdayRiddleModal({ returnToToday: true });
     });
   }
 }
 
-function showYesterdayRiddleModal() {
+function showYesterdayRiddleModal(opts) {
   const riddle = getYesterdayRiddle();
   let bodyHtml;
   if (!riddle) {
@@ -2873,6 +2873,7 @@ function showYesterdayRiddleModal() {
     bodyHtml = '<div class="riddle-text">' + linesHtml + answerHtml + '</div>';
   }
   openInfoModal('Yesterday’s Riddle', bodyHtml);
+  if (opts && opts.returnToToday) infoModalReturnTo = showRiddleModal;
 }
 
 // --- Events ---
@@ -3221,12 +3222,19 @@ document.addEventListener('keydown', (e) => {
   else if (infoModalEl.classList.contains('show')) closeInfoModal();
 });
 
+let infoModalReturnTo = null;
 function openInfoModal(title, bodyHTML) {
+  infoModalReturnTo = null;
   infoModalTitleEl.textContent = title;
   infoModalBodyEl.innerHTML = bodyHTML;
   infoModalEl.classList.add('show');
 }
-function closeInfoModal() { infoModalEl.classList.remove('show'); }
+function closeInfoModal() {
+  const ret = infoModalReturnTo;
+  infoModalReturnTo = null;
+  if (ret) ret();
+  else infoModalEl.classList.remove('show');
+}
 infoModalCloseBtn.addEventListener('click', closeInfoModal);
 infoModalEl.addEventListener('click', (e) => { if (e.target === infoModalEl) closeInfoModal(); });
 
