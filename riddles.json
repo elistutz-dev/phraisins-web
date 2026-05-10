@@ -1021,5 +1021,123 @@
       "And sees with his nose?"
     ],
     "answer": "dog"
+  },
+  {
+    "id": 91,
+    "lines": [
+      "When out of toy",
+      "To sky I ran.",
+      "I voice the boy",
+      "Within the man.",
+      "What am I?"
+    ],
+    "answer": "helium"
+  },
+  {
+    "id": 92,
+    "lines": [
+      "My secret lies beneath a spot,",
+      "One leg, one eye, is all I've got.",
+      "My castle glides on swirls of brine,",
+      "When I arrive, what's yours is mine.",
+      "What am I?"
+    ],
+    "answer": "pirate"
+  },
+  {
+    "id": 93,
+    "lines": [
+      "I rise to a bell,",
+      "And come spiralling down,",
+      "With a boot on each foot,",
+      "And a cap on my crown.",
+      "There's a tap that I twist,",
+      "When my band has arrived.",
+      "But not for a drill,",
+      "For a drill is contrived.",
+      "What am I?"
+    ],
+    "answer": "firefighter"
+  },
+  {
+    "id": 94,
+    "lines": [
+      "Seen but not felt,",
+      "Heard but not smelt.",
+      "In an empty old home,",
+      "You might not be alone.",
+      "What am I?"
+    ],
+    "answer": "ghost"
+  },
+  {
+    "id": 95,
+    "lines": [
+      "First squeezed with ease,",
+      "Then shaken about.",
+      "A crimson addition,",
+      "Some can't do without.",
+      "What am I?"
+    ],
+    "answer": "ketchup"
+  },
+  {
+    "id": 96,
+    "lines": [
+      "I began in the boot,",
+      "In a box I am put.",
+      "Late, could be free,",
+      "Cold, none want me.",
+      "What am I?"
+    ],
+    "answer": "pizza"
+  },
+  {
+    "id": 97,
+    "lines": [
+      "I'm old and I'm short,",
+      "But size matters not.",
+      "I'm green but no frog,",
+      "Class starts in a bog.",
+      "What am I?"
+    ],
+    "answer": "Yoda"
+  },
+  {
+    "id": 98,
+    "lines": [
+      "I'm a house without windows,",
+      "Just two rooms and a light.",
+      "I beckon to you",
+      "As I hum through the night.",
+      "One room is winter,",
+      "The other is autumn.",
+      "Give things to me",
+      "So that later you got 'em",
+      "What am I?"
+    ],
+    "answer": "fridge"
+  },
+  {
+    "id": 99,
+    "lines": [
+      "When old I must live",
+      "By the skill of my tongue.",
+      "But live I cannot",
+      "As when I was young.",
+      "What am I?"
+    ],
+    "answer": "frog"
+  },
+  {
+    "id": 100,
+    "lines": [
+      "We two are alike",
+      "On that tiled floor.",
+      "Slow men walk before,",
+      "While we man the corners behind.",
+      "What are we?"
+    ],
+    "answer": "rooks"
   }
 ]
