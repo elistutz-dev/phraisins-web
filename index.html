@@ -1567,8 +1567,15 @@ function clearInProgressGame() {
 function loadInProgressGame() {
   try {
     const raw = JSON.parse(localStorage.getItem('phraisins_in_progress'));
-    if (!raw || raw.date !== getTodayKey() || !Array.isArray(raw.symbols)) {
+    if (!raw || !raw.date || !Array.isArray(raw.symbols)) {
       if (raw) clearInProgressGame();
+      return null;
+    }
+    const stored = new Date(raw.date + 'T00:00:00');
+    const today = new Date(getTodayKey() + 'T00:00:00');
+    const dayDiff = Math.round((today - stored) / 86400000);
+    if (!Number.isFinite(dayDiff) || dayDiff < 0 || dayDiff > 7) {
+      clearInProgressGame();
       return null;
     }
     return raw;
