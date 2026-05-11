@@ -29,6 +29,43 @@
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
 <link rel="preload" as="fetch" href="phrases.json" crossorigin="anonymous">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": "https://phraisins.com/#website",
+      "url": "https://phraisins.com/",
+      "name": "Phraisins",
+      "description": "A raisin-powered daily word game. Guess the hidden phrase and achieve grapeness.",
+      "inLanguage": "en"
+    },
+    {
+      "@type": ["WebApplication", "VideoGame"],
+      "@id": "https://phraisins.com/#app",
+      "name": "Phraisins",
+      "url": "https://phraisins.com/",
+      "isPartOf": {
+        "@id": "https://phraisins.com/#website"
+      },
+      "description": "Guess the hidden phrase in 5 tries with the help of a clue. A new puzzle every day.",
+      "image": "https://phraisins.com/og-image.png",
+      "applicationCategory": "GameApplication",
+      "genre": "Word puzzle",
+      "gamePlatform": "Web browser",
+      "operatingSystem": "Any",
+      "inLanguage": "en",
+      "isAccessibleForFree": true,
+      "offers": {
+        "@type": "Offer",
+        "price": 0,
+        "priceCurrency": "USD"
+      }
+    }
+  ]
+}
+</script>
 <style>
   :root {
     --bg: #170f24;
