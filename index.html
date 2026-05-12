@@ -660,6 +660,9 @@
     #info-modal-card:has(.riddle-text) { max-width: 560px; padding: 2.1rem 2.1rem; }
     #info-modal-card:has(.riddle-text) #info-modal-title { font-size: 1.5rem; margin-bottom: 1.2rem; }
     .riddle-text { font-size: 1.25rem; line-height: 1.6; }
+    #info-modal-card:has(.about-text) { max-width: 560px; padding: 2.1rem 2.1rem; }
+    #info-modal-card:has(.about-text) #info-modal-title { font-size: 1.55rem; margin-bottom: 1.2rem; }
+    .about-text { font-size: 1.15rem; line-height: 1.6; }
 
     #result-card { max-width: 500px; padding: 2.1rem 2.1rem; }
     #result-feedback { font-size: 1.3rem; }
@@ -3342,8 +3345,10 @@ function showHistoryModal() {
 
 function showAboutModal() {
   const html =
+    '<div class="about-text">' +
     '<p>Phraisins is a free word game where players have three tries to guess a hidden phrase with the help of a clue. You can play up to three puzzles a day. Correct guesses win you raisins, unlock riddles, and raise you to new levels of grapeness. The game is designed by Eli&nbsp;Stutz for your pure, fruity enjoyment.</p>' +
-    '<p><a href="https://elistutz.wordpress.com/contact-info/" target="_blank" rel="noopener">Contact Eli</a></p>';
+    '<p><a href="https://elistutz.wordpress.com/contact-info/" target="_blank" rel="noopener">Contact Eli</a></p>' +
+    '</div>';
   openInfoModal('About', html);
 }
 
