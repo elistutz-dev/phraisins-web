@@ -2687,7 +2687,7 @@ function showWin() {
   game.streak = newStreak;
   game.perfectStreak = newPerfectStreak;
   if (newPerfectStreak >= 3 && [3, 6, 10].includes(newPerfectStreak)) {
-    raisinText += '<div class="streak-message">You\'re on a streak of perfection<br>No mistakes for <span class="nowrap">' + newPerfectStreak + ' in a row!</span></div>';
+    raisinText += '<div class="streak-message">Perfect streak!<br><span class="nowrap">' + newPerfectStreak + ' in a row</span></div>';
   } else if ([3, 6, 10].includes(newStreak)) {
     raisinText += '<div class="streak-message">You\'re on a hot streak!<br><span class="nowrap">' + newStreak + ' in a row</span></div>';
   }
