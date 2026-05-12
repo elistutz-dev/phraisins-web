@@ -2237,8 +2237,9 @@ function setupAnswerNavigation() {
     if (/^[a-zA-Z]$/.test(e.key)) {
       e.preventDefault();
       if (handleCellInput(index, e.key)) {
-        const nextEmpty = findNextEmptyCell(index);
-        if (nextEmpty !== -1) focusCell(nextEmpty);
+        const next = findNextEmptyCell(index);
+        const target = next !== -1 ? next : findNextCell(index);
+        if (target !== -1) focusCell(target);
       }
     }
   });
@@ -2250,8 +2251,9 @@ function setupAnswerNavigation() {
     const value = e.target.value;
     if (value) {
       if (handleCellInput(index, value.slice(-1))) {
-        const nextEmpty = findNextEmptyCell(index);
-        if (nextEmpty !== -1) focusCell(nextEmpty);
+        const next = findNextEmptyCell(index);
+        const target = next !== -1 ? next : findNextCell(index);
+        if (target !== -1) focusCell(target);
       } else {
         // Browser already wrote the blocked character into the field; revert it.
         e.target.value = game.cells[index].userLetter || '';
@@ -2387,9 +2389,9 @@ function handleKeyboardKey(k) {
       if (index === -1) return;
     }
     if (handleCellInput(index, k.toLowerCase())) {
-      const nextEmpty = findNextEmptyCell(index);
-      if (nextEmpty !== -1) focusCell(nextEmpty);
-      else focusCell(index);
+      const next = findNextEmptyCell(index);
+      const target = next !== -1 ? next : findNextCell(index);
+      focusCell(target !== -1 ? target : index);
     }
   }
 }
