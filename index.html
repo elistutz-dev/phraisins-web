@@ -3023,8 +3023,8 @@ const TUTORIAL_SEED = {
 const TUTORIAL_STEPS = [
   { targets: ['#cipher-display'],              title: 'The puzzle',               body: 'Each symbol represents a letter that makes up a common phrase.' },
   { targets: ['#clue-display'],                title: 'The clue',                 body: "Solve it with the help of the clue.", calloutGap: 27 },
-  { targets: ['#hint-btn', '#cipher-display'], title: 'Stuck? Use a hint',       body: "Hints reveal a letter \u2014 but each costs you a raisin and one of your tries (max 2 hints).", placement: 'between', onEnter: tutorialDemoHint },
-  { targets: ['#answer-area', '#score-area'], title: 'Answer and win', body: "Guess the phrase in 3 tries and win raisins! You can't eat them, but it will be fun.", placement: 'between', cta: 'Start Game', onEnter: tutorialDemoSolve }
+  { targets: ['#hint-btn', '#cipher-display'], title: 'Stuck? Use a hint',       body: "Hints reveal a letter but will cost you a raisin.", placement: 'between', onEnter: tutorialDemoHint },
+  { targets: ['#answer-area', '#score-area'], title: 'Answer and win', body: "Guess the phrase and win raisins! You can't eat them, but it will be fun.", placement: 'between', cta: 'Start Game', onEnter: tutorialDemoSolve }
 ];
 
 function getTutorialSeen() { return localStorage.getItem('phraisins_tutorial_seen') === 'true'; }
@@ -3342,7 +3342,7 @@ function showHistoryModal() {
 
 function showAboutModal() {
   const html =
-    '<p>Phraisins is a free cryptogram word game where players have three tries to guess a hidden phrase with the help of a clue. You can play up to three puzzles a day and share results with friends. Correct guesses win you raisins, unlock riddles, and raise you to new levels of grapeness. The game is designed by Eli&nbsp;Stutz for your pure, fruity enjoyment.</p>' +
+    '<p>Phraisins is a free word game where players have three tries to guess a hidden phrase with the help of a clue. You can play up to three puzzles a day. Correct guesses win you raisins, unlock riddles, and raise you to new levels of grapeness. The game is designed by Eli&nbsp;Stutz for your pure, fruity enjoyment.</p>' +
     '<p><a href="https://elistutz.wordpress.com/contact-info/" target="_blank" rel="noopener">Contact Eli</a></p>';
   openInfoModal('About', html);
 }
