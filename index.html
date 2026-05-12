@@ -3022,7 +3022,7 @@ const TUTORIAL_STEPS = [
   { targets: ['#cipher-display'],              title: 'The puzzle',               body: 'Each symbol represents a letter that makes up a common phrase.' },
   { targets: ['#clue-display'],                title: 'The clue',                 body: "Solve it with the help of the clue.", calloutGap: 27 },
   { targets: ['#hint-btn', '#cipher-display'], title: 'Stuck? Use a hint',       body: "Hints reveal a letter \u2014 but each one costs you a raisin.", placement: 'between', onEnter: tutorialDemoHint },
-  { targets: ['#answer-area', '#score-area'], title: 'Answer and win', body: "Guess the phrase and earn raisins! You can't eat them, but it will be fun.", placement: 'between', cta: 'Start Game', onEnter: tutorialDemoSolve }
+  { targets: ['#answer-area', '#score-area'], title: 'Answer and win', body: "Guess the phrase in 3 tries and win raisins! You can't eat them, but it will be fun.", placement: 'between', cta: 'Start Game', onEnter: tutorialDemoSolve }
 ];
 
 function getTutorialSeen() { return localStorage.getItem('phraisins_tutorial_seen') === 'true'; }
