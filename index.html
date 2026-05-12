@@ -2008,21 +2008,16 @@ function buildAnswerArea() {
 
     answerAreaEl.appendChild(wordGroup);
   });
-  updateKeyboardDisabledState();
 }
 
 // --- Auto-propagation ---
-// Gray out letters the user can no longer usefully assign: revealed hints
-// (locked in forever) and letters currently filling a multi-cell symbol.
+// Hint-revealed letters are locked in forever; re-assigning one to another
+// symbol would put the player in an unwinnable state, so we gray them out
+// on the keyboard and reject them here.
 function getDisabledLetters() {
   const disabled = new Set();
   if (!game) return disabled;
   (game.revealedHints || []).forEach(h => disabled.add(h.letter));
-  for (const [symbol, letter] of Object.entries(game.symbolToUserLetter)) {
-    if (!letter) continue;
-    const positions = game.symbolToPositions[symbol] || [];
-    if (positions.length > 1) disabled.add(letter);
-  }
   return disabled;
 }
 
@@ -2059,7 +2054,6 @@ function handleCellInput(index, letter) {
     if (inputEl) inputEl.value = normalized;
   });
   updateVirtualCaret();
-  updateKeyboardDisabledState();
   saveInProgressGame();
   return true;
 }
@@ -3073,7 +3067,6 @@ function tutorialDemoSolve() {
         const inputEl = answerAreaEl.querySelector('.answer-cell[data-index="' + pos + '"] input');
         if (inputEl) inputEl.value = letter;
       });
-      updateKeyboardDisabledState();
     }, delay));
     delay += 280;
   });
