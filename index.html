@@ -1488,6 +1488,7 @@ let game = null;
 let lastLevelUp = null;
 let scrambleTimer = null;
 const MAX_TRIES = 3;
+const MAX_HINTS = 2;
 const RAISIN_REWARDS = { 1: 3, 2: 3, 3: 4, 4: 5, 5: 6 };
 const DEFAULT_REWARD = 3;
 const LEGACY_MAX_RAISINS = 5; // fallback for stored stats/history written before variable rewards
@@ -1606,7 +1607,8 @@ function saveInProgressGame() {
     raisins: game.raisins,
     maxRaisins: game.maxRaisins,
     triesLeft: game.triesLeft,
-    guessCount: game.guessCount
+    guessCount: game.guessCount,
+    hintsUsed: game.hintsUsed
   };
   try { localStorage.setItem('phraisins_in_progress', JSON.stringify(data)); } catch {}
 }
@@ -1926,7 +1928,7 @@ function updateRaisinDisplay() {
     Array.from(stakeRaisinsEl.children).forEach(el => el.classList.remove('spent'));
   }
   stakeLabelEl.textContent = '';
-  hintBtn.disabled = game && game.raisins <= 1;
+  hintBtn.disabled = game && (game.raisins <= 1 || game.triesLeft <= 1 || game.hintsUsed >= MAX_HINTS);
   const level = getCurrentLevel(total);
   const next = getNextLevel(total);
   if (level) {
@@ -2515,6 +2517,7 @@ function startGame({ fromNewGame = false, seed = null, restored = null } = {}) {
     triesLeft: MAX_TRIES,
     isOver: false,
     guessCount: 0,
+    hintsUsed: 0,
     cells: [],
     symbolToPositions: {},
     symbolToUserLetter: {}
@@ -2568,6 +2571,7 @@ function startGame({ fromNewGame = false, seed = null, restored = null } = {}) {
     game.raisins = typeof restored.raisins === 'number' ? restored.raisins : game.maxRaisins;
     game.triesLeft = typeof restored.triesLeft === 'number' ? restored.triesLeft : MAX_TRIES;
     game.guessCount = restored.guessCount || 0;
+    game.hintsUsed = typeof restored.hintsUsed === 'number' ? restored.hintsUsed : 0;
     updateRaisinDisplay();
   }
 
@@ -2949,20 +2953,22 @@ shareBtn.addEventListener('click', shareResult);
 riddleBtn.addEventListener('click', showRiddleModal);
 submitBtn.addEventListener('click', handleGuess);
 hintBtn.addEventListener('click', () => {
-  if (!game.isOver) {
-    feedbackEl.textContent = '';
-    if (!spendRaisin()) {
-      revealHint();
-      const next = findNextEmptyCell(-1);
-      if (next !== -1) {
-        const isMobile = window.matchMedia('(pointer: coarse)').matches;
-        if (IS_MOBILE_CUSTOM_KB) hideMobileKeyboardImmediate();
-        else if (isMobile) focusCellQuietly(next);
-        else focusCell(next);
-      } else if (IS_MOBILE_CUSTOM_KB) {
-        hideMobileKeyboardImmediate();
-      }
-    }
+  if (game.isOver) return;
+  if (game.hintsUsed >= MAX_HINTS) return;
+  if (game.triesLeft <= 1) return;
+  feedbackEl.textContent = '';
+  game.hintsUsed++;
+  game.triesLeft = Math.max(0, (game.triesLeft || 0) - 1);
+  if (spendRaisin()) return;
+  revealHint();
+  const next = findNextEmptyCell(-1);
+  if (next !== -1) {
+    const isMobile = window.matchMedia('(pointer: coarse)').matches;
+    if (IS_MOBILE_CUSTOM_KB) hideMobileKeyboardImmediate();
+    else if (isMobile) focusCellQuietly(next);
+    else focusCell(next);
+  } else if (IS_MOBILE_CUSTOM_KB) {
+    hideMobileKeyboardImmediate();
   }
 });
 giveupBtn.addEventListener('click', () => { if (!game.isOver) showLoss(); });
@@ -3017,7 +3023,7 @@ const TUTORIAL_SEED = {
 const TUTORIAL_STEPS = [
   { targets: ['#cipher-display'],              title: 'The puzzle',               body: 'Each symbol represents a letter that makes up a common phrase.' },
   { targets: ['#clue-display'],                title: 'The clue',                 body: "Solve it with the help of the clue.", calloutGap: 27 },
-  { targets: ['#hint-btn', '#cipher-display'], title: 'Stuck? Use a hint',       body: "Hints reveal a letter \u2014 but each one costs you a raisin.", placement: 'between', onEnter: tutorialDemoHint },
+  { targets: ['#hint-btn', '#cipher-display'], title: 'Stuck? Use a hint',       body: "Hints reveal a letter \u2014 but each costs you a raisin and one of your tries (max 2 hints).", placement: 'between', onEnter: tutorialDemoHint },
   { targets: ['#answer-area', '#score-area'], title: 'Answer and win', body: "Guess the phrase in 3 tries and win raisins! You can't eat them, but it will be fun.", placement: 'between', cta: 'Start Game', onEnter: tutorialDemoSolve }
 ];
 
