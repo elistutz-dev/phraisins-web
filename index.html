@@ -1261,6 +1261,21 @@
     min-height: 0;
     overflow-y: auto;
   }
+  @media (hover: hover) and (pointer: fine) {
+    #info-modal-body {
+      scrollbar-width: thin;
+      scrollbar-color: rgba(170, 160, 185, 0.45) transparent;
+    }
+    #info-modal-body::-webkit-scrollbar { width: 8px; }
+    #info-modal-body::-webkit-scrollbar-track { background: transparent; }
+    #info-modal-body::-webkit-scrollbar-thumb {
+      background: rgba(170, 160, 185, 0.45);
+      border-radius: 4px;
+    }
+    #info-modal-body::-webkit-scrollbar-thumb:hover {
+      background: rgba(170, 160, 185, 0.65);
+    }
+  }
   #info-modal-body p { margin-bottom: 0.7rem; }
   #info-modal-body p:last-child { margin-bottom: 0; }
   #info-modal-body a {
