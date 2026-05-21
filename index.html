@@ -3021,12 +3021,17 @@ function showDailyLimitScreen() {
   const lastPhrase = getLastPlayedPhrase();
   if (lastPhrase) {
     paintSolvedCipher(lastPhrase);
-    const lastMax = maxRaisinsForRank(lastPhrase.rank);
+    const dailyGames = getDailyStats().games;
+    const lastGame = dailyGames[dailyGames.length - 1];
+    const lastMax = (lastGame && lastGame.max) || maxRaisinsForRank(lastPhrase.rank);
+    const lastWon = lastGame ? lastGame.won : lastMax;
     stakeRaisinsEl.innerHTML = '';
     for (let i = 0; i < lastMax; i++) {
       const tmp = document.createElement('span');
       tmp.innerHTML = STAKE_RAISIN_SVG;
-      stakeRaisinsEl.appendChild(tmp.firstElementChild);
+      const chip = tmp.firstElementChild;
+      if (i >= lastWon) chip.classList.add('spent');
+      stakeRaisinsEl.appendChild(chip);
     }
   } else {
     cipherEl.textContent = '';
