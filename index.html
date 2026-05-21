@@ -3021,6 +3021,13 @@ function showDailyLimitScreen() {
   const lastPhrase = getLastPlayedPhrase();
   if (lastPhrase) {
     paintSolvedCipher(lastPhrase);
+    const lastMax = maxRaisinsForRank(lastPhrase.rank);
+    stakeRaisinsEl.innerHTML = '';
+    for (let i = 0; i < lastMax; i++) {
+      const tmp = document.createElement('span');
+      tmp.innerHTML = STAKE_RAISIN_SVG;
+      stakeRaisinsEl.appendChild(tmp.firstElementChild);
+    }
   } else {
     cipherEl.textContent = '';
     clueEl.textContent = '';
