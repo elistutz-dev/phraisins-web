@@ -993,13 +993,13 @@
   {
     "id": 88,
     "lines": [
-      "No roof to this cave,",
-      "Yet closed to the sky.",
-      "Four walls make one grave,",
-      "Where rulers do lie.",
-      "What is it?"
+      "An eye within a golden mane,",
+      "An army standing on the plain.",
+      "A face that says 'look up, my love',",
+      "As heaven smiles from above.",
+      "What am I?"
     ],
-    "answer": "pyramid"
+    "answer": "sunflower"
   },
   {
     "id": 89,
@@ -1139,5 +1139,115 @@
       "What are we?"
     ],
     "answer": "rooks"
+  },
+  {
+    "id": 101,
+    "lines": [
+      "Little lords, very royal,",
+      "Labored by the shore.",
+      "The moon approached to see their toil,",
+      "But their kingdom was no more.",
+      "What are they?"
+    ],
+    "answer": "sandcastles"
+  },
+  {
+    "id": 102,
+    "lines": [
+      "Hung from a knight,",
+      "Lit for a fight.",
+      "A colorful glow,",
+      "From a long time ago.",
+      "What am I?"
+    ],
+    "answer": "lightsaber"
+  },
+  {
+    "id": 103,
+    "lines": [
+      "I've a delectable nose,",
+      "That could almost compete with Pinocchio's.",
+      "But the truth be told,",
+      "It's the rest that shrinks as I grow old.",
+      "What am I?"
+    ],
+    "answer": "snowman"
+  },   
+  {
+    "id": 104,
+    "lines": [
+      "I'm a quick little guy",
+      "With a bright little eye.",
+      "When under your hand,",
+      "I do nothing but help,",
+      "When under your foot,",
+      "You do nothing but yelp.",
+      "What am I?"
+    ],
+    "answer": "mouse"
+  },
+  {
+    "id": 105,
+    "lines": [
+      "Like a two-legged table,",
+      "With a top that bends.",
+      "I sound like dessert,",
+      "But my tale never ends.",
+      "What am I?"
+    ],
+    "answer": "pi"
+  },
+  {
+    "id": 106,
+    "lines": [
+      "A silent cat guards over my lands,",
+      "My line of life's like the vein of your hands.",
+      "Upon my death I enter these halls,",
+      "A place whose ceiling is also its walls.",
+      "What am I?"
+    ],
+    "answer": "Egypt"
+  },
+  {
+    "id": 107,
+    "lines": [
+      "Once a year I'm pretty in pink,",
+      "For intolerant folks I'm a very fine drink.",
+      "If you're reading a mystery, beware of my smell,",
+      "But together with raisins I'm really quite swell.",
+      "What am I?"
+    ],
+    "answer": "almonds"
+  },
+  {
+    "id": 108,
+    "lines": [
+      "To add to me you have to halve,",
+      "I was born in a pot,",
+      "And I'm famous for what I have not.",
+      "What am I?"
+    ],
+    "answer": "bagel"
+  },
+  {
+    "id": 109,
+    "lines": [
+      "There's paint on my face,",
+      "I came from a tree,",
+      "Your kids really bring out the grandma in me.",
+      "What am I?"
+    ],
+    "answer": "matryoshka"
+  },
+  {
+    "id": 110,
+    "lines": [
+      "Dress me up in a gown,",
+      "Don't stay up if I'm down,",
+      "Close your eyes when we meet,",
+      "Hope your visions are sweet.",
+      "What am I?"
+    ],
+    "answer": "pillow"
   }
 ]
