@@ -1297,3 +1297,18 @@
     .kb-key { height: 48px; font-size: 1rem; }
     .kb-key[data-key="ENTER"] { font-size: 0.95rem; letter-spacing: 0.1em; }
   }
+
+  /* --- Footer --- */
+  footer {
+    text-align: center;
+    padding: 24px 0 0;
+    font-size: 13px;
+    color: #888;
+    opacity: 0.7;
+    margin-top: auto;
+  }
+  footer a {
+    color: #aaa;
+    text-decoration: none;
+    letter-spacing: -0.3px;
+  }
