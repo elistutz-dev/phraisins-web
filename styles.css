@@ -532,6 +532,15 @@
   #share-btn {
     color: #a8b4f0;
     border-color: rgba(168, 180, 240, 0.25);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  #share-btn .share-icon {
+    width: 1em;
+    height: 1em;
+    flex-shrink: 0;
+    transform: translateY(-0.05em);
   }
   #share-btn:hover {
     border-color: #a8b4f0;
