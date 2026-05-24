@@ -1751,7 +1751,9 @@ function endTutorial() {
     clearInProgressGame();
     showDailyLimitScreen();
   } else {
-    startGame({ fromNewGame: true });
+    const inProgress = loadInProgressGame();
+    if (inProgress) startGame({ restored: inProgress });
+    else startGame({ fromNewGame: true });
   }
 }
 
@@ -1791,9 +1793,6 @@ welcomePlayBtn.addEventListener('click', () => {
 
 welcomeHowToBtn.addEventListener('click', () => {
   hideWelcomeDialog();
-  if (game && game.phraseId) {
-    saveUsed(getUsed().filter(id => id !== game.phraseId));
-  }
   startGame({ seed: TUTORIAL_SEED });
   showTutorial();
 });
@@ -1898,10 +1897,6 @@ function showAboutModal() {
 }
 
 function startHowToFromMenu() {
-  if (game && game.phraseId) {
-    saveUsed(getUsed().filter(id => id !== game.phraseId));
-    clearInProgressGame();
-  }
   startGame({ seed: TUTORIAL_SEED });
   showTutorial();
 }
