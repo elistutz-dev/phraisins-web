@@ -117,7 +117,6 @@ function recordDailyGame(result) {
   const stats = getDailyStats();
   stats.games.push(result);
   saveDailyStats(stats);
-  return stats;
 }
 function isDailyLimitReached() { return getDailyStats().games.length >= DAILY_GAME_LIMIT; }
 const HISTORY_LIMIT = 200;
@@ -266,7 +265,6 @@ const shareToast = document.getElementById('share-toast');
 const subtitleEl = document.getElementById('subtitle');
 const totalRaisinsEl = document.getElementById('total-raisins');
 const stakeRaisinsEl = document.getElementById('stake-raisins');
-const stakeLabelEl = document.getElementById('stake-label');
 const currentLevelEl = document.getElementById('current-level');
 
 const STAKE_RAISIN_SVG = '<svg class="stake-raisin" viewBox="0 0 52 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">' +
@@ -463,7 +461,6 @@ function updateRaisinDisplay() {
   } else {
     Array.from(stakeRaisinsEl.children).forEach(el => el.classList.remove('spent'));
   }
-  stakeLabelEl.textContent = '';
   hintBtn.disabled = game && (game.raisins <= 1 || game.triesLeft <= 1 || game.hintsUsed >= MAX_HINTS);
   const level = getCurrentLevel(total);
   const next = getNextLevel(total);
@@ -505,7 +502,7 @@ function buildAnswerArea() {
 
   let globalIndex = 0;
 
-  words.forEach((word, wordIdx) => {
+  words.forEach((word) => {
     const wordGroup = document.createElement('div');
     wordGroup.className = 'answer-word';
 
