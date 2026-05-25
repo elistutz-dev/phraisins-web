@@ -605,6 +605,22 @@ function buildAnswerArea() {
 
     answerAreaEl.appendChild(wordGroup);
   });
+
+  applyWordWrapHyphens();
+}
+
+// Mark the last cell of a wrapped line with a class that renders a trailing
+// hyphen, so a word split across two rows reads as one continuous word.
+function applyWordWrapHyphens() {
+  answerAreaEl.querySelectorAll('.answer-word').forEach(word => {
+    const cells = word.querySelectorAll('.answer-cell');
+    cells.forEach(c => c.classList.remove('wrap-hyphen'));
+    for (let i = 0; i < cells.length - 1; i++) {
+      if (Math.abs(cells[i].offsetTop - cells[i + 1].offsetTop) > 1) {
+        cells[i].classList.add('wrap-hyphen');
+      }
+    }
+  });
 }
 
 // --- Auto-propagation ---
@@ -1078,7 +1094,11 @@ function startGame({ fromNewGame = false, seed = null, restored = null } = {}) {
     const used = getUsed();
     const isStarterGame = seed ? true : (used.length === 0 && getTotalRaisins() <= 5);
     const group = isStarterGame ? SYMBOL_GROUPS[0] : SYMBOL_GROUPS[Math.floor(Math.random() * SYMBOL_GROUPS.length)];
-    currentSymbols = group.symbols;
+    currentSymbols = [...group.symbols];
+    for (let i = currentSymbols.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [currentSymbols[i], currentSymbols[j]] = [currentSymbols[j], currentSymbols[i]];
+    }
     symScale = group.scale || 1;
     phraseObj = seed || selectPhrase();
   }
@@ -1891,6 +1911,7 @@ function repositionActiveCallout() {
   positionTutorialCallout();
 }
 window.addEventListener('resize', repositionActiveCallout);
+window.addEventListener('resize', applyWordWrapHyphens);
 window.addEventListener('scroll', repositionActiveCallout, { passive: true });
 document.addEventListener('keydown', (e) => {
   if (tutorialCalloutEl.classList.contains('hidden')) return;
