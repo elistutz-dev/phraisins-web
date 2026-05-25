@@ -1210,11 +1210,11 @@
     vertical-align: -0.12em;
   }
   .menu-icon {
-    width: 1em;
-    height: 1em;
+    width: 1.15em;
+    height: 1.15em;
     flex-shrink: 0;
-    margin-right: 0.55em;
-    vertical-align: -0.15em;
+    margin-right: 0.5em;
+    vertical-align: -0.22em;
   }
   .menu-item:hover, .menu-item:focus-visible {
     background: rgba(232, 184, 122, 0.08);
