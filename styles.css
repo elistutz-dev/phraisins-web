@@ -148,6 +148,14 @@
     color: var(--accent-bright);
     font-style: italic;
   }
+  .marathon-roundup-title {
+    margin: 0.2rem 0 0.5rem;
+    font-size: 1.25rem;
+    font-weight: bold;
+    color: var(--accent-bright);
+    letter-spacing: 0.02em;
+    line-height: 1.25;
+  }
   .marathon-score {
     margin: 0.4rem 0 0.55rem;
     font-size: 1.45rem;
@@ -675,6 +683,7 @@
     .raisin-trophy { width: 2.35rem; height: 2.35rem; }
     .daily-summary { font-size: 1.1rem; }
     .daily-summary-title { font-size: 1.2rem; }
+    .marathon-roundup-title { font-size: 1.45rem; }
   }
   #share-toast {
     position: fixed;

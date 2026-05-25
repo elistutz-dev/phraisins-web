@@ -256,6 +256,7 @@ function buildMarathonRoundupHTML() {
   const pips = games.map(g => (g.won || 0) > 0 ? '\u{1F347}' : '⚫').join('');
   let html = '<div class="daily-summary marathon-roundup">';
   if (GAME_CONFIG.roundupIconHTML) html += GAME_CONFIG.roundupIconHTML;
+  html += '<div class="marathon-roundup-title">' + getRoundupTitle() + '</div>';
   html += '<div class="marathon-score">' + correct + ' / ' + total + ' correct</div>';
   html += '<div class="marathon-pips">' + pips + '</div>';
   html += '<div class="daily-summary-total">' + raisinsThisRun + ' raisin' + (raisinsThisRun !== 1 ? 's' : '') + ' earned this run</div>';
@@ -1291,10 +1292,6 @@ function showWin() {
   }
   if (isDailyLimitReached()) {
     raisinText += buildDailySummaryHTML();
-    if (IS_MARATHON_MODE) {
-      resultFeedbackEl.textContent = getRoundupTitle();
-      resultFeedbackEl.className = 'feedback-correct';
-    }
   }
   resultRaisinsEl.innerHTML = raisinText;
   const shouldCelebrate = !!levelUp ||
@@ -1333,10 +1330,6 @@ function showLoss() {
     '<div class="won-caption">You got 0 raisins.</div>';
   if (isDailyLimitReached()) {
     lossHTML += buildDailySummaryHTML();
-    if (IS_MARATHON_MODE) {
-      resultFeedbackEl.textContent = getRoundupTitle();
-      resultFeedbackEl.className = 'feedback-correct';
-    }
   }
   resultRaisinsEl.innerHTML = lossHTML;
   showResult();
@@ -1637,10 +1630,23 @@ function showDailyLimitScreen() {
     cipherEl.textContent = '';
     clueEl.textContent = '';
   }
-  resultFeedbackEl.textContent = IS_MARATHON_MODE
-    ? getRoundupTitle()
-    : 'That’s a wrap for today!';
-  resultFeedbackEl.className = 'feedback-correct';
+  if (IS_MARATHON_MODE) {
+    const dailyGames = getDailyStats().games;
+    const lastGame = dailyGames[dailyGames.length - 1];
+    if (lastGame && (lastGame.won || 0) > 0) {
+      resultFeedbackEl.textContent = pickWinPhrase(lastGame.won);
+      resultFeedbackEl.className = 'feedback-correct';
+    } else if (lastGame) {
+      resultFeedbackEl.textContent = 'Nice try!';
+      resultFeedbackEl.className = 'feedback-wrong';
+    } else {
+      resultFeedbackEl.textContent = '';
+      resultFeedbackEl.className = '';
+    }
+  } else {
+    resultFeedbackEl.textContent = 'That’s a wrap for today!';
+    resultFeedbackEl.className = 'feedback-correct';
+  }
   resultRaisinsEl.innerHTML = buildDailySummaryHTML();
   resultEl.style.display = 'flex';
 }
