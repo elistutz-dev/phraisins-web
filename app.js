@@ -16,6 +16,25 @@ let currentSymbols = null;
 const STARTER_PHRASE_IDS = [97,174,191,199,219,257,270,315,349,361];
 const IS_MOBILE_CUSTOM_KB = window.matchMedia('(pointer: coarse)').matches;
 
+// --- Game variant config ---
+// The default page (index.html) uses the values below. Other pages
+// (e.g. /potter-puzzles/) override these by setting window.GAME_CONFIG
+// before this script loads. To remove a variant entirely, delete its
+// HTML/JSON files and any menu entry that links to it.
+const POTTER_PUZZLES_ENABLED = true;
+const GAME_CONFIG = Object.assign({
+  phrasesFile: 'phrases.json',
+  storagePrefix: 'phraisins_',
+  marathonSize: null,        // null = daily mode (DAILY_GAME_LIMIT/day); number = marathon mode (no daily limit, roundup after N games)
+  roundupTitle: 'Marathon complete!',
+  riddlesEnabled: true
+}, (typeof window !== 'undefined' && window.GAME_CONFIG) || {});
+const PHRASES_FILE = GAME_CONFIG.phrasesFile;
+const STORAGE_PREFIX = GAME_CONFIG.storagePrefix;
+const MARATHON_SIZE = GAME_CONFIG.marathonSize;
+const IS_MARATHON_MODE = MARATHON_SIZE !== null;
+function lsKey(name) { return STORAGE_PREFIX + name; }
+
 let PHRASES = [];
 let RIDDLES = [];
 
@@ -85,18 +104,18 @@ function checkLevelUp(before, after) {
 
 // --- localStorage helpers ---
 function getUsed() {
-  try { return JSON.parse(localStorage.getItem('phraisins_used')) || []; }
+  try { return JSON.parse(localStorage.getItem(lsKey('used'))) || []; }
   catch { return []; }
 }
-function saveUsed(used) { localStorage.setItem('phraisins_used', JSON.stringify(used)); }
-function getTotalRaisins() { return parseInt(localStorage.getItem('phraisins_total_raisins')) || 0; }
-function saveTotalRaisins(total) { localStorage.setItem('phraisins_total_raisins', JSON.stringify(total)); }
-function getStreak() { return parseInt(localStorage.getItem('phraisins_streak')) || 0; }
-function saveStreak(n) { localStorage.setItem('phraisins_streak', n); }
-function getPerfectStreak() { return parseInt(localStorage.getItem('phraisins_perfect_streak')) || 0; }
-function savePerfectStreak(n) { localStorage.setItem('phraisins_perfect_streak', n); }
-function getLossStreak() { return parseInt(localStorage.getItem('phraisins_loss_streak')) || 0; }
-function saveLossStreak(n) { localStorage.setItem('phraisins_loss_streak', n); }
+function saveUsed(used) { localStorage.setItem(lsKey('used'), JSON.stringify(used)); }
+function getTotalRaisins() { return parseInt(localStorage.getItem(lsKey('total_raisins'))) || 0; }
+function saveTotalRaisins(total) { localStorage.setItem(lsKey('total_raisins'), JSON.stringify(total)); }
+function getStreak() { return parseInt(localStorage.getItem(lsKey('streak'))) || 0; }
+function saveStreak(n) { localStorage.setItem(lsKey('streak'), n); }
+function getPerfectStreak() { return parseInt(localStorage.getItem(lsKey('perfect_streak'))) || 0; }
+function savePerfectStreak(n) { localStorage.setItem(lsKey('perfect_streak'), n); }
+function getLossStreak() { return parseInt(localStorage.getItem(lsKey('loss_streak'))) || 0; }
+function saveLossStreak(n) { localStorage.setItem(lsKey('loss_streak'), n); }
 function getTodayKey() {
   const d = new Date();
   const y = d.getFullYear();
@@ -105,30 +124,43 @@ function getTodayKey() {
   return y + '-' + m + '-' + day;
 }
 function getDailyStats() {
+  if (IS_MARATHON_MODE) {
+    try {
+      const raw = JSON.parse(localStorage.getItem(lsKey('marathon_stats')));
+      if (raw && Array.isArray(raw.games)) return raw;
+    } catch {}
+    return { games: [] };
+  }
   const today = getTodayKey();
   try {
-    const raw = JSON.parse(localStorage.getItem('phraisins_daily_stats'));
+    const raw = JSON.parse(localStorage.getItem(lsKey('daily_stats')));
     if (raw && raw.date === today && Array.isArray(raw.games)) return raw;
   } catch {}
   return { date: today, games: [] };
 }
-function saveDailyStats(stats) { localStorage.setItem('phraisins_daily_stats', JSON.stringify(stats)); }
+function saveDailyStats(stats) {
+  const key = IS_MARATHON_MODE ? lsKey('marathon_stats') : lsKey('daily_stats');
+  localStorage.setItem(key, JSON.stringify(stats));
+}
 function recordDailyGame(result) {
   const stats = getDailyStats();
   stats.games.push(result);
   saveDailyStats(stats);
 }
-function isDailyLimitReached() { return getDailyStats().games.length >= DAILY_GAME_LIMIT; }
+function isDailyLimitReached() {
+  const limit = IS_MARATHON_MODE ? MARATHON_SIZE : DAILY_GAME_LIMIT;
+  return getDailyStats().games.length >= limit;
+}
 const HISTORY_LIMIT = 200;
 function getHistory() {
-  try { return JSON.parse(localStorage.getItem('phraisins_history')) || []; }
+  try { return JSON.parse(localStorage.getItem(lsKey('history'))) || []; }
   catch { return []; }
 }
 function recordHistory(entry) {
   const history = getHistory();
   history.push({ ts: Date.now(), ...entry });
   if (history.length > HISTORY_LIMIT) history.splice(0, history.length - HISTORY_LIMIT);
-  try { localStorage.setItem('phraisins_history', JSON.stringify(history)); } catch {}
+  try { localStorage.setItem(lsKey('history'), JSON.stringify(history)); } catch {}
 }
 function saveInProgressGame() {
   if (!game || game.isOver || !game.phraseId) return;
@@ -145,14 +177,14 @@ function saveInProgressGame() {
     guessCount: game.guessCount,
     hintsUsed: game.hintsUsed
   };
-  try { localStorage.setItem('phraisins_in_progress', JSON.stringify(data)); } catch {}
+  try { localStorage.setItem(lsKey('in_progress'), JSON.stringify(data)); } catch {}
 }
 function clearInProgressGame() {
-  try { localStorage.removeItem('phraisins_in_progress'); } catch {}
+  try { localStorage.removeItem(lsKey('in_progress')); } catch {}
 }
 function loadInProgressGame() {
   try {
-    const raw = JSON.parse(localStorage.getItem('phraisins_in_progress'));
+    const raw = JSON.parse(localStorage.getItem(lsKey('in_progress')));
     if (!raw || !raw.date || !Array.isArray(raw.symbols)) {
       if (raw) clearInProgressGame();
       return null;
@@ -186,6 +218,7 @@ function paintSolvedCipher(phraseObj) {
   clueEl.textContent = phraseObj.clue || '';
 }
 function buildDailySummaryHTML() {
+  if (IS_MARATHON_MODE) return buildMarathonRoundupHTML();
   const stats = getDailyStats();
   const games = stats.games;
   const totalToday = games.reduce((sum, g) => sum + (g.won || 0), 0);
@@ -199,6 +232,34 @@ function buildDailySummaryHTML() {
   });
   html += '<div class="daily-summary-total">' + totalToday + ' raisin' + (totalToday !== 1 ? 's' : '') + ' earned today</div>';
   html += '<div class="daily-summary-message">Come back tomorrow to play again!</div>';
+  html += '</div>';
+  return html;
+}
+
+function getRoundupTitle() {
+  const games = getDailyStats().games;
+  const correct = games.filter(g => (g.won || 0) > 0).length;
+  const tiers = GAME_CONFIG.roundupTitles;
+  if (Array.isArray(tiers) && tiers.length) {
+    const sorted = tiers.slice().sort((a, b) => (b.minScore || 0) - (a.minScore || 0));
+    const pick = sorted.find(t => correct >= (t.minScore || 0));
+    if (pick && pick.title) return pick.title;
+  }
+  return GAME_CONFIG.roundupTitle || 'Marathon complete!';
+}
+
+function buildMarathonRoundupHTML() {
+  const games = getDailyStats().games;
+  const correct = games.filter(g => (g.won || 0) > 0).length;
+  const total = MARATHON_SIZE;
+  const raisinsThisRun = games.reduce((sum, g) => sum + (g.won || 0), 0);
+  const pips = games.map(g => (g.won || 0) > 0 ? '\u{1F347}' : '⚫').join('');
+  let html = '<div class="daily-summary marathon-roundup">';
+  if (GAME_CONFIG.roundupIconHTML) html += GAME_CONFIG.roundupIconHTML;
+  html += '<div class="marathon-score">' + correct + ' / ' + total + ' correct</div>';
+  html += '<div class="marathon-pips">' + pips + '</div>';
+  html += '<div class="daily-summary-total">' + raisinsThisRun + ' raisin' + (raisinsThisRun !== 1 ? 's' : '') + ' earned this run</div>';
+  html += '<button id="marathon-end-btn" class="marathon-end-btn" type="button">MORE PUZZLES</button>';
   html += '</div>';
   return html;
 }
@@ -1302,7 +1363,7 @@ function showResult(delay = 1500) {
   giveupBtn.classList.add('hidden');
   if (!isDailyLimitReached()) newgameBtn.classList.remove('hidden');
   else newgameBtn.classList.add('hidden');
-  if (isDailyLimitReached() && RIDDLES.length) riddleBtn.classList.remove('hidden');
+  if (!IS_MARATHON_MODE && isDailyLimitReached() && RIDDLES.length) riddleBtn.classList.remove('hidden');
   else riddleBtn.classList.add('hidden');
 
   answerAreaEl.querySelectorAll('input').forEach(input => { input.disabled = true; });
@@ -1327,6 +1388,18 @@ function buildDailyShareText() {
   const games = stats.games;
   const total = getTotalRaisins();
   const todayRaisins = games.reduce((sum, g) => sum + (g.won || 0), 0);
+  if (IS_MARATHON_MODE) {
+    const correct = games.filter(g => (g.won || 0) > 0).length;
+    const lead = GAME_CONFIG.shareLead || '';
+    const url = GAME_CONFIG.shareUrl || 'phraisins.com';
+    const header = GAME_CONFIG.shareHeader || 'PHRAISINS';
+    let mText = (lead ? lead + ' ' : '') + header + '\n';
+    mText += '✨ ' + getRoundupTitle() + '\n';
+    mText += correct + '/' + MARATHON_SIZE + ' correct\n';
+    mText += '\u{1F347} ' + todayRaisins + ' raisin' + (todayRaisins !== 1 ? 's' : '') + ' earned\n';
+    mText += url;
+    return mText;
+  }
   let text = 'PHRAISINS — daily recap\n';
   games.forEach(g => {
     const won = g.won || 0;
@@ -1389,18 +1462,18 @@ async function shareResult() {
 }
 
 function getSeenRiddleIds() {
-  try { return JSON.parse(localStorage.getItem('phraisins_riddles_seen')) || []; }
+  try { return JSON.parse(localStorage.getItem(lsKey('riddles_seen'))) || []; }
   catch { return []; }
 }
 function saveSeenRiddleIds(ids) {
-  try { localStorage.setItem('phraisins_riddles_seen', JSON.stringify(ids)); } catch {}
+  try { localStorage.setItem(lsKey('riddles_seen'), JSON.stringify(ids)); } catch {}
 }
 function rolloverRiddleIfNeeded() {
   const today = getTodayKey();
   try {
-    const raw = JSON.parse(localStorage.getItem('phraisins_riddle_today'));
+    const raw = JSON.parse(localStorage.getItem(lsKey('riddle_today')));
     if (raw && raw.date && raw.date !== today && raw.id != null) {
-      localStorage.setItem('phraisins_riddle_yesterday', JSON.stringify(raw));
+      localStorage.setItem(lsKey('riddle_yesterday'), JSON.stringify(raw));
     }
   } catch {}
 }
@@ -1410,7 +1483,7 @@ function getDailyRiddle() {
   const today = getTodayKey();
   const validIds = new Set(RIDDLES.map(r => r.id));
   try {
-    const raw = JSON.parse(localStorage.getItem('phraisins_riddle_today'));
+    const raw = JSON.parse(localStorage.getItem(lsKey('riddle_today')));
     if (raw && raw.date === today && validIds.has(raw.id)) {
       const found = RIDDLES.find(r => r.id === raw.id);
       if (found) return found;
@@ -1422,7 +1495,7 @@ function getDailyRiddle() {
   const riddle = pool[Math.floor(Math.random() * pool.length)];
   seen.push(riddle.id);
   saveSeenRiddleIds(seen);
-  try { localStorage.setItem('phraisins_riddle_today', JSON.stringify({ date: today, id: riddle.id })); } catch {}
+  try { localStorage.setItem(lsKey('riddle_today'), JSON.stringify({ date: today, id: riddle.id })); } catch {}
   return riddle;
 }
 
@@ -1430,7 +1503,7 @@ function getYesterdayRiddle() {
   if (!RIDDLES.length) return null;
   rolloverRiddleIfNeeded();
   try {
-    const raw = JSON.parse(localStorage.getItem('phraisins_riddle_yesterday'));
+    const raw = JSON.parse(localStorage.getItem(lsKey('riddle_yesterday')));
     if (raw && raw.id != null) {
       const found = RIDDLES.find(r => r.id === raw.id);
       if (found) return found;
@@ -1513,7 +1586,10 @@ resultCloseBtn.addEventListener('click', () => {
     if (!isDailyLimitReached()) newgameOuterBtn.classList.remove('hidden');
   }
 });
-resultEl.addEventListener('click', (e) => { if (e.target === resultEl) resultCloseBtn.click(); });
+resultEl.addEventListener('click', (e) => {
+  if (e.target && e.target.id === 'marathon-end-btn') { window.location.href = '/'; return; }
+  if (e.target === resultEl) resultCloseBtn.click();
+});
 reopenResultBtn.addEventListener('click', () => {
   resultEl.style.display = 'flex';
   reopenResultBtn.classList.add('hidden');
@@ -1532,7 +1608,8 @@ function showDailyLimitScreen() {
   newgameOuterBtn.classList.add('hidden');
   reopenResultBtn.classList.add('hidden');
   answerAreaEl.classList.add('hidden');
-  if (RIDDLES.length) riddleBtn.classList.remove('hidden');
+  if (!IS_MARATHON_MODE && RIDDLES.length) riddleBtn.classList.remove('hidden');
+  else riddleBtn.classList.add('hidden');
   const lastPhrase = getLastPlayedPhrase();
   if (lastPhrase) {
     paintSolvedCipher(lastPhrase);
@@ -1552,7 +1629,9 @@ function showDailyLimitScreen() {
     cipherEl.textContent = '';
     clueEl.textContent = '';
   }
-  resultFeedbackEl.textContent = 'That’s a wrap for today!';
+  resultFeedbackEl.textContent = IS_MARATHON_MODE
+    ? getRoundupTitle()
+    : 'That’s a wrap for today!';
   resultFeedbackEl.className = 'feedback-correct';
   resultRaisinsEl.innerHTML = buildDailySummaryHTML();
   resultEl.style.display = 'flex';
@@ -1572,8 +1651,8 @@ const TUTORIAL_STEPS = [
   { targets: ['#answer-area', '#score-area'], title: 'Answer and win', body: "Guess the phrase and win raisins! You can't eat them, but it will be fun.", placement: 'between', cta: 'Start Game', onEnter: tutorialDemoSolve }
 ];
 
-function getTutorialSeen() { return localStorage.getItem('phraisins_tutorial_seen') === 'true'; }
-function saveTutorialSeen() { localStorage.setItem('phraisins_tutorial_seen', 'true'); }
+function getTutorialSeen() { return localStorage.getItem(lsKey('tutorial_seen')) === 'true'; }
+function saveTutorialSeen() { localStorage.setItem(lsKey('tutorial_seen'), 'true'); }
 
 let tutorialStepIndex = 0;
 let tutorialSpotlightEls = [];
@@ -1900,14 +1979,32 @@ function startHowToFromMenu() {
 
 document.getElementById('menu-how-to').addEventListener('click', () => { closeMenu(); startHowToFromMenu(); });
 document.getElementById('menu-history').addEventListener('click', () => { closeMenu(); showHistoryModal(); });
-document.getElementById('menu-riddle-answer').addEventListener('click', () => { closeMenu(); showYesterdayRiddleModal(); });
+const menuRiddleBtn = document.getElementById('menu-riddle-answer');
+if (menuRiddleBtn) {
+  if (IS_MARATHON_MODE || !GAME_CONFIG.riddlesEnabled) menuRiddleBtn.classList.add('hidden');
+  else menuRiddleBtn.addEventListener('click', () => { closeMenu(); showYesterdayRiddleModal(); });
+}
+const menuPotterBtn = document.getElementById('menu-potter-puzzles');
+if (menuPotterBtn) {
+  // Hide if Potter is disabled, or if we are already on the Potter page.
+  if (POTTER_PUZZLES_ENABLED && !IS_MARATHON_MODE) {
+    menuPotterBtn.classList.remove('hidden');
+    menuPotterBtn.addEventListener('click', () => { window.location.href = '/potter-puzzles/'; });
+  } else {
+    menuPotterBtn.classList.add('hidden');
+  }
+}
+const menuPhraisinsBtn = document.getElementById('menu-phraisins');
+if (menuPhraisinsBtn) {
+  menuPhraisinsBtn.addEventListener('click', () => { window.location.href = '/'; });
+}
 document.getElementById('menu-about').addEventListener('click', () => { closeMenu(); showAboutModal(); });
 
 // --- Init ---
 async function init() {
   const loadingTimer = setTimeout(() => { clueEl.textContent = 'Loading\u2026'; }, 500);
   try {
-    const response = await fetch('phrases.json');
+    const response = await fetch(PHRASES_FILE);
     if (!response.ok) throw new Error('HTTP ' + response.status);
     PHRASES = await response.json();
   } catch (err) {
@@ -1917,17 +2014,19 @@ async function init() {
     return;
   }
   clearTimeout(loadingTimer);
-  fetch('riddles.json')
-    .then(r => r.ok ? r.json() : Promise.reject(new Error('HTTP ' + r.status)))
-    .then(data => {
-      if (Array.isArray(data)) {
-        RIDDLES = data;
-        if (isDailyLimitReached() && resultEl.style.display === 'flex') {
-          riddleBtn.classList.remove('hidden');
+  if (GAME_CONFIG.riddlesEnabled && !IS_MARATHON_MODE) {
+    fetch('riddles.json')
+      .then(r => r.ok ? r.json() : Promise.reject(new Error('HTTP ' + r.status)))
+      .then(data => {
+        if (Array.isArray(data)) {
+          RIDDLES = data;
+          if (isDailyLimitReached() && resultEl.style.display === 'flex') {
+            riddleBtn.classList.remove('hidden');
+          }
         }
-      }
-    })
-    .catch(err => console.error('Failed to load riddles:', err));
+      })
+      .catch(err => console.error('Failed to load riddles:', err));
+  }
   updateRaisinDisplay();
   if (getTotalRaisins() > 0 || getUsed().length > 0) saveTutorialSeen();
   if (isDailyLimitReached()) {

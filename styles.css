@@ -148,6 +148,71 @@
     color: var(--accent-bright);
     font-style: italic;
   }
+  .marathon-score {
+    margin: 0.4rem 0 0.55rem;
+    font-size: 1.45rem;
+    font-weight: bold;
+    color: var(--accent-bright);
+    letter-spacing: 0.02em;
+  }
+  .marathon-pips {
+    margin: 0 auto 0.55rem;
+    max-width: 18em;
+    line-height: 1.5;
+    letter-spacing: 0.05em;
+    word-break: break-all;
+  }
+  .marathon-end-btn {
+    margin-top: 0.9rem;
+    background: var(--bg-panel);
+    border: 1px solid rgba(124, 200, 138, 0.25);
+    border-radius: 6px;
+    padding: 0.9rem 1.5rem;
+    color: #7cc88a;
+    font-family: var(--font);
+    font-size: 1.05rem;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
+  }
+  .marathon-end-btn:hover {
+    border-color: #7cc88a;
+    background: rgba(124, 200, 138, 0.08);
+    box-shadow: 0 2px 8px rgba(124, 200, 138, 0.1);
+  }
+  .raisin-with-hat {
+    position: relative;
+    display: inline-flex;
+    align-items: flex-end;
+    line-height: 0;
+    flex-shrink: 0;
+    overflow: visible;
+  }
+  .raisin-with-hat--flip { transform: scaleX(-1); }
+  .wizard-hat {
+    position: absolute;
+    bottom: 55%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 105%;
+    height: auto;
+    pointer-events: none;
+    z-index: 1;
+    filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.55));
+  }
+  .recap-wand {
+    display: block;
+    margin: 0.1rem auto 0.4rem;
+    width: clamp(70px, 22vw, 96px);
+    height: auto;
+    filter: drop-shadow(0 0 6px rgba(246, 236, 255, 0.35));
+  }
+  .welcome-wand {
+    display: block;
+    margin: -0.2rem auto 0.6rem;
+    width: clamp(80px, 28vw, 110px);
+    height: auto;
+    filter: drop-shadow(0 0 6px rgba(246, 236, 255, 0.35));
+  }
   .nowrap { white-space: nowrap; }
   #level-up-message {
     color: var(--accent-bright);
@@ -640,6 +705,7 @@
 
   /* ─── Mobile ─────────────────────────────────────────────────── */
   @media (max-width: 600px) {
+    body.variant-potter { padding-top: 0.4rem; }
     body {
       padding: 0;
       min-height: 0;
@@ -1123,6 +1189,13 @@
     text-align: left;
     cursor: pointer;
     transition: background 0.15s, color 0.15s;
+  }
+  .menu-arrow {
+    width: 0.95em;
+    height: 0.95em;
+    flex-shrink: 0;
+    margin-right: 0.5em;
+    vertical-align: -0.12em;
   }
   .menu-item:hover, .menu-item:focus-visible {
     background: rgba(232, 184, 122, 0.08);
