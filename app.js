@@ -52,7 +52,7 @@ function maxRaisinsForRank(rank) {
 }
 const DAILY_GAME_LIMIT = 3;
 
-const WIN_PHRASES = {
+const WIN_PHRASES = GAME_CONFIG.winPhrases || {
   6: ["Wine-some!"],
   5: ["Suntastic!"],
   4: ["Juicy!"],
@@ -66,7 +66,7 @@ function pickWinPhrase(won) {
   return list[Math.floor(Math.random() * list.length)];
 }
 
-const REWARD_LEVELS = [
+const REWARD_LEVELS = GAME_CONFIG.rewardLevels || [
   { threshold: 15,  phrase: "Raise a toast!",                            label: "Raisin Toaster" },
   { threshold: 30,  phrase: "I dub thee, Sir/Madam Raisin",              label: "Sir/Madam Raisin" },
   { threshold: 50,  phrase: "You are my raison d'\u00eatre",             label: "Raison d'\u00eatre" },
