@@ -12,65 +12,56 @@
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Phraisins – Daily Word Game | Guess the Hidden Phrase</title>
-<meta name="description" content="A raisin-powered word game. Guess the hidden phrase in 4 tries with the help of a clue. Earn raisins and achieve grapeness.">
-<meta property="og:title" content="Phraisins - Word game">
-<meta property="og:description" content="A raisin-powered word game. Guess the phrase, earn raisins, and achieve grapeness.">
+<title>Potter Puzzles | Phraisins – 30 magical phrases</title>
+<meta name="description" content="A Harry Potter edition of Phraisins. Guess 30 magical hidden phrases with the help of a cryptic clue.">
+<meta property="og:title" content="Phraisins – Potter Puzzles">
+<meta property="og:description" content="A Harry Potter edition of Phraisins. Guess 30 magical hidden phrases.">
 <meta property="og:image" content="https://phraisins.com/og-image.png">
 <meta property="og:image:alt" content="Phraisins logo: a smiling cartoon raisin beside the word PHRAISINS.">
-<meta property="og:url" content="https://phraisins.com/">
+<meta property="og:url" content="https://phraisins.com/potter-puzzles/">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Phraisins">
-<meta name="twitter:description" content="A raisin-powered word game. Guess the phrase, earn raisins, and achieve grapeness.">
+<meta name="twitter:title" content="Phraisins – Potter Puzzles">
+<meta name="twitter:description" content="A Harry Potter edition of Phraisins. Guess 30 magical hidden phrases.">
 <meta name="twitter:image" content="https://phraisins.com/og-image.png">
 <meta name="twitter:image:alt" content="Phraisins logo: a smiling cartoon raisin beside the word PHRAISINS.">
-<link rel="canonical" href="https://phraisins.com/">
+<link rel="canonical" href="https://phraisins.com/potter-puzzles/">
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-<link rel="preload" as="fetch" href="phrases.json" crossorigin="anonymous">
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@graph": [
-    {
-      "@type": "WebSite",
-      "@id": "https://phraisins.com/#website",
-      "url": "https://phraisins.com/",
-      "name": "Phraisins",
-      "description": "A raisin-powered daily word game. Guess the hidden phrase and achieve grapeness.",
-      "inLanguage": "en"
-    },
-    {
-      "@type": ["WebApplication", "VideoGame"],
-      "@id": "https://phraisins.com/#app",
-      "name": "Phraisins",
-      "url": "https://phraisins.com/",
-      "isPartOf": {
-        "@id": "https://phraisins.com/#website"
-      },
-      "description": "Guess the hidden phrase in 4 tries with the help of a clue. Three new puzzles every day.",
-      "image": "https://phraisins.com/og-image.png",
-      "applicationCategory": "GameApplication",
-      "genre": "Word puzzle",
-      "gamePlatform": "Web browser",
-      "operatingSystem": "Any",
-      "inLanguage": "en",
-      "isAccessibleForFree": true,
-      "offers": {
-        "@type": "Offer",
-        "price": 0,
-        "priceCurrency": "USD"
-      }
-    }
-  ]
-}
+<link rel="preload" as="fetch" href="/potter-phrases.json" crossorigin="anonymous">
+<link rel="stylesheet" href="/styles.css">
+<script>
+  // Variant config consumed by app.js. To remove Potter Puzzles entirely,
+  // delete this directory, /potter-phrases.json, and the menu item in / index.html.
+  window.GAME_CONFIG = {
+    phrasesFile: '/potter-phrases.json',
+    storagePrefix: 'phraisins_potter_',
+    marathonSize: 30,
+    roundupTitles: [
+      { minScore: 25, title: 'Magical job, young wizard!' },
+      { minScore: 18, title: 'Bravo, apprentice!' },
+      { minScore: 12, title: 'Not bad for a first-year' },
+      { minScore: 0,  title: 'Even Neville started somewhere…' }
+    ],
+    riddlesEnabled: false,
+    shareLead: '\u{1FA84}',
+    shareHeader: 'Phraisins · Potter Puzzles',
+    shareUrl: 'phraisins.com/potter-puzzles',
+    roundupIconHTML:
+      '<svg class="recap-wand" viewBox="0 0 80 50" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">' +
+      '<line x1="12" y1="42" x2="62" y2="8" stroke="#7a5535" stroke-width="2.4" stroke-linecap="round"/>' +
+      '<line x1="10" y1="44" x2="22" y2="36" stroke="#3a200c" stroke-width="3.4" stroke-linecap="round"/>' +
+      '<path d="M64 4 l1.3 3.6 l3.7 1.3 l-3.7 1.3 l-1.3 3.6 l-1.3 -3.6 l-3.7 -1.3 l3.7 -1.3 z" fill="#f6ecff"/>' +
+      '<circle cx="56" cy="14" r="1" fill="#f6ecff"/>' +
+      '<circle cx="70" cy="18" r="1.2" fill="#e8b87a"/>' +
+      '<circle cx="54" cy="6" r="0.7" fill="#f6ecff"/>' +
+      '</svg>'
+  };
 </script>
-<link rel="stylesheet" href="styles.css">
 </head>
-<body class="app-loading">
+<body class="app-loading variant-potter">
 <button id="menu-btn" type="button" aria-label="Open menu" aria-haspopup="true" aria-expanded="false">
   <span class="menu-bar"></span>
   <span class="menu-bar"></span>
@@ -79,8 +70,9 @@
 <div id="menu-dropdown" class="hidden" role="menu" aria-labelledby="menu-btn">
   <button class="menu-item" id="menu-how-to" type="button" role="menuitem">How to play</button>
   <button class="menu-item" id="menu-history" type="button" role="menuitem">My puzzle history</button>
-  <button class="menu-item" id="menu-riddle-answer" type="button" role="menuitem">Riddle answer</button>
+  <button class="menu-item hidden" id="menu-riddle-answer" type="button" role="menuitem">Riddle answer</button>
   <button class="menu-item hidden" id="menu-potter-puzzles" type="button" role="menuitem">Potter Puzzles</button>
+  <button class="menu-item" id="menu-phraisins" type="button" role="menuitem"><svg class="menu-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>Home (Daily Phraisins)</button>
   <button class="menu-item" id="menu-about" type="button" role="menuitem">About</button>
 </div>
 <div id="info-modal" role="dialog" aria-modal="true" aria-labelledby="info-modal-title">
@@ -92,6 +84,25 @@
 </div>
 <div id="app">
   <div class="title-row">
+    <span class="raisin-with-hat">
+    <svg class="wizard-hat" viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <!-- Cone with battered, kinked outline (irregular L/Q mix) -->
+      <path d="M10 39 L11.5 33 Q13 27 14 22 L15.5 19 Q17 16 20 14 L23 12 Q27 9 31 7 L34.5 5.5 L36 6 L35 9 Q33 12 32.5 15 L33 18 Q33.5 22 33 26 L32 29 Q33 33 35 35.5 L37.5 39 Z" fill="#7a5535" stroke="#3a200c" stroke-width="0.7" stroke-linejoin="round"/>
+      <!-- Wrinkles / creases across the body -->
+      <path d="M12.5 32 Q22 30 33 32" stroke="#3a200c" stroke-width="0.55" fill="none" opacity="0.75" stroke-linecap="round"/>
+      <path d="M14 25 Q22 23.5 32.5 24.5" stroke="#3a200c" stroke-width="0.5" fill="none" opacity="0.6" stroke-linecap="round"/>
+      <path d="M16.5 18.5 Q22 17 30 17" stroke="#3a200c" stroke-width="0.45" fill="none" opacity="0.55" stroke-linecap="round"/>
+      <!-- Vertical fold near the tip -->
+      <path d="M27 14 L28.5 9" stroke="#3a200c" stroke-width="0.4" fill="none" opacity="0.55" stroke-linecap="round"/>
+      <!-- Subtle highlight along the front face -->
+      <path d="M14 35 Q17 26 22 17 L25 12" stroke="#a87a4a" stroke-width="0.55" fill="none" opacity="0.55" stroke-linecap="round"/>
+      <!-- Brim - slightly uneven, droops more on left -->
+      <path d="M3 41.2 Q12 38.4 24.5 38 Q36 38.2 46 40.6 Q36.5 43.5 24.5 43.8 Q12.5 43.7 3 41.2 Z" fill="#6b4423" stroke="#3a200c" stroke-width="0.55" stroke-linejoin="round"/>
+      <!-- Leather band -->
+      <path d="M5 40.2 Q24.5 42.8 44 40.0" stroke="#3a200c" stroke-width="1.7" fill="none"/>
+      <!-- Buckle -->
+      <rect x="22.3" y="38.5" width="4.4" height="3.3" fill="#e8b87a" stroke="#3a200c" stroke-width="0.5"/>
+    </svg>
     <svg class="raisin-svg" width="52" height="48" viewBox="0 0 52 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
       <path d="M26 8c-6-1-12 2-16 8-3 5-4 11-2 16 2 6 7 10 14 11 3 0 6 0 9-2 5-3 9-8 10-14 1-5-1-10-4-14-3-3-7-5-11-5z" fill="#542a78"/>
       <path d="M26 8c-6-1-12 2-16 8-3 5-4 11-2 16 2 6 7 10 14 11 3 0 6 0 9-2 5-3 9-8 10-14 1-5-1-10-4-14-3-3-7-5-11-5z" fill="url(#rg1)"/>
@@ -107,8 +118,28 @@
       <path d="M27 4c2-1 4-1 5 0" stroke="#6b8a3a" stroke-width="1.2" stroke-linecap="round" opacity="0.6"/>
       <defs><radialGradient id="rg1" cx="0.35" cy="0.3" r="0.5"><stop offset="0%" stop-color="#8050b8" stop-opacity="0.35"/><stop offset="100%" stop-color="#381855" stop-opacity="0"/></radialGradient></defs>
     </svg>
+    </span>
     <h1>PHRAISINS</h1>
-    <svg class="raisin-svg" width="52" height="48" viewBox="0 0 52 48" fill="none" xmlns="http://www.w3.org/2000/svg" style="transform: scaleX(-1)" aria-hidden="true">
+    <span class="raisin-with-hat raisin-with-hat--flip">
+    <svg class="wizard-hat" viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <!-- Cone with battered, kinked outline (irregular L/Q mix) -->
+      <path d="M10 39 L11.5 33 Q13 27 14 22 L15.5 19 Q17 16 20 14 L23 12 Q27 9 31 7 L34.5 5.5 L36 6 L35 9 Q33 12 32.5 15 L33 18 Q33.5 22 33 26 L32 29 Q33 33 35 35.5 L37.5 39 Z" fill="#7a5535" stroke="#3a200c" stroke-width="0.7" stroke-linejoin="round"/>
+      <!-- Wrinkles / creases across the body -->
+      <path d="M12.5 32 Q22 30 33 32" stroke="#3a200c" stroke-width="0.55" fill="none" opacity="0.75" stroke-linecap="round"/>
+      <path d="M14 25 Q22 23.5 32.5 24.5" stroke="#3a200c" stroke-width="0.5" fill="none" opacity="0.6" stroke-linecap="round"/>
+      <path d="M16.5 18.5 Q22 17 30 17" stroke="#3a200c" stroke-width="0.45" fill="none" opacity="0.55" stroke-linecap="round"/>
+      <!-- Vertical fold near the tip -->
+      <path d="M27 14 L28.5 9" stroke="#3a200c" stroke-width="0.4" fill="none" opacity="0.55" stroke-linecap="round"/>
+      <!-- Subtle highlight along the front face -->
+      <path d="M14 35 Q17 26 22 17 L25 12" stroke="#a87a4a" stroke-width="0.55" fill="none" opacity="0.55" stroke-linecap="round"/>
+      <!-- Brim - slightly uneven, droops more on left -->
+      <path d="M3 41.2 Q12 38.4 24.5 38 Q36 38.2 46 40.6 Q36.5 43.5 24.5 43.8 Q12.5 43.7 3 41.2 Z" fill="#6b4423" stroke="#3a200c" stroke-width="0.55" stroke-linejoin="round"/>
+      <!-- Leather band -->
+      <path d="M5 40.2 Q24.5 42.8 44 40.0" stroke="#3a200c" stroke-width="1.7" fill="none"/>
+      <!-- Buckle -->
+      <rect x="22.3" y="38.5" width="4.4" height="3.3" fill="#e8b87a" stroke="#3a200c" stroke-width="0.5"/>
+    </svg>
+    <svg class="raisin-svg" width="52" height="48" viewBox="0 0 52 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
       <path d="M26 8c-6-1-12 2-16 8-3 5-4 11-2 16 2 6 7 10 14 11 3 0 6 0 9-2 5-3 9-8 10-14 1-5-1-10-4-14-3-3-7-5-11-5z" fill="#542a78"/>
       <path d="M26 8c-6-1-12 2-16 8-3 5-4 11-2 16 2 6 7 10 14 11 3 0 6 0 9-2 5-3 9-8 10-14 1-5-1-10-4-14-3-3-7-5-11-5z" fill="url(#rg2)"/>
       <path d="M14 16c3 4 5 8 4 13" stroke="#381855" stroke-width="1.4" stroke-linecap="round" fill="none" opacity="0.7"/>
@@ -123,8 +154,9 @@
       <path d="M27 4c2-1 4-1 5 0" stroke="#6b8a3a" stroke-width="1.2" stroke-linecap="round" opacity="0.6"/>
       <defs><radialGradient id="rg2" cx="0.35" cy="0.3" r="0.5"><stop offset="0%" stop-color="#8050b8" stop-opacity="0.35"/><stop offset="100%" stop-color="#381855" stop-opacity="0"/></radialGradient></defs>
     </svg>
+    </span>
   </div>
-  <div id="subtitle"><span>Guess the hidden phrase. Achieve grapeness.</span></div>
+  <div id="subtitle"><span>Guess the magical phrase. Achieve grapeness.</span></div>
   <div id="score-area">
     <div id="raisin-bar">
       <span id="total-raisins"></span>
@@ -171,8 +203,16 @@
   </div>
 </div>
 <div id="welcome-dialog" class="hidden" role="dialog" aria-labelledby="welcome-title">
-  <div id="welcome-title">Welcome to Phraisins!</div>
-  <div id="welcome-body">Guess the hidden phrase and win raisins. Ready to achieve grapeness?</div>
+  <svg class="welcome-wand" viewBox="0 0 80 50" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <line x1="12" y1="42" x2="62" y2="8" stroke="#7a5535" stroke-width="2.4" stroke-linecap="round"/>
+    <line x1="10" y1="44" x2="22" y2="36" stroke="#3a200c" stroke-width="3.4" stroke-linecap="round"/>
+    <path d="M64 4 l1.3 3.6 l3.7 1.3 l-3.7 1.3 l-1.3 3.6 l-1.3 -3.6 l-3.7 -1.3 l3.7 -1.3 z" fill="#f6ecff"/>
+    <circle cx="56" cy="14" r="1" fill="#f6ecff"/>
+    <circle cx="70" cy="18" r="1.2" fill="#e8b87a"/>
+    <circle cx="54" cy="6" r="0.7" fill="#f6ecff"/>
+  </svg>
+  <div id="welcome-title">Welcome to Potter Puzzles!</div>
+  <div id="welcome-body">Solve 30 magical hidden phrases in a row. Ready to test your wizard knowledge?</div>
   <div id="welcome-buttons">
     <button id="welcome-play" type="button">Play Now</button>
     <button id="welcome-how-to" type="button">How to Play</button>
@@ -180,6 +220,6 @@
 </div>
 <div id="share-toast">Copied!</div>
 <footer>&copy; 2026 All rights reserved. &middot; <a href="https://elistutz.wordpress.com/contact-info/" target="_blank" rel="noopener">Contact game author</a></footer>
-<script src="app.js"></script>
+<script src="/app.js"></script>
 </body>
 </html>
