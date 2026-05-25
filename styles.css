@@ -268,7 +268,7 @@
     line-height: 1.65;
     box-shadow: 0 4px 24px rgba(80, 30, 120, 0.12);
   }
-  .cipher-word { display: inline-block; }
+  .cipher-word { display: inline-block; max-width: 100%; overflow-wrap: anywhere; }
   .cipher-char { display: inline; }
   .cipher-char.revealed {
     text-transform: lowercase;
@@ -828,6 +828,9 @@
       margin-bottom: 0.4rem;
     }
     .answer-word {
+      flex-wrap: wrap;
+      justify-content: center;
+      max-width: 100%;
       margin: 0 0.55rem;
     }
     .answer-cell {
