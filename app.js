@@ -1291,6 +1291,10 @@ function showWin() {
   }
   if (isDailyLimitReached()) {
     raisinText += buildDailySummaryHTML();
+    if (IS_MARATHON_MODE) {
+      resultFeedbackEl.textContent = getRoundupTitle();
+      resultFeedbackEl.className = 'feedback-correct';
+    }
   }
   resultRaisinsEl.innerHTML = raisinText;
   const shouldCelebrate = !!levelUp ||
@@ -1329,6 +1333,10 @@ function showLoss() {
     '<div class="won-caption">You got 0 raisins.</div>';
   if (isDailyLimitReached()) {
     lossHTML += buildDailySummaryHTML();
+    if (IS_MARATHON_MODE) {
+      resultFeedbackEl.textContent = getRoundupTitle();
+      resultFeedbackEl.className = 'feedback-correct';
+    }
   }
   resultRaisinsEl.innerHTML = lossHTML;
   showResult();
