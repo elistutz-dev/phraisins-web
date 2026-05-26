@@ -170,9 +170,7 @@
     letter-spacing: 0.05em;
     word-break: break-all;
   }
-  #result-actions .marathon-end-btn { margin-top: 0; }
   .marathon-end-btn {
-    margin-top: 0.9rem;
     background: var(--bg-panel);
     border: 1px solid rgba(124, 200, 138, 0.25);
     border-radius: 6px;

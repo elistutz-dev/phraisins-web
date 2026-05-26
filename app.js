@@ -266,7 +266,6 @@ function buildMarathonRoundupHTML() {
   html += '<div class="marathon-score">' + correct + ' / ' + total + ' correct</div>';
   html += '<div class="marathon-pips">' + pips + '</div>';
   html += '<div class="daily-summary-total">' + raisinsThisRun + ' raisin' + (raisinsThisRun !== 1 ? 's' : '') + ' earned this run</div>';
-  html += '<button id="marathon-end-btn" class="marathon-end-btn" type="button">MORE PUZZLES</button>';
   html += '</div>';
   return html;
 }
@@ -325,6 +324,7 @@ const submitBtn = document.getElementById('submit-btn');
 const hintBtn = document.getElementById('hint-btn');
 const giveupBtn = document.getElementById('giveup-btn');
 const newgameBtn = document.getElementById('newgame-btn');
+const marathonEndBtn = document.getElementById('marathon-end-btn');
 const buttonsEl = document.getElementById('buttons');
 const resultEl = document.getElementById('result');
 const resultFeedbackEl = document.getElementById('result-feedback');
@@ -1386,8 +1386,6 @@ function revealAllLetters() {
 }
 
 function showResult(delay = 1500) {
-  const meBtn = document.getElementById('marathon-end-btn');
-  if (meBtn) document.getElementById('result-actions').append(meBtn);
   hideMobileKeyboardImmediate();
   feedbackEl.classList.add('hidden');
   hintsEl.classList.add('hidden');
@@ -1399,6 +1397,10 @@ function showResult(delay = 1500) {
   else newgameBtn.classList.add('hidden');
   if (!IS_MARATHON_MODE && isDailyLimitReached() && RIDDLES.length) riddleBtn.classList.remove('hidden');
   else riddleBtn.classList.add('hidden');
+  if (marathonEndBtn) {
+    if (IS_MARATHON_MODE && isDailyLimitReached()) marathonEndBtn.classList.remove('hidden');
+    else marathonEndBtn.classList.add('hidden');
+  }
 
   answerAreaEl.querySelectorAll('input').forEach(input => { input.disabled = true; });
 
@@ -1694,8 +1696,7 @@ function showDailyLimitScreen() {
     resultFeedbackEl.className = 'feedback-correct';
   }
   resultRaisinsEl.innerHTML = buildDailySummaryHTML();
-  const meBtn = document.getElementById('marathon-end-btn');
-  if (meBtn) document.getElementById('result-actions').append(meBtn);
+  if (marathonEndBtn && IS_MARATHON_MODE) marathonEndBtn.classList.remove('hidden');
   resultEl.style.display = 'flex';
 }
 newgameOuterBtn.addEventListener('click', () => startGame({ fromNewGame: true }));
