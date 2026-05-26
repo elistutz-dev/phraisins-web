@@ -274,6 +274,7 @@
     word-spacing: 0.5em;
     line-height: 1.65;
     box-shadow: 0 4px 24px rgba(80, 30, 120, 0.12);
+    font-variant-emoji: text;
   }
   .cipher-word { display: inline-block; max-width: 100%; overflow-wrap: anywhere; }
   .cipher-char { display: inline; }
