@@ -286,7 +286,12 @@ function selectPhrase() {
   let available = unused.filter(p => p.rank !== 5);
   if (isStarterGame) {
     const starters = available.filter(p => STARTER_PHRASE_IDS.includes(p.id));
-    if (starters.length > 0) available = starters;
+    if (starters.length > 0) {
+      available = starters;
+    } else {
+      const rank1 = available.filter(p => p.rank === 1);
+      if (rank1.length > 0) available = rank1;
+    }
   } else if (getStreak() >= 4) {
     const expert = unused.filter(p => p.rank === 5);
     if (expert.length > 0) available = expert;
