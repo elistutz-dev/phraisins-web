@@ -170,6 +170,7 @@
     letter-spacing: 0.05em;
     word-break: break-all;
   }
+  #result-actions .marathon-end-btn { margin-top: 0; }
   .marathon-end-btn {
     margin-top: 0.9rem;
     background: var(--bg-panel);
@@ -672,6 +673,7 @@
   .riddle-yesterday-link a:hover, .riddle-yesterday-link a:focus-visible {
     color: var(--gold-bright, #f5c451);
   }
+  .riddle-potter-link { font-size: 1.05rem; }
   .riddle-potter-link a {
     display: inline-flex;
     align-items: center;

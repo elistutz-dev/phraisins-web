@@ -22,6 +22,12 @@ const IS_MOBILE_CUSTOM_KB = window.matchMedia('(pointer: coarse)').matches;
 // before this script loads. To remove a variant entirely, delete its
 // HTML/JSON files and any menu entry that links to it.
 const POTTER_PUZZLES_ENABLED = true;
+function hasPlayedPotter() {
+  const raw = localStorage.getItem('phraisins_potter_marathon_stats');
+  if (!raw) return false;
+  try { const p = JSON.parse(raw); return !!(p && p.games && p.games.length); }
+  catch { return false; }
+}
 const GAME_CONFIG = Object.assign({
   phrasesFile: 'phrases.json',
   storagePrefix: 'phraisins_',
@@ -1380,6 +1386,8 @@ function revealAllLetters() {
 }
 
 function showResult(delay = 1500) {
+  const meBtn = document.getElementById('marathon-end-btn');
+  if (meBtn) document.getElementById('result-actions').append(meBtn);
   hideMobileKeyboardImmediate();
   feedbackEl.classList.add('hidden');
   hintsEl.classList.add('hidden');
@@ -1576,7 +1584,7 @@ function showYesterdayRiddleModal(opts) {
       : '';
     bodyHtml = '<div class="riddle-text">' + linesHtml + answerHtml + '</div>';
   }
-  if (POTTER_PUZZLES_ENABLED && !IS_MARATHON_MODE) {
+  if (POTTER_PUZZLES_ENABLED && !IS_MARATHON_MODE && !hasPlayedPotter()) {
     bodyHtml += '<div class="riddle-yesterday-link riddle-potter-link">' +
       '<a href="/potter-puzzles/">' +
       '<svg class="menu-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">' +
@@ -1686,6 +1694,8 @@ function showDailyLimitScreen() {
     resultFeedbackEl.className = 'feedback-correct';
   }
   resultRaisinsEl.innerHTML = buildDailySummaryHTML();
+  const meBtn = document.getElementById('marathon-end-btn');
+  if (meBtn) document.getElementById('result-actions').append(meBtn);
   resultEl.style.display = 'flex';
 }
 newgameOuterBtn.addEventListener('click', () => startGame({ fromNewGame: true }));
