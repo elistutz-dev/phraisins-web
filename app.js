@@ -360,7 +360,7 @@ function setCipherText(el, text) {
     '<span class="cipher-word">' +
     [...w].map(ch => {
       const escaped = ch.replace(/</g, '&lt;').replace(/>/g, '&gt;');
-      return '<span class="cipher-char" data-symbol="' + escaped + '">' + escaped + '</span>';
+      return '<span class="cipher-char" data-symbol="' + escaped + '">' + escaped + '︎</span>';
     }).join('') +
     '</span>'
   ).join(' ');
