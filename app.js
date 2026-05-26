@@ -1576,6 +1576,19 @@ function showYesterdayRiddleModal(opts) {
       : '';
     bodyHtml = '<div class="riddle-text">' + linesHtml + answerHtml + '</div>';
   }
+  if (POTTER_PUZZLES_ENABLED && !IS_MARATHON_MODE) {
+    bodyHtml += '<div class="riddle-yesterday-link riddle-potter-link">' +
+      '<a href="/potter-puzzles/">' +
+      '<svg class="menu-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">' +
+      '<line x1="3.5" y1="20.5" x2="13.5" y2="10.5" stroke="#6b4423" stroke-width="2.4" stroke-linecap="round"/>' +
+      '<line x1="13" y1="11" x2="16.5" y2="7.5" stroke="#a8794f" stroke-width="2.2" stroke-linecap="round"/>' +
+      '<circle cx="17" cy="7" r="2.2" fill="#ffe199"/>' +
+      '<circle cx="17" cy="7" r="1" fill="#fff8dc"/>' +
+      '<path d="M17 1.1v0.7M17 2.6v0.7M16.6 2.2h-0.7M17.4 2.2h0.7M21 2.5v0.7M21 4v0.7M20.6 3.6h-0.7M21.4 3.6h0.7M22.5 5.9v0.7M22.5 7.4v0.7M22.1 7h-0.7M22.9 7h0.7" stroke="#ffd97a" stroke-width="0.9" stroke-linecap="round"/>' +
+      '</svg>' +
+      '<span>Try Potter Puzzles</span>' +
+      '</a></div>';
+  }
   openInfoModal('Yesterday’s Riddle', bodyHtml);
   if (opts && opts.returnToToday) infoModalReturnTo = showRiddleModal;
 }

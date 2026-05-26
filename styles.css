@@ -672,6 +672,12 @@
   .riddle-yesterday-link a:hover, .riddle-yesterday-link a:focus-visible {
     color: var(--gold-bright, #f5c451);
   }
+  .riddle-potter-link a {
+    display: inline-flex;
+    align-items: center;
+    text-decoration: none;
+  }
+  .riddle-potter-link a span { text-decoration: underline; }
   .riddle-yesterday-note {
     color: rgba(255, 255, 255, 0.55);
     font-style: normal;
