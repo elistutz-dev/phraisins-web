@@ -211,11 +211,19 @@ function getLastPlayedPhrase() {
   const lastId = used[used.length - 1];
   return PHRASES.find(p => p.id === lastId) || null;
 }
+function computeLenScale(phrase) {
+  const wordCount = phrase.trim().split(/\s+/).length;
+  if (wordCount > 4) return 1;
+  const charCount = phrase.replace(/\s+/g, '').length;
+  if (charCount <= 8) return 1.3;
+  if (charCount <= 12) return 1.2;
+  if (charCount <= 16) return 1.1;
+  return 1;
+}
 function paintSolvedCipher(phraseObj) {
   const phrase = phraseObj.phrase;
-  const wordCount = phrase.trim().split(/\s+/).length;
   cipherEl.style.setProperty('--sym-scale', 1);
-  cipherEl.style.setProperty('--len-scale', wordCount <= 4 ? 1.3 : 1);
+  cipherEl.style.setProperty('--len-scale', computeLenScale(phrase));
   setCipherText(cipherEl, phrase.toLowerCase().replace(/ /g, '  '));
   cipherEl.querySelectorAll('.cipher-char').forEach(span => {
     if (span.textContent && span.textContent !== ' ') span.classList.add('revealed');
@@ -1114,8 +1122,7 @@ function startGame({ fromNewGame = false, seed = null, restored = null } = {}) {
     phraseObj = seed || selectPhrase();
   }
   cipherEl.style.setProperty('--sym-scale', symScale);
-  const wordCount = phraseObj.phrase.trim().split(/\s+/).length;
-  cipherEl.style.setProperty('--len-scale', wordCount <= 4 ? 1.3 : 1);
+  cipherEl.style.setProperty('--len-scale', computeLenScale(phraseObj.phrase));
   const { encoded, mapping } = encode(phraseObj.phrase);
   const reverseMapping = {};
   for (const [letter, symbol] of Object.entries(mapping)) {
