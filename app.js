@@ -1595,7 +1595,7 @@ function showYesterdayRiddleModal(opts) {
   }
   if (POTTER_PUZZLES_ENABLED && !IS_MARATHON_MODE && !hasPlayedPotter()) {
     bodyHtml += '<div class="riddle-yesterday-link riddle-potter-link">' +
-      '<a href="/potter-puzzles/">' +
+      '<a href="/wizarding-words/">' +
       '<svg class="menu-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">' +
       '<line x1="3.5" y1="20.5" x2="13.5" y2="10.5" stroke="#6b4423" stroke-width="2.4" stroke-linecap="round"/>' +
       '<line x1="13" y1="11" x2="16.5" y2="7.5" stroke="#a8794f" stroke-width="2.2" stroke-linecap="round"/>' +
@@ -2060,7 +2060,7 @@ if (menuPotterBtn) {
   // Hide if Potter is disabled, or if we are already on the Potter page.
   if (POTTER_PUZZLES_ENABLED && !IS_MARATHON_MODE) {
     menuPotterBtn.classList.remove('hidden');
-    menuPotterBtn.addEventListener('click', () => { window.location.href = '/potter-puzzles/'; });
+    menuPotterBtn.addEventListener('click', () => { window.location.href = '/wizarding-words/'; });
   } else {
     menuPotterBtn.classList.add('hidden');
   }
