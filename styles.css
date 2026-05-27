@@ -1096,6 +1096,24 @@
     background: rgba(168, 180, 240, 0.08);
     box-shadow: 0 2px 8px rgba(168, 180, 240, 0.12);
   }
+  #welcome-about {
+    display: inline-block;
+    margin-top: 0.9rem;
+    border: none;
+    background: none;
+    padding: 0.2rem 0.4rem;
+    font-family: var(--font);
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.55);
+    text-decoration: underline;
+    text-decoration-color: rgba(255, 255, 255, 0.3);
+    cursor: pointer;
+    transition: color 0.2s;
+  }
+  #welcome-about:hover, #welcome-about:focus-visible {
+    color: var(--gold);
+    text-decoration-color: rgba(232, 184, 122, 0.5);
+  }
   @media (max-width: 600px) {
     #welcome-dialog {
       left: 1rem;
@@ -1332,6 +1350,14 @@
   }
   #info-modal-body p { margin-bottom: 0.7rem; }
   #info-modal-body p:last-child { margin-bottom: 0; }
+  .about-disclaimer {
+    margin-top: 1.1rem;
+    padding-top: 0.9rem;
+    border-top: 1px solid var(--border);
+    font-size: 0.8rem;
+    line-height: 1.45;
+    color: rgba(255, 255, 255, 0.5);
+  }
   #info-modal-body a {
     color: var(--gold);
     text-decoration: underline;

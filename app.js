@@ -1917,6 +1917,7 @@ tutorialNextBtn.addEventListener('click', advanceTutorial);
 const welcomeDialogEl = document.getElementById('welcome-dialog');
 const welcomePlayBtn = document.getElementById('welcome-play');
 const welcomeHowToBtn = document.getElementById('welcome-how-to');
+const welcomeAboutBtn = document.getElementById('welcome-about');
 
 function showWelcomeDialog() {
   document.body.classList.add('tutorial-active');
@@ -1942,6 +1943,21 @@ welcomeHowToBtn.addEventListener('click', () => {
   startGame({ seed: TUTORIAL_SEED });
   showTutorial();
 });
+
+if (welcomeAboutBtn) {
+  welcomeAboutBtn.addEventListener('click', () => {
+    // Tuck the welcome dialog and its overlay away so the About modal (a lower
+    // z-index) is visible, then restore them when the modal is closed.
+    hideWelcomeDialog();
+    tutorialOverlayEl.classList.add('hidden');
+    tutorialOverlayEl.setAttribute('aria-hidden', 'true');
+    showAboutModal();
+    infoModalReturnTo = () => {
+      infoModalEl.classList.remove('show');
+      showWelcomeDialog();
+    };
+  });
+}
 function repositionActiveCallout() {
   if (tutorialOverlayEl.classList.contains('hidden')) return;
   positionTutorialCallout();
@@ -2035,11 +2051,15 @@ function showHistoryModal() {
 }
 
 function showAboutModal() {
-  const html =
+  let html =
     '<div class="about-text">' +
     '<p>Phraisins is a free word game where players have four tries to guess a hidden phrase with the help of a clue. You can play up to three puzzles a day. Correct guesses win you raisins, unlock riddles, and raise you to new levels of grapeness. The game is designed by Eli&nbsp;Stutz for your pure, fruity enjoyment.</p>' +
-    '<p><a href="https://elistutz.wordpress.com/contact-info/" target="_blank" rel="noopener">Contact Eli</a></p>' +
-    '</div>';
+    '<p><a href="https://elistutz.wordpress.com/contact-info/" target="_blank" rel="noopener">Contact Eli</a></p>';
+  if (document.body.classList.contains('variant-potter')) {
+    html +=
+      '<p class="about-disclaimer">Wizarding Words is an unofficial fan project. Not affiliated with or endorsed by Warner Bros. or J.K. Rowling.</p>';
+  }
+  html += '</div>';
   openInfoModal('About', html);
 }
 
