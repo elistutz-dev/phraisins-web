@@ -1603,7 +1603,7 @@ function showYesterdayRiddleModal(opts) {
       '<circle cx="17" cy="7" r="1" fill="#fff8dc"/>' +
       '<path d="M17 1.1v0.7M17 2.6v0.7M16.6 2.2h-0.7M17.4 2.2h0.7M21 2.5v0.7M21 4v0.7M20.6 3.6h-0.7M21.4 3.6h0.7M22.5 5.9v0.7M22.5 7.4v0.7M22.1 7h-0.7M22.9 7h0.7" stroke="#ffd97a" stroke-width="0.9" stroke-linecap="round"/>' +
       '</svg>' +
-      '<span>Try Potter Puzzles</span>' +
+      '<span>Try Wizarding Words</span>' +
       '</a></div>';
   }
   openInfoModal('Yesterday’s Riddle', bodyHtml);
