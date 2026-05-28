@@ -1918,6 +1918,7 @@ const welcomeDialogEl = document.getElementById('welcome-dialog');
 const welcomePlayBtn = document.getElementById('welcome-play');
 const welcomeHowToBtn = document.getElementById('welcome-how-to');
 const welcomeAboutBtn = document.getElementById('welcome-about');
+const welcomeCloseBtn = document.getElementById('welcome-close');
 
 function showWelcomeDialog() {
   document.body.classList.add('tutorial-active');
@@ -1930,13 +1931,19 @@ function hideWelcomeDialog() {
   welcomeDialogEl.classList.add('hidden');
 }
 
-welcomePlayBtn.addEventListener('click', () => {
+function dismissWelcomeDialog() {
   hideWelcomeDialog();
   tutorialOverlayEl.classList.add('hidden');
   tutorialOverlayEl.setAttribute('aria-hidden', 'true');
   document.body.classList.remove('tutorial-active');
   saveTutorialSeen();
-});
+}
+
+welcomePlayBtn.addEventListener('click', dismissWelcomeDialog);
+
+if (welcomeCloseBtn) {
+  welcomeCloseBtn.addEventListener('click', dismissWelcomeDialog);
+}
 
 welcomeHowToBtn.addEventListener('click', () => {
   hideWelcomeDialog();

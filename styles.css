@@ -1042,6 +1042,28 @@
     animation: welcomeFadeIn 0.35s ease-out;
   }
   #welcome-dialog.hidden { display: none; }
+  #welcome-close {
+    position: absolute;
+    top: 0.4rem;
+    right: 0.5rem;
+    width: 1.9rem;
+    height: 1.9rem;
+    padding: 0;
+    background: transparent;
+    border: none;
+    color: var(--dim);
+    font-family: inherit;
+    font-size: 1.5rem;
+    line-height: 1;
+    cursor: pointer;
+    border-radius: 50%;
+    transition: color 0.15s, background 0.15s;
+  }
+  #welcome-close:hover, #welcome-close:focus-visible {
+    color: var(--accent-bright);
+    background: rgba(226, 196, 255, 0.08);
+    outline: none;
+  }
   @keyframes welcomeFadeIn {
     from { opacity: 0; }
     to { opacity: 1; }
