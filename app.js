@@ -1218,10 +1218,15 @@ function startGame({ fromNewGame = false, seed = null, restored = null } = {}) {
 
   const isMobile = window.matchMedia('(pointer: coarse)').matches;
   setTimeout(() => {
-    if (seed || restored) return;
+    if (seed) return;
     if (IS_MOBILE_CUSTOM_KB) return; // wait for user tap before showing keyboard
-    if (fromNewGame && isMobile) focusCellQuietly(0);
-    else focusCell(0);
+    if (isMobile) {
+      if (fromNewGame) focusCellQuietly(0);
+      return;
+    }
+    // Desktop: focus the first empty editable cell so the native caret blinks.
+    const idx = getFirstEditableEmptyIndex();
+    focusCell(idx === -1 ? 0 : idx);
   }, 100);
 
   // Append keyboard once content has been laid out so the static-positioned
@@ -1931,12 +1936,24 @@ function hideWelcomeDialog() {
   welcomeDialogEl.classList.add('hidden');
 }
 
+// Desktop only — restores the native caret to the first empty cell after a
+// click moves focus away (welcome buttons, tutorial Next). Skipped on touch
+// devices since focusing an input pops the on-screen keyboard.
+function focusFirstEditableCellIfDesktop() {
+  if (window.matchMedia('(pointer: coarse)').matches) return;
+  if (IS_MOBILE_CUSTOM_KB) return;
+  if (!game || game.isOver) return;
+  const idx = getFirstEditableEmptyIndex();
+  focusCell(idx === -1 ? 0 : idx);
+}
+
 function dismissWelcomeDialog() {
   hideWelcomeDialog();
   tutorialOverlayEl.classList.add('hidden');
   tutorialOverlayEl.setAttribute('aria-hidden', 'true');
   document.body.classList.remove('tutorial-active');
   saveTutorialSeen();
+  focusFirstEditableCellIfDesktop();
 }
 
 welcomePlayBtn.addEventListener('click', dismissWelcomeDialog);
@@ -1972,6 +1989,13 @@ function repositionActiveCallout() {
 window.addEventListener('resize', repositionActiveCallout);
 window.addEventListener('resize', applyWordWrapHyphens);
 window.addEventListener('scroll', repositionActiveCallout, { passive: true });
+// Browser back/forward restores from bfcache without re-running init/startGame,
+// so the native caret is lost. Re-focus on desktop when the page is revived.
+window.addEventListener('pageshow', (e) => {
+  if (!e.persisted) return;
+  if (document.body.classList.contains('tutorial-active')) return;
+  focusFirstEditableCellIfDesktop();
+});
 document.addEventListener('keydown', (e) => {
   if (tutorialCalloutEl.classList.contains('hidden')) return;
   if (e.key === 'Enter' || e.key === ' ' || e.key === 'ArrowRight') {
@@ -2023,7 +2047,10 @@ function closeInfoModal() {
   const ret = infoModalReturnTo;
   infoModalReturnTo = null;
   if (ret) ret();
-  else infoModalEl.classList.remove('show');
+  else {
+    infoModalEl.classList.remove('show');
+    focusFirstEditableCellIfDesktop();
+  }
 }
 infoModalCloseBtn.addEventListener('click', closeInfoModal);
 infoModalEl.addEventListener('click', (e) => { if (e.target === infoModalEl) closeInfoModal(); });
