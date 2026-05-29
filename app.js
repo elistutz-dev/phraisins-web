@@ -224,6 +224,7 @@ function paintSolvedCipher(phraseObj) {
   const phrase = phraseObj.phrase;
   cipherEl.style.setProperty('--sym-scale', 1);
   cipherEl.style.setProperty('--len-scale', computeLenScale(phrase));
+  cipherEl.style.removeProperty('--cipher-cell'); // letters, not symbols — use natural widths
   setCipherText(cipherEl, phrase.toLowerCase().replace(/ /g, '  '));
   cipherEl.querySelectorAll('.cipher-char').forEach(span => {
     if (span.textContent && span.textContent !== ' ') span.classList.add('revealed');
@@ -372,6 +373,36 @@ function setCipherText(el, text) {
     }).join('') +
     '</span>'
   ).join(' ');
+}
+
+// Sizes every cipher cell to the widest glyph the phrase actually uses, plus a
+// constant gap. A uniform cell keeps line wrapping stable while glyphs of
+// varying width swap in during the scramble and on reveal. Basing it on the
+// phrase's own glyphs (rather than the whole symbol set) keeps the leftover
+// centering slack small, so spacing reads consistently across symbol sets
+// instead of looking cramped in dense sets and airy in sparse ones. The
+// constant gap guarantees breathing room even when every glyph is full-width.
+// Stored in em so it tracks the viewport-relative font-size on resize.
+const CIPHER_CELL_GAP_EM = 0.15;
+function setCipherCellWidth(symbols) {
+  if (!symbols || !symbols.length) {
+    cipherEl.style.removeProperty('--cipher-cell');
+    return;
+  }
+  const probe = document.createElement('span');
+  probe.style.cssText = 'position:absolute;left:-9999px;top:0;visibility:hidden;' +
+    'white-space:nowrap;letter-spacing:normal;pointer-events:none;';
+  cipherEl.appendChild(probe);
+  let maxW = 0;
+  for (const sym of symbols) {
+    probe.textContent = sym + '︎';
+    const w = probe.getBoundingClientRect().width;
+    if (w > maxW) maxW = w;
+  }
+  cipherEl.removeChild(probe);
+  const fontPx = parseFloat(getComputedStyle(cipherEl).fontSize) || 16;
+  const em = (maxW / fontPx) * 1.02 + CIPHER_CELL_GAP_EM;
+  cipherEl.style.setProperty('--cipher-cell', em.toFixed(3) + 'em');
 }
 
 function updateCipherDisplay() {
@@ -1124,6 +1155,7 @@ function startGame({ fromNewGame = false, seed = null, restored = null } = {}) {
   cipherEl.style.setProperty('--sym-scale', symScale);
   cipherEl.style.setProperty('--len-scale', computeLenScale(phraseObj.phrase));
   const { encoded, mapping } = encode(phraseObj.phrase);
+  setCipherCellWidth(Object.values(mapping));
   const reverseMapping = {};
   for (const [letter, symbol] of Object.entries(mapping)) {
     reverseMapping[symbol] = letter;

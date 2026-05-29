@@ -277,7 +277,15 @@
     font-variant-emoji: text;
   }
   .cipher-word { display: inline-block; max-width: 100%; overflow-wrap: anywhere; }
-  .cipher-char { display: inline; }
+  /* Uniform cell width keeps wrapping (and thus the line count) stable while
+     glyphs of varying width swap in during the scramble and on reveal.
+     --cipher-cell is sized per puzzle to the widest glyph in its symbol set;
+     falls back to natural width when unset. */
+  .cipher-char {
+    display: inline-block;
+    width: var(--cipher-cell, auto);
+    text-align: center;
+  }
   .cipher-char.revealed {
     text-transform: lowercase;
     color: var(--gold);
