@@ -383,7 +383,7 @@ function setCipherText(el, text) {
 // instead of looking cramped in dense sets and airy in sparse ones. The
 // constant gap guarantees breathing room even when every glyph is full-width.
 // Stored in em so it tracks the viewport-relative font-size on resize.
-const CIPHER_CELL_GAP_EM = 0.12;
+const CIPHER_CELL_GAP_EM = 0.1;
 function setCipherCellWidth(symbols) {
   if (!symbols || !symbols.length) {
     cipherEl.style.removeProperty('--cipher-cell');
