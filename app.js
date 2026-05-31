@@ -33,7 +33,8 @@ const GAME_CONFIG = Object.assign({
   storagePrefix: 'phraisins_',
   marathonSize: null,        // null = daily mode (DAILY_GAME_LIMIT/day); number = marathon mode (no daily limit, roundup after N games)
   roundupTitle: 'Marathon complete!',
-  riddlesEnabled: true
+  riddlesEnabled: true,
+  inviteShare: true         // true = share button copies a "Copy Invite" message instead of the result grid (general page); variants override to false
 }, (typeof window !== 'undefined' && window.GAME_CONFIG) || {});
 const PHRASES_FILE = GAME_CONFIG.phrasesFile;
 const STORAGE_PREFIX = GAME_CONFIG.storagePrefix;
@@ -1523,8 +1524,23 @@ function showToast(msg) {
   setTimeout(() => shareToast.classList.remove('show'), 1500);
 }
 
+function buildInviteText() {
+  let won;
+  if (isDailyLimitReached()) {
+    won = getDailyStats().games.reduce((sum, g) => sum + (g.won || 0), 0);
+  } else {
+    won = (game && typeof game.raisins === 'number') ? game.raisins : 0;
+  }
+  let text = 'PHRAISINS \u{1F347}\n\n';
+  text += "I've been playing this daily word puzzle:\n";
+  text += 'Guess the hidden phrase with a cryptic clue.\n';
+  if (won > 0) text += 'I just won ' + won + ' raisin' + (won !== 1 ? 's' : '') + '! How many can you win?\n';
+  text += '\nPlay here:\nhttps://phraisins.com';
+  return text;
+}
+
 async function shareResult() {
-  const text = buildShareText();
+  const text = GAME_CONFIG.inviteShare ? buildInviteText() : buildShareText();
   const shareData = { text };
   const isMobile = window.matchMedia('(pointer: coarse)').matches;
   if (isMobile && navigator.share && (!navigator.canShare || navigator.canShare(shareData))) {
