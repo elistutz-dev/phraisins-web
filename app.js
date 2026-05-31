@@ -1430,8 +1430,8 @@ function revealAllLetters() {
   game.unrevealedLetters = [];
 }
 
-// Per-puzzle share reads "SHARE"; the daily recap share reads "SHARE GAME".
-// Marathon variants (e.g. Wizarding Words) always stay "SHARE".
+// Per-puzzle share reads "SHARE"; once the daily limit is reached it reads
+// "SHARE GAME". Marathon variants (e.g. Wizarding Words) always stay "SHARE".
 function updateShareBtnLabel() {
   if (!shareBtn || shareBtn.firstChild == null || shareBtn.firstChild.nodeType !== Node.TEXT_NODE) return;
   shareBtn.firstChild.nodeValue = (!IS_MARATHON_MODE && isDailyLimitReached()) ? 'SHARE GAME' : 'SHARE';
