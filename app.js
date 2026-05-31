@@ -1472,57 +1472,20 @@ function showResult(delay = 1500) {
 }
 
 // --- Share ---
+// Marathon roundup, copied once the marathon is complete (Wizarding Words).
+// Only reached via shareResult() in marathon mode at the daily limit.
 function buildDailyShareText() {
-  const stats = getDailyStats();
-  const games = stats.games;
-  const total = getTotalRaisins();
+  const games = getDailyStats().games;
   const todayRaisins = games.reduce((sum, g) => sum + (g.won || 0), 0);
-  if (IS_MARATHON_MODE) {
-    const correct = games.filter(g => (g.won || 0) > 0).length;
-    const lead = GAME_CONFIG.shareLead || '';
-    const url = GAME_CONFIG.shareUrl || 'phraisins.com';
-    const header = GAME_CONFIG.shareHeader || 'PHRAISINS';
-    let mText = (lead ? lead + ' ' : '') + header + '\n';
-    mText += '✨ ' + getRoundupTitle() + '\n';
-    mText += correct + '/' + MARATHON_SIZE + ' correct\n';
-    mText += '\u{1F347} ' + todayRaisins + ' raisin' + (todayRaisins !== 1 ? 's' : '') + ' earned\n';
-    mText += url;
-    return mText;
-  }
-  let text = 'PHRAISINS — daily recap\n';
-  games.forEach(g => {
-    const won = g.won || 0;
-    const max = g.max || LEGACY_MAX_RAISINS;
-    const filled = '\u{1F347}'.repeat(won);
-    const empty = '⚫'.repeat(Math.max(0, max - won));
-    text += filled + empty + ' (' + won + '/' + max + ')\n';
-  });
-  text += 'Today: ' + todayRaisins + ' raisin' + (todayRaisins !== 1 ? 's' : '') + '\n';
-  const level = getCurrentLevel(total);
-  text += 'Total: ' + total + ' raisins';
-  if (level) text += ' — ' + level.label;
-  text += '\nphraisins.com';
-  return text;
-}
-
-function buildShareText() {
-  if (isDailyLimitReached()) return buildDailyShareText();
-  const won = game.raisins;
-  const max = game.maxRaisins || LEGACY_MAX_RAISINS;
-  const total = getTotalRaisins();
-  const filled = '\u{1F347}'.repeat(won);
-  const empty = '\u26AB'.repeat(Math.max(0, max - won));
-  let text = 'PHRAISINS\n';
-  text += filled + empty + ' (' + won + '/' + max + ')\n';
-  const level = getCurrentLevel(total);
-  text += 'Total: ' + total + ' raisins';
-  if (level) text += ' \u2014 ' + level.label;
-  if (lastLevelUp) text += ' \u{1F389}';
-  const streak = game.streak || 0;
-  const perfectStreak = game.perfectStreak || 0;
-  if (perfectStreak >= 3) text += '\nPerfect Streak: ' + perfectStreak + ' in a row!';
-  else if (streak >= 3) text += '\nStreak: ' + streak + ' in a row';
-  text += '\nphraisins.com';
+  const correct = games.filter(g => (g.won || 0) > 0).length;
+  const lead = GAME_CONFIG.shareLead || '';
+  const url = GAME_CONFIG.shareUrl || 'phraisins.com';
+  const header = GAME_CONFIG.shareHeader || 'PHRAISINS';
+  let text = (lead ? lead + ' ' : '') + header + '\n';
+  text += '✨ ' + getRoundupTitle() + '\n';
+  text += correct + '/' + MARATHON_SIZE + ' correct\n';
+  text += '\u{1F347} ' + todayRaisins + ' raisin' + (todayRaisins !== 1 ? 's' : '') + ' earned\n';
+  text += url;
   return text;
 }
 
@@ -1566,7 +1529,7 @@ async function shareResult() {
   // each puzzle, but keep the score roundup once the marathon is complete.
   let useInvite = GAME_CONFIG.inviteShare;
   if (IS_MARATHON_MODE) useInvite = !isDailyLimitReached();
-  const text = useInvite ? buildInviteText() : buildShareText();
+  const text = useInvite ? buildInviteText() : buildDailyShareText();
   const shareData = { text };
   const isMobile = window.matchMedia('(pointer: coarse)').matches;
   if (isMobile && navigator.share && (!navigator.canShare || navigator.canShare(shareData))) {
