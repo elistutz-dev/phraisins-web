@@ -1531,16 +1531,34 @@ function buildInviteText() {
   } else {
     won = (game && typeof game.raisins === 'number') ? game.raisins : 0;
   }
-  let text = 'PHRAISINS \u{1F347}\n\n';
-  text += "I've been playing this daily word puzzle:\n";
-  text += 'Guess the hidden phrase with a cryptic clue.\n';
+  let header, intro, desc, url;
+  if (IS_MARATHON_MODE) {
+    const lead = GAME_CONFIG.shareLead || '';
+    header = (lead ? lead + ' ' : '') + (GAME_CONFIG.shareHeader || 'Phraisins · Wizarding Words');
+    intro = "I've been playing this Wizarding Words puzzle:";
+    desc = 'Guess the magical phrase with a cryptic clue.';
+    url = GAME_CONFIG.shareUrl || 'phraisins.com/wizarding-words';
+    if (!/^https?:\/\//.test(url)) url = 'https://' + url;
+  } else {
+    header = 'PHRAISINS \u{1F347}';
+    intro = "I've been playing this daily word puzzle:";
+    desc = 'Guess the hidden phrase with a cryptic clue.';
+    url = 'https://phraisins.com';
+  }
+  let text = header + '\n\n';
+  text += intro + '\n';
+  text += desc + '\n';
   if (won > 0) text += 'I just won ' + won + ' raisin' + (won !== 1 ? 's' : '') + '! How many can you win?\n';
-  text += '\nPlay here:\nhttps://phraisins.com';
+  text += '\nPlay here:\n' + url;
   return text;
 }
 
 async function shareResult() {
-  const text = GAME_CONFIG.inviteShare ? buildInviteText() : buildShareText();
+  // General page: always an invite. Wizarding Words (marathon): invite after
+  // each puzzle, but keep the score roundup once the marathon is complete.
+  let useInvite = GAME_CONFIG.inviteShare;
+  if (IS_MARATHON_MODE) useInvite = !isDailyLimitReached();
+  const text = useInvite ? buildInviteText() : buildShareText();
   const shareData = { text };
   const isMobile = window.matchMedia('(pointer: coarse)').matches;
   if (isMobile && navigator.share && (!navigator.canShare || navigator.canShare(shareData))) {
