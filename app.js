@@ -1430,7 +1430,15 @@ function revealAllLetters() {
   game.unrevealedLetters = [];
 }
 
+// Per-puzzle share reads "SHARE"; the daily recap share reads "SHARE GAME".
+// Marathon variants (e.g. Wizarding Words) always stay "SHARE".
+function updateShareBtnLabel() {
+  if (!shareBtn || shareBtn.firstChild == null || shareBtn.firstChild.nodeType !== Node.TEXT_NODE) return;
+  shareBtn.firstChild.nodeValue = (!IS_MARATHON_MODE && isDailyLimitReached()) ? 'SHARE GAME' : 'SHARE';
+}
+
 function showResult(delay = 1500) {
+  updateShareBtnLabel();
   hideMobileKeyboardImmediate();
   feedbackEl.classList.add('hidden');
   hintsEl.classList.add('hidden');
@@ -1774,6 +1782,7 @@ function showDailyLimitScreen() {
     resultFeedbackEl.className = 'feedback-correct';
   }
   resultRaisinsEl.innerHTML = buildDailySummaryHTML();
+  updateShareBtnLabel();
   if (marathonEndBtn && IS_MARATHON_MODE) marathonEndBtn.classList.remove('hidden');
   resultEl.style.display = 'flex';
 }
