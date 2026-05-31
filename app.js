@@ -1539,7 +1539,7 @@ function buildInviteText() {
   } else {
     won = (game && typeof game.raisins === 'number') ? game.raisins : 0;
   }
-  let header, intro, desc, url;
+  let header, intro, desc, url, playLine;
   if (IS_MARATHON_MODE) {
     const lead = GAME_CONFIG.shareLead || '';
     header = (lead ? lead + ' ' : '') + (GAME_CONFIG.shareHeader || 'Phraisins · Wizarding Words');
@@ -1547,17 +1547,19 @@ function buildInviteText() {
     desc = 'Guess the magical phrase with a cryptic clue.';
     url = GAME_CONFIG.shareUrl || 'phraisins.com/wizarding-words';
     if (!/^https?:\/\//.test(url)) url = 'https://' + url;
+    playLine = '\nPlay here:\n' + url;
   } else {
     header = '\u{1F347} Phraisins';
     intro = "I've been playing this daily word puzzle:";
     desc = 'Guess the hidden phrase with a cryptic clue.';
-    url = 'https://phraisins.com';
+    url = 'phraisins.com';
+    playLine = '\nPlay here: ' + url;
   }
   let text = header + '\n\n';
   text += intro + '\n';
   text += desc + '\n';
   if (won > 0) text += 'I just won ' + won + ' raisin' + (won !== 1 ? 's' : '') + '! How many can you win?\n';
-  text += '\nPlay here:\n' + url;
+  text += playLine;
   return text;
 }
 
