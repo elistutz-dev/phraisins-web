@@ -2052,6 +2052,7 @@ function focusFirstEditableCellIfDesktop() {
   if (IS_MOBILE_CUSTOM_KB) return;
   if (!game || game.isOver) return;
   const idx = getFirstEditableEmptyIndex();
+  skipHighlightOnNextFocus = true;
   focusCell(idx === -1 ? 0 : idx);
 }
 
