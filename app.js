@@ -835,6 +835,11 @@ function releaseAppLift() {
   }, 350);
 }
 
+// Set before a programmatic focus that shouldn't light up the symbol group
+// (e.g. the desktop auto-focus on load) so the highlight only appears in
+// response to real interaction — matching how mobile behaves.
+let skipHighlightOnNextFocus = false;
+
 function highlightSameSymbol(symbol) {
   clearHighlights();
   (game.symbolToPositions[symbol] || []).forEach(pos => {
@@ -924,7 +929,11 @@ function setupAnswerNavigation() {
   answerAreaEl.addEventListener('focusin', (e) => {
     if (e.target.tagName !== 'INPUT') return;
     const index = parseInt(e.target.dataset.index);
-    highlightSameSymbol(game.cells[index].symbol);
+    if (skipHighlightOnNextFocus) {
+      skipHighlightOnNextFocus = false;
+    } else {
+      highlightSameSymbol(game.cells[index].symbol);
+    }
     if (IS_MOBILE_CUSTOM_KB) {
       showMobileKeyboard();
     } else if (!e.target.hasAttribute('readonly')) {
@@ -1258,7 +1267,10 @@ function startGame({ fromNewGame = false, seed = null, restored = null } = {}) {
       return;
     }
     // Desktop: focus the first empty editable cell so the native caret blinks.
+    // Suppress the group highlight for this auto-focus so it only appears once
+    // the player actually interacts, the same as on mobile.
     const idx = getFirstEditableEmptyIndex();
+    skipHighlightOnNextFocus = true;
     focusCell(idx === -1 ? 0 : idx);
   }, 100);
 
