@@ -1512,7 +1512,7 @@ function buildInviteText() {
     // Show a bare domain (no scheme); messaging apps auto-linkify it.
     url = (GAME_CONFIG.shareUrl || 'phraisins.com/wizarding-words').replace(/^https?:\/\//, '');
   } else {
-    header = 'Phraisins \u{1F347}';
+    header = '\u{1F347} Phraisins · Word Game';
     intro = 'Thought you might like this word puzzle:';
     desc = 'Guess the hidden phrase with a cryptic clue.';
     url = 'phraisins.com';
