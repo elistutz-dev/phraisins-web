@@ -1512,7 +1512,7 @@ function buildInviteText() {
     url = GAME_CONFIG.shareUrl || 'phraisins.com/wizarding-words';
     if (!/^https?:\/\//.test(url)) url = 'https://' + url;
   } else {
-    header = '\u{1F347} Phraisins';
+    header = 'Phraisins \u{1F347}';
     intro = 'A quick daily word puzzle:';
     desc = 'Guess the hidden phrase from a cryptic clue.';
     url = 'https://phraisins.com';
