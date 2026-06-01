@@ -1340,8 +1340,13 @@ function showWin() {
   subtitleEl.classList.add('hidden-mobile');
   feedbackEl.textContent = '';
 
-  // Drop the caret and symbol-group highlight off whatever cell the player
-  // was on — the puzzle is solved, so there's nothing left to type into.
+  // The puzzle is solved, so nothing should look active. Collapse each cell's
+  // text selection (a blurred input can still paint its gold ::selection
+  // highlight otherwise — that's the box left on the last-typed letter), drop
+  // focus to kill the caret, and clear the symbol-group highlight.
+  answerAreaEl.querySelectorAll('.answer-cell input').forEach(inp => {
+    try { inp.setSelectionRange(0, 0); } catch (e) {}
+  });
   const focused = answerAreaEl.querySelector('input:focus');
   if (focused) focused.blur();
   clearHighlights();
