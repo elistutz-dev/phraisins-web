@@ -1507,7 +1507,7 @@ function buildInviteText() {
   if (IS_MARATHON_MODE) {
     const lead = GAME_CONFIG.shareLead || '';
     header = (lead ? lead + ' ' : '') + (GAME_CONFIG.shareHeader || 'Phraisins · Wizarding Words');
-    intro = 'A quick Wizarding Words puzzle:';
+    intro = "I'm playing this Wizarding Words puzzle:";
     desc = 'Guess the magical phrase from a cryptic clue.';
     url = GAME_CONFIG.shareUrl || 'phraisins.com/wizarding-words';
     if (!/^https?:\/\//.test(url)) url = 'https://' + url;
@@ -1520,7 +1520,11 @@ function buildInviteText() {
   let text = header + '\n\n';
   text += intro + '\n';
   text += desc + '\n';
-  if (won > 0) text += '\nI won ' + won + ' raisin' + (won !== 1 ? 's' : '') + ' - can you top that?\n';
+  if (IS_MARATHON_MODE) {
+    text += '\n';
+  } else if (won > 0) {
+    text += '\nI won ' + won + ' raisin' + (won !== 1 ? 's' : '') + ' - can you top that?\n';
+  }
   text += url;
   return text;
 }
