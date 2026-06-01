@@ -1479,7 +1479,8 @@ function buildDailyShareText() {
   const todayRaisins = games.reduce((sum, g) => sum + (g.won || 0), 0);
   const correct = games.filter(g => (g.won || 0) > 0).length;
   const lead = GAME_CONFIG.shareLead || '';
-  const url = GAME_CONFIG.shareUrl || 'phraisins.com';
+  let url = GAME_CONFIG.shareUrl || 'phraisins.com';
+  if (!/^https?:\/\//.test(url)) url = 'https://' + url;
   const header = GAME_CONFIG.shareHeader || 'PHRAISINS';
   let text = (lead ? lead + ' ' : '') + header + '\n';
   text += '✨ ' + getRoundupTitle() + '\n';
@@ -1506,21 +1507,21 @@ function buildInviteText() {
   if (IS_MARATHON_MODE) {
     const lead = GAME_CONFIG.shareLead || '';
     header = (lead ? lead + ' ' : '') + (GAME_CONFIG.shareHeader || 'Phraisins · Wizarding Words');
-    intro = "I've been playing this Wizarding Words puzzle:";
-    desc = 'Guess the magical phrase with a cryptic clue.';
+    intro = 'A quick Wizarding Words puzzle:';
+    desc = 'Guess the magical phrase from a cryptic clue.';
     url = GAME_CONFIG.shareUrl || 'phraisins.com/wizarding-words';
     if (!/^https?:\/\//.test(url)) url = 'https://' + url;
   } else {
     header = '\u{1F347} Phraisins';
-    intro = "I've been playing this daily word puzzle:";
-    desc = 'Guess the hidden phrase with a cryptic clue.';
+    intro = 'A quick daily word puzzle:';
+    desc = 'Guess the hidden phrase from a cryptic clue.';
     url = 'https://phraisins.com';
   }
   let text = header + '\n\n';
   text += intro + '\n';
   text += desc + '\n';
-  if (won > 0) text += 'I just won ' + won + ' raisin' + (won !== 1 ? 's' : '') + '! How many can you win?\n';
-  text += '\nPlay here:\n' + url;
+  if (won > 0) text += '\nI won ' + won + ' raisin' + (won !== 1 ? 's' : '') + ' - can you top that?\n';
+  text += url;
   return text;
 }
 
