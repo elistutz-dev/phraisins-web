@@ -227,6 +227,7 @@ function paintSolvedCipher(phraseObj) {
   cipherEl.style.setProperty('--len-scale', computeLenScale(phrase));
   cipherEl.style.removeProperty('--cipher-cell'); // letters, not symbols — use natural widths
   setCipherText(cipherEl, phrase.toLowerCase().replace(/ /g, '  '));
+  fitCipherToWidth();
   cipherEl.querySelectorAll('.cipher-char').forEach(span => {
     if (span.textContent && span.textContent !== ' ') span.classList.add('revealed');
   });
@@ -406,6 +407,33 @@ function setCipherCellWidth(symbols) {
   cipherEl.style.setProperty('--cipher-cell', em.toFixed(3) + 'em');
 }
 
+// A single long word (common on mobile, where the panel is narrow) can be wider
+// than the panel and wrap mid-word, orphaning a letter or two on the next line.
+// In that rare case, shrink the whole cipher just enough that the widest word
+// fits on one line. --fit-scale feeds the font-size calc; since --cipher-cell is
+// an em value it scales with the font, so cells and glyphs shrink together and
+// the layout stays uniform. Floored so a pathological word can't shrink it away.
+const CIPHER_FIT_FLOOR = 0.55;
+function fitCipherToWidth() {
+  cipherEl.style.setProperty('--fit-scale', 1);
+  const cs = getComputedStyle(cipherEl);
+  const avail = cipherEl.clientWidth -
+    parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
+  if (avail <= 0) return;
+  let widest = 0;
+  cipherEl.querySelectorAll('.cipher-word').forEach(word => {
+    const prev = word.style.whiteSpace;
+    word.style.whiteSpace = 'nowrap';
+    const w = word.scrollWidth;
+    word.style.whiteSpace = prev;
+    if (w > widest) widest = w;
+  });
+  if (widest > avail) {
+    const scale = Math.max(avail / widest, CIPHER_FIT_FLOOR);
+    cipherEl.style.setProperty('--fit-scale', scale.toFixed(3));
+  }
+}
+
 function updateCipherDisplay() {
   const charSpans = cipherEl.querySelectorAll('.cipher-char');
   charSpans.forEach(span => {
@@ -430,6 +458,7 @@ function animateCipherScramble(encoded, targetEl) {
     return Math.min(base + Math.floor(Math.random() * 3), totalIterations);
   });
   setCipherText(targetEl, encoded);
+  fitCipherToWidth();
   const finalHeight = targetEl.offsetHeight;
   let iteration = 0;
   setCipherText(targetEl, chars.map((ch, i) =>
@@ -1265,6 +1294,7 @@ function startGame({ fromNewGame = false, seed = null, restored = null } = {}) {
   updateVirtualCaret();
   if (seed || restored) {
     setCipherText(cipherEl, encoded);
+    fitCipherToWidth();
     if (restored) updateCipherDisplay();
   } else {
     animateCipherScramble(encoded, cipherEl);
@@ -2058,6 +2088,7 @@ function repositionActiveCallout() {
 }
 window.addEventListener('resize', repositionActiveCallout);
 window.addEventListener('resize', applyWordWrapHyphens);
+window.addEventListener('resize', fitCipherToWidth);
 window.addEventListener('scroll', repositionActiveCallout, { passive: true });
 // Browser back/forward restores from bfcache without re-running init/startGame,
 // so the native caret is lost. Re-focus on desktop when the page is revived.
