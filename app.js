@@ -1507,7 +1507,7 @@ function buildInviteText() {
   if (IS_MARATHON_MODE) {
     const lead = GAME_CONFIG.shareLead || '';
     header = (lead ? lead + ' ' : '') + (GAME_CONFIG.shareHeader || 'Phraisins · Wizarding Words');
-    intro = "I'm playing this Wizarding Words puzzle:";
+    intro = 'Thought you might like this word puzzle:';
     desc = 'Guess the magical phrase from a cryptic clue.';
     url = GAME_CONFIG.shareUrl || 'phraisins.com/wizarding-words';
     if (!/^https?:\/\//.test(url)) url = 'https://' + url;
