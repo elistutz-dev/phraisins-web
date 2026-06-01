@@ -1479,8 +1479,8 @@ function buildDailyShareText() {
   const todayRaisins = games.reduce((sum, g) => sum + (g.won || 0), 0);
   const correct = games.filter(g => (g.won || 0) > 0).length;
   const lead = GAME_CONFIG.shareLead || '';
-  let url = GAME_CONFIG.shareUrl || 'phraisins.com';
-  if (!/^https?:\/\//.test(url)) url = 'https://' + url;
+  // Show a bare domain (no scheme); messaging apps auto-linkify it.
+  const url = (GAME_CONFIG.shareUrl || 'phraisins.com').replace(/^https?:\/\//, '');
   const header = GAME_CONFIG.shareHeader || 'PHRAISINS';
   let text = (lead ? lead + ' ' : '') + header + '\n';
   text += '✨ ' + getRoundupTitle() + '\n';
