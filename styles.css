@@ -389,8 +389,20 @@
     border-bottom-color: rgba(232, 184, 122, 0.4);
     cursor: default;
   }
+  /* When a cell is focused, every cell sharing its symbol lights up as a
+     group, so the player can see the duplicates move together — and the
+     caret skipping past them when they auto-fill reads as intentional. */
+  .answer-cell.same-sym {
+    background: rgba(237, 218, 252, 0.08);
+    border-radius: 5px 5px 0 0;
+  }
   .answer-cell.same-sym input {
     border-bottom-color: var(--accent);
+  }
+  /* The active cell keeps the gold underline so it stays distinct from its
+     lit-up duplicates (gold is the focus/caret color elsewhere too). */
+  .answer-cell.same-sym input:focus {
+    border-bottom-color: var(--gold);
   }
   .answer-cell.cell-incorrect input {
     border-bottom-color: var(--red);
