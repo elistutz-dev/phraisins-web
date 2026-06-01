@@ -413,6 +413,12 @@ function setCipherCellWidth(symbols) {
 // fits on one line. --fit-scale feeds the font-size calc; since --cipher-cell is
 // an em value it scales with the font, so cells and glyphs shrink together and
 // the layout stays uniform. Floored so a pathological word can't shrink it away.
+//
+// Each word's true single-line width is measured with an off-flow clone
+// (absolute + nowrap + max-width:none). Measuring the live word doesn't work:
+// on mobile the panel is a flex container and overflow-wrap:anywhere lets a
+// word's min-content collapse to one glyph, so the flex item is shrunk and the
+// word wraps *inside* it — its measured width never reveals the overflow.
 const CIPHER_FIT_FLOOR = 0.55;
 function fitCipherToWidth() {
   cipherEl.style.setProperty('--fit-scale', 1);
@@ -422,13 +428,15 @@ function fitCipherToWidth() {
   if (avail <= 0) return;
   let widest = 0;
   cipherEl.querySelectorAll('.cipher-word').forEach(word => {
-    const prev = word.style.whiteSpace;
-    word.style.whiteSpace = 'nowrap';
-    const w = word.scrollWidth;
-    word.style.whiteSpace = prev;
+    const probe = word.cloneNode(true);
+    probe.style.cssText = 'position:absolute;left:-9999px;top:0;visibility:hidden;' +
+      'white-space:nowrap;max-width:none;pointer-events:none;';
+    cipherEl.appendChild(probe);
+    const w = probe.getBoundingClientRect().width;
+    cipherEl.removeChild(probe);
     if (w > widest) widest = w;
   });
-  if (widest > avail) {
+  if (widest > avail + 0.5) {
     const scale = Math.max(avail / widest, CIPHER_FIT_FLOOR);
     cipherEl.style.setProperty('--fit-scale', scale.toFixed(3));
   }
