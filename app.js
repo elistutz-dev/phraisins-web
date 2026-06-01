@@ -1508,13 +1508,13 @@ function buildInviteText() {
     const lead = GAME_CONFIG.shareLead || '';
     header = (lead ? lead + ' ' : '') + (GAME_CONFIG.shareHeader || 'Phraisins · Wizarding Words');
     intro = 'Thought you might like this word puzzle:';
-    desc = 'Guess the magical phrase from a cryptic clue.';
+    desc = 'Guess the magical phrase with a cryptic clue.';
     // Show a bare domain (no scheme); messaging apps auto-linkify it.
     url = (GAME_CONFIG.shareUrl || 'phraisins.com/wizarding-words').replace(/^https?:\/\//, '');
   } else {
     header = 'Phraisins \u{1F347}';
-    intro = 'A quick daily word puzzle:';
-    desc = 'Guess the hidden phrase from a cryptic clue.';
+    intro = 'Thought you might like this daily word puzzle:';
+    desc = 'Guess the hidden phrase with a cryptic clue.';
     url = 'phraisins.com';
   }
   let text = header + '\n\n';
