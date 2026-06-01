@@ -1340,6 +1340,12 @@ function showWin() {
   subtitleEl.classList.add('hidden-mobile');
   feedbackEl.textContent = '';
 
+  // Drop the caret and symbol-group highlight off whatever cell the player
+  // was on — the puzzle is solved, so there's nothing left to type into.
+  const focused = answerAreaEl.querySelector('input:focus');
+  if (focused) focused.blur();
+  clearHighlights();
+
   game.cells.forEach((c, i) => {
     const cellDiv = answerAreaEl.querySelector('.answer-cell[data-index="' + i + '"]');
     if (cellDiv) setTimeout(() => cellDiv.classList.add('cell-correct'), i * 30);
