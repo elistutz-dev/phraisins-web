@@ -850,6 +850,17 @@ function highlightSameSymbol(symbol) {
 function clearHighlights() {
   answerAreaEl.querySelectorAll('.same-sym').forEach(el => el.classList.remove('same-sym'));
 }
+// On game over, make sure no cell still looks active: drop focus to kill the
+// caret and clear the symbol-group highlight. The `solved` class hides the
+// gold text-selection box — collapsing each input with setSelectionRange is
+// unreliable on mobile (a blurred or readonly cell keeps painting it), so we
+// suppress the ::selection paint in CSS instead.
+function deactivateAnswerCells() {
+  const focused = answerAreaEl.querySelector('input:focus');
+  if (focused) focused.blur();
+  clearHighlights();
+  answerAreaEl.classList.add('solved');
+}
 
 function setupAnswerNavigation() {
   answerAreaEl.addEventListener('keydown', (e) => {
@@ -1202,6 +1213,7 @@ function startGame({ fromNewGame = false, seed = null, restored = null } = {}) {
   hintsEl.innerHTML = '';
   hintsEl.classList.remove('hidden');
   cipherEl.classList.remove('game-over');
+  answerAreaEl.classList.remove('solved');
   feedbackEl.textContent = '';
   feedbackEl.className = '';
   resultFeedbackEl.textContent = '';
@@ -1340,16 +1352,7 @@ function showWin() {
   subtitleEl.classList.add('hidden-mobile');
   feedbackEl.textContent = '';
 
-  // The puzzle is solved, so nothing should look active. Collapse each cell's
-  // text selection (a blurred input can still paint its gold ::selection
-  // highlight otherwise — that's the box left on the last-typed letter), drop
-  // focus to kill the caret, and clear the symbol-group highlight.
-  answerAreaEl.querySelectorAll('.answer-cell input').forEach(inp => {
-    try { inp.setSelectionRange(0, 0); } catch (e) {}
-  });
-  const focused = answerAreaEl.querySelector('input:focus');
-  if (focused) focused.blur();
-  clearHighlights();
+  deactivateAnswerCells();
 
   game.cells.forEach((c, i) => {
     const cellDiv = answerAreaEl.querySelector('.answer-cell[data-index="' + i + '"]');
@@ -1407,6 +1410,7 @@ function showLoss() {
   game.isOver = true;
   clearInProgressGame();
   updateVirtualCaret();
+  deactivateAnswerCells();
   game.raisins = 0;
   saveStreak(0);
   savePerfectStreak(0);

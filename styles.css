@@ -382,6 +382,12 @@
   .answer-cell input::selection {
     background: rgba(232, 184, 122, 0.25);
   }
+  /* Once the puzzle is over, don't paint the text-selection box on any cell.
+     A blurred/readonly cell on mobile can otherwise keep showing it, leaving
+     a stray highlight on whatever letter was last active. */
+  #answer-area.solved .answer-cell input::selection {
+    background: transparent;
+  }
   .answer-cell.locked input {
     color: var(--gold);
     -webkit-text-fill-color: var(--gold);
