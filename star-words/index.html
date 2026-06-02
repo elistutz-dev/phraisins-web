@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-EBJD7X7V95"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-EBJD7X7V95');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Star Words | Phraisins – 20 galactic phrases</title>
+<meta name="description" content="A galactic edition of Phraisins. Guess 20 hidden phrases from a galaxy far, far away with the help of a cryptic clue.">
+<meta property="og:title" content="Phraisins – Star Words">
+<meta property="og:description" content="A galactic edition of Phraisins. Guess 20 hidden phrases from a galaxy far, far away.">
+<meta property="og:image" content="https://phraisins.com/star-words/og-image.png">
+<meta property="og:image:alt" content="Phraisins logo: a cartoon raisin beside two crossed lightsabers, with the word PHRAISINS.">
+<meta property="og:url" content="https://phraisins.com/star-words/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Phraisins – Star Words">
+<meta name="twitter:description" content="A galactic edition of Phraisins. Guess 20 hidden phrases from a galaxy far, far away.">
+<meta name="twitter:image" content="https://phraisins.com/star-words/og-image.png">
+<meta name="twitter:image:alt" content="Phraisins logo: a cartoon raisin beside two crossed lightsabers, with the word PHRAISINS.">
+<link rel="canonical" href="https://phraisins.com/star-words/">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="preload" as="fetch" href="/star-phrases.json" crossorigin="anonymous">
+<link rel="stylesheet" href="/styles.css">
+<script>
+  // Variant config consumed by app.js. To remove Star Words entirely,
+  // delete this directory, /star-phrases.json, and the menu items in / index.html
+  // and /wizarding-words/index.html.
+  window.GAME_CONFIG = {
+    variant: 'star',
+    phrasesFile: '/star-phrases.json',
+    storagePrefix: 'phraisins_star_',
+    marathonSize: 20,
+    roundupTitles: [
+      { minScore: 17, title: 'A true Jedi Master!' },
+      { minScore: 12, title: 'The Force is strong with you!' },
+      { minScore: 7,  title: 'A promising Padawan' },
+      { minScore: 0,  title: 'Even Luke missed the first shot…' }
+    ],
+    riddlesEnabled: false,
+    inviteShare: false,
+    inviteDesc: 'Guess the galactic phrase with a cryptic clue.',
+    winPhrases: {
+      6: ["Legendary!"],
+      5: ["Jedi reflexes!"],
+      4: ["Force-ful!"],
+      3: ["Sharp shot!"],
+      2: ["Close one!"],
+      1: ["Lucky escape!"]
+    },
+    rewardLevels: [
+      { threshold: 10,  phrase: "A new hope!",                    label: "Droid Raisin" },
+      { threshold: 20,  phrase: "Welcome, young one!",            label: "Padawan Raisin" },
+      { threshold: 30,  phrase: "The Force awakens!",             label: "Force Sensitive" },
+      { threshold: 40,  phrase: "You've made the jump!",          label: "Smuggler Raisin" },
+      { threshold: 50,  phrase: "Bullseyed the womp rat!",         label: "Ace Pilot" },
+      { threshold: 60,  phrase: "Knighted at last!",              label: "Raisin Knight" },
+      { threshold: 70,  phrase: "Raisins you're looking for!",    label: "Mind Trickster" },
+      { threshold: 80,  phrase: "A seat on the Council!",         label: "Council Raisin" },
+      { threshold: 90,  phrase: "The Force is strong with this one!", label: "Master Raisin" },
+      { threshold: 100, phrase: "You brought order to the galaxy!",     label: "Galatic Raisin" },
+      { threshold: 110, phrase: "Balance to the Force!",          label: "The Chosen Raisin" },
+      { threshold: 120, phrase: "A Grand Master raisin!",         label: "Grand Master Raisin" }
+    ],
+    shareLead: '⚔️',
+    shareHeader: 'Phraisins · Star Words',
+    shareUrl: 'phraisins.com/star-words',
+    roundupIconHTML:
+      '<svg class="recap-sabers" viewBox="0 0 80 50" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">' +
+      '<line x1="16" y1="44" x2="60" y2="8" stroke="#4ec9ff" stroke-width="3.4" stroke-linecap="round"/>' +
+      '<line x1="16" y1="44" x2="60" y2="8" stroke="#f6ffff" stroke-width="1.3" stroke-linecap="round"/>' +
+      '<line x1="64" y1="44" x2="20" y2="8" stroke="#ff5050" stroke-width="3.4" stroke-linecap="round"/>' +
+      '<line x1="64" y1="44" x2="20" y2="8" stroke="#fff0f0" stroke-width="1.3" stroke-linecap="round"/>' +
+      '<line x1="10" y1="49" x2="18" y2="42" stroke="#9a9a9a" stroke-width="4.2" stroke-linecap="round"/>' +
+      '<line x1="70" y1="49" x2="62" y2="42" stroke="#9a9a9a" stroke-width="4.2" stroke-linecap="round"/>' +
+      '</svg>'
+  };
+</script>
+</head>
+<body class="app-loading variant-star">
+<button id="menu-btn" type="button" aria-label="Open menu" aria-haspopup="true" aria-expanded="false">
+  <span class="menu-bar"></span>
+  <span class="menu-bar"></span>
+  <span class="menu-bar"></span>
+</button>
+<div id="menu-dropdown" class="hidden" role="menu" aria-labelledby="menu-btn">
+  <button class="menu-item" id="menu-how-to" type="button" role="menuitem">How to play</button>
+  <button class="menu-item" id="menu-history" type="button" role="menuitem">My puzzle history</button>
+  <button class="menu-item hidden" id="menu-riddle-answer" type="button" role="menuitem">Riddle answer</button>
+  <button class="menu-item hidden" id="menu-star-words" type="button" role="menuitem"><svg class="menu-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><line x1="4" y1="20" x2="16" y2="6" stroke="#4ec9ff" stroke-width="2.2" stroke-linecap="round"/><line x1="20" y1="20" x2="8" y2="6" stroke="#ff5050" stroke-width="2.2" stroke-linecap="round"/><line x1="3" y1="21.5" x2="6" y2="18" stroke="#9a9a9a" stroke-width="2.4" stroke-linecap="round"/><line x1="21" y1="21.5" x2="18" y2="18" stroke="#9a9a9a" stroke-width="2.4" stroke-linecap="round"/></svg>Star Words</button>
+  <button class="menu-item hidden" id="menu-potter-puzzles" type="button" role="menuitem"><svg class="menu-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><line x1="3.5" y1="20.5" x2="13.5" y2="10.5" stroke="#6b4423" stroke-width="2.4" stroke-linecap="round"/><line x1="13" y1="11" x2="16.5" y2="7.5" stroke="#a8794f" stroke-width="2.2" stroke-linecap="round"/><circle cx="17" cy="7" r="2.2" fill="#ffe199"/><circle cx="17" cy="7" r="1" fill="#fff8dc"/><path d="M17 1.1v0.7M17 2.6v0.7M16.6 2.2h-0.7M17.4 2.2h0.7M21 2.5v0.7M21 4v0.7M20.6 3.6h-0.7M21.4 3.6h0.7M22.5 5.9v0.7M22.5 7.4v0.7M22.1 7h-0.7M22.9 7h0.7" stroke="#ffd97a" stroke-width="0.9" stroke-linecap="round"/></svg>Wizarding Words</button>
+  <button class="menu-item" id="menu-phraisins" type="button" role="menuitem"><svg class="menu-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>Home (Daily Phraisins)</button>
+  <button class="menu-item" id="menu-about" type="button" role="menuitem">About</button>
+</div>
+<div id="info-modal" role="dialog" aria-modal="true" aria-labelledby="info-modal-title">
+  <div id="info-modal-card">
+    <button id="info-modal-close" type="button" aria-label="Close">&times;</button>
+    <div id="info-modal-title"></div>
+    <div id="info-modal-body"></div>
+  </div>
+</div>
+<div id="app">
+  <div class="title-row">
+    <svg class="lightsaber lightsaber-blue title-saber" viewBox="0 0 16 60" aria-hidden="true">
+      <rect x="3" y="4" width="10" height="40" rx="5" fill="currentColor" opacity="0.32"/>
+      <rect x="6" y="6" width="4" height="38" rx="2" fill="currentColor"/>
+      <rect x="7" y="7" width="2" height="36" rx="1" fill="#ffffff" opacity="0.9"/>
+      <rect x="5" y="44" width="6" height="12" fill="#9a9a9a"/>
+      <rect x="5" y="47" width="6" height="1.5" fill="#3a3a3a"/>
+      <rect x="5" y="50" width="6" height="1.5" fill="#3a3a3a"/>
+      <rect x="6" y="55" width="4" height="2" fill="#6a6a6a"/>
+    </svg>
+    <h1>PHRAISINS</h1>
+    <svg class="lightsaber lightsaber-red title-saber" viewBox="0 0 16 60" aria-hidden="true">
+      <rect x="3" y="4" width="10" height="40" rx="5" fill="currentColor" opacity="0.32"/>
+      <rect x="6" y="6" width="4" height="38" rx="2" fill="currentColor"/>
+      <rect x="7" y="7" width="2" height="36" rx="1" fill="#ffffff" opacity="0.9"/>
+      <rect x="5" y="44" width="6" height="12" fill="#9a9a9a"/>
+      <rect x="5" y="47" width="6" height="1.5" fill="#3a3a3a"/>
+      <rect x="5" y="50" width="6" height="1.5" fill="#3a3a3a"/>
+      <rect x="6" y="55" width="4" height="2" fill="#6a6a6a"/>
+    </svg>
+  </div>
+  <div id="subtitle"><span>Guess the galactic phrase. Raisins and lasers await.</span></div>
+  <div id="score-area">
+    <div id="raisin-bar">
+      <span id="total-raisins"></span>
+      <div id="current-level"></div>
+    </div>
+    <div id="stake-wrap">
+      <div id="stake-raisins"></div>
+    </div>
+  </div>
+  <div id="cipher-display"></div>
+  <div id="clue-display"></div>
+  <div id="hints-area"></div>
+  <div id="feedback"></div>
+  <div id="answer-area"></div>
+  <div id="buttons">
+    <button id="giveup-btn">GIVE UP</button>
+    <button id="hint-btn">HINT</button>
+    <button id="submit-btn">ENTER</button>
+    <button id="reopen-result-btn" class="hidden">RESULTS</button>
+    <button id="newgame-outer-btn" class="hidden">NEXT PUZZLE</button>
+  </div>
+  <div id="result" role="dialog" aria-modal="true" aria-labelledby="result-feedback">
+    <div id="result-card">
+      <button id="result-close" type="button" aria-label="Close">&times;</button>
+      <div id="result-feedback"></div>
+      <div id="result-raisins"></div>
+      <div id="result-actions">
+        <button id="share-btn">SHARE<svg class="share-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.41" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></button>
+        <button id="riddle-btn" class="hidden">BONUS RIDDLE</button>
+        <button id="newgame-btn" class="hidden">NEXT PUZZLE</button>
+        <button id="marathon-end-btn" class="marathon-end-btn hidden" type="button">MORE PUZZLES</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="tutorial-overlay" class="hidden" aria-hidden="true">
+  <div id="tutorial-backdrop"></div>
+</div>
+<div id="tutorial-callout" class="hidden" role="dialog" aria-live="polite" aria-labelledby="tutorial-title">
+  <div id="tutorial-title"></div>
+  <div id="tutorial-body"></div>
+  <div id="tutorial-footer">
+    <div id="tutorial-dots"></div>
+    <button id="tutorial-next" type="button">Next</button>
+  </div>
+</div>
+<div id="welcome-dialog" class="hidden" role="dialog" aria-labelledby="welcome-title">
+  <button id="welcome-close" type="button" aria-label="Close">&times;</button>
+  <svg class="welcome-sabers" viewBox="0 0 80 50" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <line x1="16" y1="44" x2="60" y2="8" stroke="#4ec9ff" stroke-width="3.4" stroke-linecap="round"/>
+    <line x1="16" y1="44" x2="60" y2="8" stroke="#f6ffff" stroke-width="1.3" stroke-linecap="round"/>
+    <line x1="64" y1="44" x2="20" y2="8" stroke="#ff5050" stroke-width="3.4" stroke-linecap="round"/>
+    <line x1="64" y1="44" x2="20" y2="8" stroke="#fff0f0" stroke-width="1.3" stroke-linecap="round"/>
+    <line x1="10" y1="49" x2="18" y2="42" stroke="#9a9a9a" stroke-width="4.2" stroke-linecap="round"/>
+    <line x1="70" y1="49" x2="62" y2="42" stroke="#9a9a9a" stroke-width="4.2" stroke-linecap="round"/>
+  </svg>
+  <div id="welcome-title">Welcome to<br><span class="nowrap">Star Words!</span></div>
+  <div id="welcome-body">Solve 20 hidden phrases from a galaxy far, far away. May the Force be with you.</div>
+  <div id="welcome-buttons">
+    <button id="welcome-play" type="button">Play Now</button>
+    <button id="welcome-how-to" type="button">How to Play</button>
+  </div>
+  <button id="welcome-about" type="button">About</button>
+</div>
+<div id="share-toast">Copied!</div>
+<footer>&copy; 2026 All rights reserved. &middot; <a href="https://elistutz.wordpress.com/contact-info/" target="_blank" rel="noopener">Contact game author</a></footer>
+<script src="/app.js"></script>
+</body>
+</html>

@@ -22,12 +22,15 @@ const IS_MOBILE_CUSTOM_KB = window.matchMedia('(pointer: coarse)').matches;
 // before this script loads. To remove a variant entirely, delete its
 // HTML/JSON files and any menu entry that links to it.
 const POTTER_PUZZLES_ENABLED = true;
-function hasPlayedPotter() {
-  const raw = localStorage.getItem('phraisins_potter_marathon_stats');
+const STAR_WORDS_ENABLED = true;
+function hasPlayedMarathon(prefix) {
+  const raw = localStorage.getItem(prefix + 'marathon_stats');
   if (!raw) return false;
   try { const p = JSON.parse(raw); return !!(p && p.games && p.games.length); }
   catch { return false; }
 }
+function hasPlayedPotter() { return hasPlayedMarathon('phraisins_potter_'); }
+function hasPlayedStar() { return hasPlayedMarathon('phraisins_star_'); }
 const GAME_CONFIG = Object.assign({
   phrasesFile: 'phrases.json',
   storagePrefix: 'phraisins_',
@@ -40,6 +43,7 @@ const PHRASES_FILE = GAME_CONFIG.phrasesFile;
 const STORAGE_PREFIX = GAME_CONFIG.storagePrefix;
 const MARATHON_SIZE = GAME_CONFIG.marathonSize;
 const IS_MARATHON_MODE = MARATHON_SIZE !== null;
+const CURRENT_VARIANT = GAME_CONFIG.variant || 'default';
 function lsKey(name) { return STORAGE_PREFIX + name; }
 
 let PHRASES = [];
@@ -1573,7 +1577,7 @@ function buildInviteText() {
     const lead = GAME_CONFIG.shareLead || '';
     header = (lead ? lead + ' ' : '') + (GAME_CONFIG.shareHeader || 'Phraisins · Wizarding Words');
     intro = 'Thought you might like this word puzzle:';
-    desc = 'Guess the magical phrase with a cryptic clue.';
+    desc = GAME_CONFIG.inviteDesc || 'Guess the magical phrase with a cryptic clue.';
     // Show a bare domain (no scheme); messaging apps auto-linkify it.
     url = (GAME_CONFIG.shareUrl || 'phraisins.com/wizarding-words').replace(/^https?:\/\//, '');
   } else {
@@ -1716,6 +1720,18 @@ function showYesterdayRiddleModal(opts) {
       '<path d="M17 1.1v0.7M17 2.6v0.7M16.6 2.2h-0.7M17.4 2.2h0.7M21 2.5v0.7M21 4v0.7M20.6 3.6h-0.7M21.4 3.6h0.7M22.5 5.9v0.7M22.5 7.4v0.7M22.1 7h-0.7M22.9 7h0.7" stroke="#ffd97a" stroke-width="0.9" stroke-linecap="round"/>' +
       '</svg>' +
       '<span>Try Wizarding Words</span>' +
+      '</a></div>';
+  }
+  if (STAR_WORDS_ENABLED && !IS_MARATHON_MODE && !hasPlayedStar()) {
+    bodyHtml += '<div class="riddle-yesterday-link riddle-potter-link">' +
+      '<a href="/star-words/">' +
+      '<svg class="menu-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">' +
+      '<line x1="4" y1="20" x2="16" y2="6" stroke="#4ec9ff" stroke-width="2.2" stroke-linecap="round"/>' +
+      '<line x1="20" y1="20" x2="8" y2="6" stroke="#ff5050" stroke-width="2.2" stroke-linecap="round"/>' +
+      '<line x1="3" y1="21.5" x2="6" y2="18" stroke="#9a9a9a" stroke-width="2.4" stroke-linecap="round"/>' +
+      '<line x1="21" y1="21.5" x2="18" y2="18" stroke="#9a9a9a" stroke-width="2.4" stroke-linecap="round"/>' +
+      '</svg>' +
+      '<span>Try Star Words</span>' +
       '</a></div>';
   }
   openInfoModal('Yesterday’s Riddle', bodyHtml);
@@ -2203,6 +2219,10 @@ function showAboutModal() {
     html +=
       '<p class="about-disclaimer">Wizarding Words is an unofficial fan project. Not affiliated with or endorsed by Warner Bros. or J.K. Rowling.</p>';
   }
+  if (document.body.classList.contains('variant-star')) {
+    html +=
+      '<p class="about-disclaimer">Star Words is an unofficial fan project. Not affiliated with or endorsed by Lucasfilm or The Walt Disney Company.</p>';
+  }
   html += '</div>';
   openInfoModal('About', html);
 }
@@ -2222,11 +2242,21 @@ if (menuRiddleBtn) {
 const menuPotterBtn = document.getElementById('menu-potter-puzzles');
 if (menuPotterBtn) {
   // Hide if Potter is disabled, or if we are already on the Potter page.
-  if (POTTER_PUZZLES_ENABLED && !IS_MARATHON_MODE) {
+  if (POTTER_PUZZLES_ENABLED && CURRENT_VARIANT !== 'potter') {
     menuPotterBtn.classList.remove('hidden');
     menuPotterBtn.addEventListener('click', () => { window.location.href = '/wizarding-words/'; });
   } else {
     menuPotterBtn.classList.add('hidden');
+  }
+}
+const menuStarBtn = document.getElementById('menu-star-words');
+if (menuStarBtn) {
+  // Hide if Star Words is disabled, or if we are already on the Star Words page.
+  if (STAR_WORDS_ENABLED && CURRENT_VARIANT !== 'star') {
+    menuStarBtn.classList.remove('hidden');
+    menuStarBtn.addEventListener('click', () => { window.location.href = '/star-words/'; });
+  } else {
+    menuStarBtn.classList.add('hidden');
   }
 }
 const menuPhraisinsBtn = document.getElementById('menu-phraisins');
