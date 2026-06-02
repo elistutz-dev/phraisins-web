@@ -232,14 +232,16 @@
     margin: 0.1rem auto 0.4rem;
     width: clamp(74px, 24vw, 104px);
     height: auto;
-    filter: drop-shadow(0 0 5px rgba(120, 200, 255, 0.4));
+    overflow: visible;
+    filter: drop-shadow(0 0 5px rgba(120, 200, 255, 0.65)) drop-shadow(0 0 9px rgba(255, 110, 110, 0.3));
   }
   .welcome-sabers {
     display: block;
     margin: -0.2rem auto 0.6rem;
     width: clamp(86px, 30vw, 118px);
     height: auto;
-    filter: drop-shadow(0 0 5px rgba(120, 200, 255, 0.4));
+    overflow: visible;
+    filter: drop-shadow(0 0 5px rgba(120, 200, 255, 0.65)) drop-shadow(0 0 9px rgba(255, 110, 110, 0.3));
   }
   .nowrap { white-space: nowrap; }
   #level-up-message {
@@ -810,8 +812,11 @@
       filter: drop-shadow(0 2px 6px rgba(80, 30, 120, 0.5));
     }
     .title-saber {
-      width: clamp(18px, 5vw, 26px);
-      height: clamp(46px, 12vw, 60px);
+      width: clamp(16px, 4.5vw, 22px);
+      /* Keep height at/under the title text so the flanking sabers don't
+         make .title-row taller than on the other pages (which would push
+         PHRAISINS down). */
+      height: clamp(34px, 9.5vw, 44px);
     }
     h1 {
       font-size: clamp(1.85rem, 8.5vw, 2.55rem);
@@ -958,7 +963,7 @@
     #app { padding: 0.7rem 1rem 0.7rem; }
     .title-row { margin-bottom: 0.1rem; }
     .raisin-svg { width: clamp(24px, 7vw, 36px); height: clamp(22px, 6.2vw, 32px); }
-    .title-saber { width: clamp(16px, 4.5vw, 22px); height: clamp(40px, 10vw, 50px); }
+    .title-saber { width: clamp(14px, 4vw, 20px); height: clamp(30px, 8vw, 40px); }
     h1 { font-size: clamp(1.6rem, 7.5vw, 2.1rem); }
     #subtitle { margin-bottom: 0.4rem; font-size: 0.74rem; }
     #raisin-bar { margin-bottom: 0.4rem; gap: 0.35rem; }
@@ -1334,6 +1339,9 @@
     margin-right: 0.5em;
     vertical-align: -0.22em;
   }
+  /* Beam glow comes from the translucent blade layer inside the SVG, so it
+     stays on the beams only — no filter here (a filter would glow the grey
+     handles too). */
   .menu-item:hover, .menu-item:focus-visible {
     background: rgba(232, 184, 122, 0.08);
     color: var(--gold-bright);
