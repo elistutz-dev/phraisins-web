@@ -1,0 +1,22 @@
+[
+  {"id": 1, "rank": 2, "phrase": "I have a bad feeling about this", "clue": "a recurring foreboding sentiment muttered before disaster"},
+  {"id": 2, "rank": 2, "phrase": "from a certain point of view", "clue": "a half-truth justified by perspective"},
+  {"id": 3, "rank": 2, "phrase": "all too easy", "clue": "the smug villain belittles a swift victory"},
+  {"id": 4, "rank": 2, "phrase": "do or do not there is no try", "clue": "the backwards-speaking master forbids the middle option"},
+  {"id": 5, "rank": 3, "phrase": "these are not the droids you are looking for", "clue": "a robed traveler waves away the obvious targets"},
+  {"id": 6, "rank": 3, "phrase": "its a trap", "clue": "the panicked three-word warning of a fish-headed admiral"},
+  {"id": 7, "rank": 3, "phrase": "you were the chosen one", "clue": "a betrayed mentor laments lost prophecy on a lava shore"},
+  {"id": 8, "rank": 3, "phrase": "never tell me the odds", "clue": "the cocky smuggler refuses statistical pessimism"},
+  {"id": 9, "rank": 4, "phrase": "I find your lack of faith disturbing", "clue": "a black-helmeted critic squeezes a doubter from afar"},
+  {"id": 10, "rank": 4, "phrase": "only a sith deals in absolutes", "clue": "a self-defeating absolute about absolutes"},
+  {"id": 11, "rank": 4, "phrase": "this is the way", "clue": "the helmeted creed of a covert tribe"},
+  {"id": 12, "rank": 4, "phrase": "the force is strong with this one", "clue": "a pursuing pilot senses uncommon ability in his quarry"},
+  {"id": 13, "rank": 4, "phrase": "let the wookiee win", "clue": "advice when playing chess against a tall hairy opponent"},
+  {"id": 14, "rank": 4, "phrase": "punch it chewie", "clue": "an order to a furry copilot to accelerate hard"},
+  {"id": 15, "rank": 5, "phrase": "fear leads to anger", "clue": "the first link in a wrinkled swamp recluse's emotional chain"},
+  {"id": 16, "rank": 5, "phrase": "hello there", "clue": "a cheerful greeting before a high-ground duel"},
+  {"id": 17, "rank": 5, "phrase": "so uncivilized", "clue": "the older knight's verdict on a discarded blaster"},
+  {"id": 18, "rank": 5, "phrase": "size matters not", "clue": "an ancient pointy-eared teacher dismisses physical scale"},
+  {"id": 19, "rank": 5, "phrase": "great kid dont get cocky", "clue": "a veteran pilot warns a rookie celebrating prematurely"},
+  {"id": 20, "rank": 5, "phrase": "no luke I am your father", "clue": "the cinematic reveal that shocked a generation"}
+]

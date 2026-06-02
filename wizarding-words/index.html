@@ -36,6 +36,7 @@
   // Variant config consumed by app.js. To remove Potter Puzzles entirely,
   // delete this directory, /wizarding-phrases.json, and the menu item in / index.html.
   window.GAME_CONFIG = {
+    variant: 'potter',
     phrasesFile: '/wizarding-phrases.json',
     storagePrefix: 'phraisins_potter_',
     marathonSize: 30,
@@ -95,6 +96,7 @@
   <button class="menu-item" id="menu-history" type="button" role="menuitem">My puzzle history</button>
   <button class="menu-item hidden" id="menu-riddle-answer" type="button" role="menuitem">Riddle answer</button>
   <button class="menu-item hidden" id="menu-potter-puzzles" type="button" role="menuitem">Wizarding Words</button>
+  <button class="menu-item hidden" id="menu-star-words" type="button" role="menuitem"><svg class="menu-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><line x1="4" y1="20" x2="16" y2="6" stroke="#4ec9ff" stroke-width="2.2" stroke-linecap="round"/><line x1="20" y1="20" x2="8" y2="6" stroke="#ff5050" stroke-width="2.2" stroke-linecap="round"/><line x1="3" y1="21.5" x2="6" y2="18" stroke="#9a9a9a" stroke-width="2.4" stroke-linecap="round"/><line x1="21" y1="21.5" x2="18" y2="18" stroke="#9a9a9a" stroke-width="2.4" stroke-linecap="round"/></svg>Star Words</button>
   <button class="menu-item" id="menu-phraisins" type="button" role="menuitem"><svg class="menu-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>Home (Daily Phraisins)</button>
   <button class="menu-item" id="menu-about" type="button" role="menuitem">About</button>
 </div>
