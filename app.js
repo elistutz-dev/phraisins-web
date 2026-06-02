@@ -1721,8 +1721,7 @@ function showYesterdayRiddleModal(opts) {
       '</svg>' +
       '<span>Try Wizarding Words</span>' +
       '</a></div>';
-  }
-  if (STAR_WORDS_ENABLED && !IS_MARATHON_MODE && !hasPlayedStar()) {
+  } else if (STAR_WORDS_ENABLED && !IS_MARATHON_MODE && !hasPlayedStar()) {
     bodyHtml += '<div class="riddle-yesterday-link riddle-potter-link">' +
       '<a href="/star-words/">' +
       '<svg class="menu-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">' +
