@@ -401,8 +401,13 @@
   .answer-cell.same-sym input {
     border-bottom-color: var(--accent);
   }
-  /* The active cell keeps the gold underline so it stays distinct from its
-     lit-up duplicates (gold is the focus/caret color elsewhere too). */
+  /* Only the active cell gets the lit-up highlight box and the gold underline,
+     keeping it distinct from its underlined duplicates (gold is the
+     focus/caret color elsewhere too). */
+  .answer-cell.same-sym:has(input:focus) {
+    background: rgba(237, 218, 252, 0.08);
+    border-radius: 5px 5px 0 0;
+  }
   .answer-cell.same-sym input:focus {
     border-bottom-color: var(--gold);
   }
