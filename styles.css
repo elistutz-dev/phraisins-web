@@ -480,9 +480,10 @@
       animation: virtualCaretBlink 1.06s steps(1) infinite;
       pointer-events: none;
     }
-    /* Hush the blinking caret while the Welcome dialog is open over the game,
-       so it doesn't flicker in the background behind the modal. */
-    body:has(#welcome-dialog:not(.hidden)) .answer-cell.has-virtual-caret::before {
+    /* Hush the blinking caret while the Welcome dialog or the tutorial is open
+       over the game (both set body.tutorial-active), so it doesn't flicker in
+       the background — most noticeably on the tutorial's answer-area slide. */
+    body.tutorial-active .answer-cell.has-virtual-caret::before {
       display: none;
     }
   }
