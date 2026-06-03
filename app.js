@@ -411,19 +411,30 @@ function setCipherCellWidth(symbols) {
   cipherEl.style.setProperty('--cipher-cell', em.toFixed(3) + 'em');
 }
 
-// A single long word (common on mobile, where the panel is narrow) can be wider
-// than the panel and wrap mid-word, orphaning a letter or two on the next line.
-// In that rare case, shrink the whole cipher just enough that the widest word
-// fits on one line. --fit-scale feeds the font-size calc; since --cipher-cell is
-// an em value it scales with the font, so cells and glyphs shrink together and
-// the layout stays uniform. Floored so a pathological word can't shrink it away.
+// Shrink the cipher to fit its panel in two passes: width (a single long word
+// wider than the panel) and line count (a long phrase wrapping onto too many
+// lines). --fit-scale feeds the font-size calc; since --cipher-cell is an em
+// value it scales with the font, so cells and glyphs shrink together and the
+// layout stays uniform. Floored so a pathological phrase can't shrink it away.
 //
-// Each word's true single-line width is measured with an off-flow clone
-// (absolute + nowrap + max-width:none). Measuring the live word doesn't work:
-// on mobile the panel is a flex container and overflow-wrap:anywhere lets a
-// word's min-content collapse to one glyph, so the flex item is shrunk and the
+// Width pass: a single long word (common on mobile, where the panel is narrow)
+// can be wider than the panel and wrap mid-word, orphaning a letter or two on
+// the next line. In that case, shrink just enough that the widest word fits on
+// one line. Each word's true single-line width is measured with an off-flow
+// clone (absolute + nowrap + max-width:none). Measuring the live word doesn't
+// work: on mobile the panel is a flex container and overflow-wrap:anywhere lets
+// a word's min-content collapse to one glyph, so the flex item is shrunk and the
 // word wraps *inside* it — its measured width never reveals the overflow.
 const CIPHER_FIT_FLOOR = 0.55;
+const CIPHER_MAX_LINES = 4;
+// Number of wrapped rows: count distinct top offsets of the word spans. Read off
+// the live element — robust to the flex container stretching/centering the box,
+// since a uniform vertical shift doesn't change how many distinct rows there are.
+function cipherLineCount() {
+  const tops = new Set();
+  cipherEl.querySelectorAll('.cipher-word').forEach(w => tops.add(Math.round(w.offsetTop)));
+  return tops.size;
+}
 function fitCipherToWidth() {
   cipherEl.style.setProperty('--fit-scale', 1);
   const cs = getComputedStyle(cipherEl);
@@ -440,9 +451,24 @@ function fitCipherToWidth() {
     cipherEl.removeChild(probe);
     if (w > widest) widest = w;
   });
+  let scale = 1;
   if (widest > avail + 0.5) {
-    const scale = Math.max(avail / widest, CIPHER_FIT_FLOOR);
-    cipherEl.style.setProperty('--fit-scale', scale.toFixed(3));
+    scale = Math.max(avail / widest, CIPHER_FIT_FLOOR);
+  }
+  cipherEl.style.setProperty('--fit-scale', scale.toFixed(3));
+
+  // Line-count pass (mobile only): a phrase whose words each fit horizontally can
+  // still wrap onto more lines than the box shows, spilling past its bottom border
+  // — on mobile #cipher-display is capped at max-height with visible overflow.
+  // Shrink stepwise until it's within CIPHER_MAX_LINES, or we hit the floor. On
+  // desktop max-height is 'none' (parseFloat -> NaN) and the box grows to fit, so
+  // skip — leaving the desktop sizing untouched.
+  if (!isNaN(parseFloat(cs.maxHeight))) {
+    let guard = 0;
+    while (scale > CIPHER_FIT_FLOOR && cipherLineCount() > CIPHER_MAX_LINES && guard++ < 16) {
+      scale = Math.max(scale - 0.04, CIPHER_FIT_FLOOR);
+      cipherEl.style.setProperty('--fit-scale', scale.toFixed(3));
+    }
   }
 }
 
