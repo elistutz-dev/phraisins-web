@@ -1497,6 +1497,9 @@ function revealAllLetters() {
     }, i * 40);
   });
   game.unrevealedLetters = [];
+  // Total time for the reveal to finish: last letter is scheduled at
+  // (n-1)*40ms and its revealPop animation runs 350ms. 0 if nothing to reveal.
+  return toReveal.length ? (toReveal.length - 1) * 40 + 350 : 0;
 }
 
 // Per-puzzle share reads "SHARE"; once the daily limit is reached it reads
@@ -1535,9 +1538,11 @@ function showResult(delay = 1500) {
   cipherEl.style.overflow = '';
   updateCipherDisplay();
   cipherEl.classList.add('game-over');
-  revealAllLetters();
+  const revealDuration = revealAllLetters();
 
-  setTimeout(() => { resultEl.style.display = 'flex'; }, delay);
+  // Wait the usual fixed delay, but never pop the modal before the answer
+  // reveal animation has finished (matters only for unusually long phrases).
+  setTimeout(() => { resultEl.style.display = 'flex'; }, Math.max(delay, revealDuration));
 }
 
 // --- Share ---
