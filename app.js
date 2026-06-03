@@ -1498,8 +1498,10 @@ function revealAllLetters() {
   });
   game.unrevealedLetters = [];
   // Total time for the reveal to finish: last letter is scheduled at
-  // (n-1)*40ms and its revealPop animation runs 350ms. 0 if nothing to reveal.
-  return toReveal.length ? (toReveal.length - 1) * 40 + 350 : 0;
+  // (n-1)*40ms and its revealPop animation runs 350ms, plus a short breath
+  // so the modal doesn't pop the instant the last letter lands. 0 if nothing
+  // to reveal.
+  return toReveal.length ? (toReveal.length - 1) * 40 + 350 + 250 : 0;
 }
 
 // Per-puzzle share reads "SHARE"; once the daily limit is reached it reads
