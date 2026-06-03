@@ -1140,6 +1140,16 @@
     line-height: 1.45;
     margin-bottom: 1.25rem;
   }
+  .grapeness-wrap {
+    position: relative;
+  }
+  .welcome-grapes {
+    position: absolute;
+    left: 100%;
+    top: 50%;
+    transform: translateY(-50%);
+    margin-left: 0.25rem;
+  }
   #welcome-buttons {
     display: flex;
     justify-content: center;
