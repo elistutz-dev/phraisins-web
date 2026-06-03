@@ -1,4 +1,4 @@
 User-agent: *
-Disallow: /potter-puzzles/
+Disallow:
 
 Sitemap: https://phraisins.com/sitemap.xml
