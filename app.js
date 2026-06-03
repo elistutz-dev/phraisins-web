@@ -2025,7 +2025,17 @@ function renderTutorialStep(i) {
     }
   });
   const primary = tutorialSpotlightEls[0] || null;
-  if (primary) primary.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  // Only scroll when the target is actually off-screen. On desktop everything
+  // fits in the viewport, so block:'center' would needlessly scroll the page
+  // down (and leave it scrolled after the tutorial). Skipping the scroll when
+  // the target is already fully visible keeps the page put.
+  if (primary) {
+    const r = primary.getBoundingClientRect();
+    const vh = window.innerHeight || document.documentElement.clientHeight;
+    if (r.top < 0 || r.bottom > vh) {
+      primary.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  }
   tutorialTitleEl.textContent = step.title || '';
   tutorialBodyEl.textContent = step.body;
   tutorialDotsEl.innerHTML = TUTORIAL_STEPS.map((_, idx) =>
