@@ -1146,15 +1146,13 @@
     line-height: 1.45;
     margin-bottom: 1.25rem;
   }
-  .grapeness-wrap {
-    position: relative;
-  }
-  .welcome-grapes {
-    position: absolute;
-    left: 100%;
-    top: 50%;
-    transform: translateY(-50%);
-    margin-left: 0.25rem;
+  .welcome-raisin-hero {
+    display: block;
+    margin: 0 auto 0.4rem;
+    /* Height matched to the Wizarding Words welcome wand (width clamp x 50/80 ratio). */
+    height: clamp(50px, 17.5vw, 69px);
+    width: auto;
+    filter: drop-shadow(0 3px 8px rgba(80, 30, 120, 0.45));
   }
   #welcome-buttons {
     display: flex;
