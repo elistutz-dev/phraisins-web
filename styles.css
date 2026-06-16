@@ -1149,8 +1149,9 @@
   .welcome-raisin-hero {
     display: block;
     margin: 0 auto 0.4rem;
-    /* Height matched to the Wizarding Words welcome wand (width clamp x 50/80 ratio). */
-    height: clamp(50px, 17.5vw, 69px);
+    /* Three-raisin family portrait; sized so the larger foreground raisin reads
+       at roughly the original single raisin's size. */
+    height: clamp(60px, 20vw, 80px);
     width: auto;
     filter: drop-shadow(0 3px 8px rgba(80, 30, 120, 0.45));
   }
