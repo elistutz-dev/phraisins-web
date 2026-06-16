@@ -811,6 +811,34 @@ function findPrevCell(fromIndex) {
   }
   return -1;
 }
+// Cells wrap across multiple visual lines, so up/down can't use index math.
+// Find the nearest editable cell in the row above (dir -1) or below (dir +1),
+// preferring the closest row first, then the cell nearest horizontally.
+function findCellInRow(fromIndex, dir) {
+  const current = answerAreaEl.querySelector('.answer-cell[data-index="' + fromIndex + '"]');
+  if (!current) return -1;
+  const cur = current.getBoundingClientRect();
+  const curX = cur.left + cur.width / 2;
+  const curY = cur.top + cur.height / 2;
+
+  let best = -1, bestRowDist = Infinity, bestXDist = Infinity;
+  answerAreaEl.querySelectorAll('.answer-cell').forEach(cellEl => {
+    const i = parseInt(cellEl.dataset.index);
+    if (game.cells[i].isLocked) return;
+    const r = cellEl.getBoundingClientRect();
+    const cy = r.top + r.height / 2;
+    const vDelta = cy - curY;
+    // Skip cells on the current row or in the wrong vertical direction.
+    if (dir < 0 ? vDelta > -r.height / 2 : vDelta < r.height / 2) return;
+    const rowDist = Math.abs(vDelta);
+    const xDist = Math.abs((r.left + r.width / 2) - curX);
+    if (rowDist < bestRowDist - 1 ||
+        (Math.abs(rowDist - bestRowDist) <= 1 && xDist < bestXDist)) {
+      best = i; bestRowDist = rowDist; bestXDist = xDist;
+    }
+  });
+  return best;
+}
 function focusCell(index) {
   const input = answerAreaEl.querySelector('.answer-cell[data-index="' + index + '"] input');
   if (input) { input.removeAttribute('readonly'); input.focus(); input.select(); }
@@ -962,6 +990,12 @@ function setupAnswerNavigation() {
       e.preventDefault();
       const next = findNextCell(index);
       if (next !== -1) focusCell(next);
+      return;
+    }
+    if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+      e.preventDefault();
+      const target = findCellInRow(index, e.key === 'ArrowUp' ? -1 : 1);
+      if (target !== -1) focusCell(target);
       return;
     }
     if (e.key === 'Tab') {
