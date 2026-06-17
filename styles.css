@@ -1517,6 +1517,8 @@
        text doesn't feel squeezed toward the middle of the page. */
     .about-body { padding: 1.5rem 0.75rem; }
     .about-card { padding: clamp(1rem, 3.6vw, 1.4rem); }
+    /* Match the modal body's line spacing (it sets line-height: 1.55). */
+    .about-card .about-text { line-height: 1.55; }
   }
   .history-list {
     display: flex;
