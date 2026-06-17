@@ -1512,6 +1512,12 @@
     text-align: center;
   }
   .about-back a { font-size: 1.05rem; }
+  @media (max-width: 600px) {
+    /* Match the Wizarding Words About modal's edge gap and text inset so the
+       text doesn't feel squeezed toward the middle of the page. */
+    .about-body { padding: 1.5rem 0.75rem; }
+    .about-card { padding: clamp(1rem, 3.6vw, 1.4rem); }
+  }
   .history-list {
     display: flex;
     flex-direction: column;
