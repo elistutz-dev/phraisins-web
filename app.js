@@ -2171,6 +2171,12 @@ welcomeHowToBtn.addEventListener('click', () => {
 
 if (welcomeAboutBtn) {
   welcomeAboutBtn.addEventListener('click', () => {
+    // The main Phraisins site links out to the standalone /about/ page; the
+    // variants show the in-page About modal.
+    if (CURRENT_VARIANT === 'default') {
+      window.location.href = '/about/';
+      return;
+    }
     // Tuck the welcome dialog and its overlay away so the About modal (a lower
     // z-index) is visible, then restore them when the modal is closed.
     hideWelcomeDialog();
@@ -2339,7 +2345,13 @@ const menuPhraisinsBtn = document.getElementById('menu-phraisins');
 if (menuPhraisinsBtn) {
   menuPhraisinsBtn.addEventListener('click', () => { window.location.href = '/'; });
 }
-document.getElementById('menu-about').addEventListener('click', () => { closeMenu(); showAboutModal(); });
+document.getElementById('menu-about').addEventListener('click', () => {
+  closeMenu();
+  // The main Phraisins site has a standalone /about/ page (better for SEO);
+  // the Wizarding Words and Star Words variants keep the in-page About modal.
+  if (CURRENT_VARIANT === 'default') window.location.href = '/about/';
+  else showAboutModal();
+});
 
 // --- Init ---
 async function init() {
