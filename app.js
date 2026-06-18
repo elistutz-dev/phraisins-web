@@ -621,8 +621,8 @@ function spawnConfetti() {
   const container = document.createElement('div');
   container.className = 'confetti-container';
   document.body.appendChild(container);
-  for (let i = 0; i < 44; i++) {
-    const p = createConfettiPiece(i < 7, 1);
+  for (let i = 0; i < 52; i++) {
+    const p = createConfettiPiece(i < 8, 1);
     p.style.left = (Math.random() * 100) + '%';
     p.style.top = (-8 - Math.random() * 16) + '%';
     p.style.setProperty('--fall-duration', (2.05 + Math.random() * 1.55) + 's');
@@ -637,8 +637,8 @@ function spawnMiniConfetti() {
   const container = document.createElement('div');
   container.className = 'confetti-container';
   document.body.appendChild(container);
-  for (let i = 0; i < 16; i++) {
-    const p = createConfettiPiece(i < 3, 0.85);
+  for (let i = 0; i < 20; i++) {
+    const p = createConfettiPiece(i < 4, 0.85);
     p.style.left = (Math.random() * 100) + '%';
     p.style.top = (-8 - Math.random() * 10) + '%';
     p.style.setProperty('--fall-duration', (1.7 + Math.random() * 1.2) + 's');
