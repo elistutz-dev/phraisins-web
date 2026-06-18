@@ -592,7 +592,7 @@ function spawnConfetti() {
     p.style.setProperty('--delay', (Math.random() * 0.4) + 's');
     p.style.setProperty('--rotation', (360 + Math.random() * 720) + 'deg');
     if (isRaisin) {
-      const size = 24 + Math.random() * 16;
+      const size = 32 + Math.random() * 20;
       p.style.width = size + 'px';
       p.style.height = size + 'px';
       p.style.background = 'none';
@@ -601,7 +601,7 @@ function spawnConfetti() {
     } else {
       p.style.background = colors[Math.floor(Math.random() * colors.length)];
       p.style.borderRadius = shapes[Math.floor(Math.random() * shapes.length)];
-      const size = 5 + Math.random() * 7;
+      const size = 8 + Math.random() * 9;
       p.style.width = size + 'px';
       p.style.height = size + 'px';
     }
@@ -632,17 +632,23 @@ function spawnMiniConfetti() {
     + '<path d="M32 13c-1 5-3 10-5 15" stroke="#381855" stroke-width="1.1" stroke-linecap="round" fill="none" opacity="0.55"/>'
     + '<path d="M26 8c0-3 1-5 3-7" stroke="#6b8a3a" stroke-width="2" stroke-linecap="round"/>'
     + '</svg>';
-  for (let i = 0; i < 10; i++) {
+  const count = 10;
+  const spread = 24;
+  for (let i = 0; i < count; i++) {
     const isRaisin = i < 3;
     const p = document.createElement('div');
     p.className = 'confetti-particle';
-    p.style.left = (originLeftPct - 12 + Math.random() * 24) + '%';
+    // Spread particles evenly across the width by index, then jitter each
+    // within its slot so they don't clump to one side of the origin.
+    const slot = spread / count;
+    const offset = (i + Math.random()) * slot - spread / 2;
+    p.style.left = (originLeftPct + offset) + '%';
     p.style.top = (originTopPct - 6 + Math.random() * 4) + '%';
     p.style.setProperty('--fall-duration', (1.2 + Math.random() * 0.6) + 's');
     p.style.setProperty('--delay', (Math.random() * 0.15) + 's');
     p.style.setProperty('--rotation', (180 + Math.random() * 360) + 'deg');
     if (isRaisin) {
-      const size = 14 + Math.random() * 6;
+      const size = 18 + Math.random() * 8;
       p.style.width = size + 'px';
       p.style.height = size + 'px';
       p.style.background = 'none';
@@ -651,7 +657,7 @@ function spawnMiniConfetti() {
     } else {
       p.style.background = colors[Math.floor(Math.random() * colors.length)];
       p.style.borderRadius = shapes[Math.floor(Math.random() * shapes.length)];
-      const size = 4 + Math.random() * 4;
+      const size = 6 + Math.random() * 6;
       p.style.width = size + 'px';
       p.style.height = size + 'px';
     }
