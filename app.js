@@ -498,24 +498,56 @@ function animateCipherScramble(encoded, targetEl) {
   setCipherText(targetEl, encoded);
   fitCipherToWidth();
   const finalHeight = targetEl.offsetHeight;
+  const randGlyph = () => currentSymbols[Math.floor(Math.random() * currentSymbols.length)];
+
+  // Build the span tree once and mutate only the symbol cells' text on each tick, rather
+  // than rebuilding the whole tree via innerHTML 15× — the rebuild reparses HTML and
+  // reflows the panel every 110ms, which is what reads as jank on mobile. A scramble's
+  // structure (words, cells, spacing) is constant; only the glyph text at symbol cells
+  // changes. Map each .cipher-char span back to its chars[] index: setCipherText splits
+  // on runs of 2+ spaces (those become inter-word gaps with no span), so every other
+  // char yields one span in document order. If the counts ever disagree, fall back to
+  // the innerHTML rebuild path so behavior is never silently wrong.
+  const spanIndices = [];
+  for (let i = 0; i < chars.length; ) {
+    if (chars[i] === ' ') {
+      let j = i;
+      while (j < chars.length && chars[j] === ' ') j++;
+      if (j - i >= 2) { i = j; continue; }   // 2+ spaces: word separator, no span
+    }
+    spanIndices.push(i);
+    i++;
+  }
+  const spans = [...targetEl.querySelectorAll('.cipher-char')];
+  const canMutate = spans.length === spanIndices.length;
+  const symbolCells = canMutate
+    ? spanIndices.map((ci, k) => ({ span: spans[k], i: ci })).filter(c => isSymbolPos[c.i])
+    : null;
+
   let iteration = 0;
-  setCipherText(targetEl, chars.map((ch, i) =>
-    isSymbolPos[i] ? currentSymbols[Math.floor(Math.random() * currentSymbols.length)] : ch
-  ).join(''));
+  // Prime the first scrambled frame (synchronous, so the answer built above never paints)
+  // and lock the box height so varying-width glyphs can't make it jitter as they swap.
+  if (canMutate) {
+    symbolCells.forEach(c => { c.span.textContent = randGlyph() + '︎'; });
+  } else {
+    setCipherText(targetEl, chars.map((ch, i) => isSymbolPos[i] ? randGlyph() : ch).join(''));
+  }
   const scrambleHeight = targetEl.offsetHeight;
   targetEl.style.height = Math.max(finalHeight, scrambleHeight) + 'px';
   targetEl.style.overflow = 'hidden';
   scrambleTimer = setInterval(() => {
     iteration++;
-    let result = '';
-    for (let i = 0; i < chars.length; i++) {
-      if (iteration >= settleIteration[i]) {
-        result += chars[i];
-      } else {
-        result += currentSymbols[Math.floor(Math.random() * currentSymbols.length)];
+    if (canMutate) {
+      symbolCells.forEach(c => {
+        c.span.textContent = (iteration >= settleIteration[c.i] ? chars[c.i] : randGlyph()) + '︎';
+      });
+    } else {
+      let result = '';
+      for (let i = 0; i < chars.length; i++) {
+        result += iteration >= settleIteration[i] ? chars[i] : randGlyph();
       }
+      setCipherText(targetEl, result);
     }
-    setCipherText(targetEl, result);
     if (iteration >= totalIterations) {
       clearInterval(scrambleTimer);
       scrambleTimer = null;
