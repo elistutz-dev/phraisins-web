@@ -1517,7 +1517,7 @@
     border-top: 1px solid var(--border);
     text-align: center;
   }
-  .about-back a { font-size: 1.05rem; }
+  .about-back a { font-size: 1.2rem; }
   .about-back-arrow {
     position: relative;
     top: -0.06em;

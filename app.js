@@ -634,14 +634,23 @@ function spawnMiniConfetti() {
     + '</svg>';
   const count = 10;
   const spread = 24;
+  // Assign each particle an evenly-spaced slot, then shuffle the slots so the
+  // big raisins (i < 3) don't always land in the leftmost slots and skew the
+  // burst to one side.
+  const slots = [];
+  for (let i = 0; i < count; i++) slots.push(i);
+  for (let i = slots.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    const tmp = slots[i]; slots[i] = slots[j]; slots[j] = tmp;
+  }
   for (let i = 0; i < count; i++) {
     const isRaisin = i < 3;
     const p = document.createElement('div');
     p.className = 'confetti-particle';
-    // Spread particles evenly across the width by index, then jitter each
+    // Spread particles evenly across the width by slot, then jitter each
     // within its slot so they don't clump to one side of the origin.
     const slot = spread / count;
-    const offset = (i + Math.random()) * slot - spread / 2;
+    const offset = (slots[i] + Math.random()) * slot - spread / 2;
     p.style.left = (originLeftPct + offset) + '%';
     p.style.top = (originTopPct - 6 + Math.random() * 4) + '%';
     p.style.setProperty('--fall-duration', (1.2 + Math.random() * 0.6) + 's');
