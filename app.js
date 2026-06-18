@@ -568,111 +568,85 @@ function animateCipherScramble(encoded, targetEl) {
   });
 }
 
+const CONFETTI_COLORS = ['#e8b87a', '#f5d4a0', '#e2c4ff', '#f0deff', '#7cc88a', '#a8b4f0'];
+const CONFETTI_RAISIN_SVG = '<svg viewBox="0 0 52 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">'
+  + '<path d="M26 8c-6-1-12 2-16 8-3 5-4 11-2 16 2 6 7 10 14 11 3 0 6 0 9-2 5-3 9-8 10-14 1-5-1-10-4-14-3-3-7-5-11-5z" fill="#542a78"/>'
+  + '<path d="M14 16c3 4 5 8 4 13" stroke="#381855" stroke-width="1.4" stroke-linecap="round" fill="none" opacity="0.7"/>'
+  + '<path d="M19 12c1 6-1 13-2 18" stroke="#381855" stroke-width="1.2" stroke-linecap="round" fill="none" opacity="0.6"/>'
+  + '<path d="M26 10c0 7-2 14-4 20" stroke="#381855" stroke-width="1.3" stroke-linecap="round" fill="none" opacity="0.65"/>'
+  + '<path d="M32 13c-1 5-3 10-5 15" stroke="#381855" stroke-width="1.1" stroke-linecap="round" fill="none" opacity="0.55"/>'
+  + '<path d="M26 8c0-3 1-5 3-7" stroke="#6b8a3a" stroke-width="2" stroke-linecap="round"/>'
+  + '</svg>';
+
+// Builds one confetti particle. `scale` shrinks the whole piece for the
+// lighter mini burst. The shape mix is streamer-heavy — long fluttering
+// ribbons with the occasional dot, and only rarely a square — so the spray
+// reads as confetti rather than a scatter of blocks. Each piece gets a
+// sideways --drift so it sways as it falls instead of dropping straight down.
+function createConfettiPiece(isRaisin, scale) {
+  const p = document.createElement('div');
+  p.className = 'confetti-particle';
+  p.style.setProperty('--drift', (Math.random() * 160 - 80) + 'px');
+  if (isRaisin) {
+    const size = (26 + Math.random() * 16) * scale;
+    p.style.width = size + 'px';
+    p.style.height = size + 'px';
+    p.innerHTML = CONFETTI_RAISIN_SVG;
+    return p;
+  }
+  p.style.background = CONFETTI_COLORS[Math.floor(Math.random() * CONFETTI_COLORS.length)];
+  const r = Math.random();
+  if (r < 0.6) {
+    // Streamer: a long thin ribbon.
+    p.classList.add('confetti-streamer');
+    p.style.width = ((3 + Math.random() * 3) * scale) + 'px';
+    p.style.height = ((14 + Math.random() * 12) * scale) + 'px';
+  } else if (r < 0.88) {
+    // Round dot.
+    const size = (6 + Math.random() * 6) * scale;
+    p.style.width = size + 'px';
+    p.style.height = size + 'px';
+    p.style.borderRadius = '50%';
+  } else {
+    // Occasional small square.
+    const size = (6 + Math.random() * 5) * scale;
+    p.style.width = size + 'px';
+    p.style.height = size + 'px';
+    p.style.borderRadius = '2px';
+  }
+  return p;
+}
+
 function spawnConfetti() {
   const container = document.createElement('div');
   container.className = 'confetti-container';
   document.body.appendChild(container);
-  const colors = ['#e8b87a', '#f5d4a0', '#e2c4ff', '#f0deff', '#7cc88a', '#a8b4f0'];
-  const shapes = ['50%', '2px'];
-  const raisinSvg = '<svg viewBox="0 0 52 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">'
-    + '<path d="M26 8c-6-1-12 2-16 8-3 5-4 11-2 16 2 6 7 10 14 11 3 0 6 0 9-2 5-3 9-8 10-14 1-5-1-10-4-14-3-3-7-5-11-5z" fill="#542a78"/>'
-    + '<path d="M14 16c3 4 5 8 4 13" stroke="#381855" stroke-width="1.4" stroke-linecap="round" fill="none" opacity="0.7"/>'
-    + '<path d="M19 12c1 6-1 13-2 18" stroke="#381855" stroke-width="1.2" stroke-linecap="round" fill="none" opacity="0.6"/>'
-    + '<path d="M26 10c0 7-2 14-4 20" stroke="#381855" stroke-width="1.3" stroke-linecap="round" fill="none" opacity="0.65"/>'
-    + '<path d="M32 13c-1 5-3 10-5 15" stroke="#381855" stroke-width="1.1" stroke-linecap="round" fill="none" opacity="0.55"/>'
-    + '<path d="M26 8c0-3 1-5 3-7" stroke="#6b8a3a" stroke-width="2" stroke-linecap="round"/>'
-    + '</svg>';
-  for (let i = 0; i < 40; i++) {
-    const isRaisin = i < 8;
-    const p = document.createElement('div');
-    p.className = 'confetti-particle';
-    p.style.left = (15 + Math.random() * 70) + '%';
-    p.style.top = (-5 - Math.random() * 10) + '%';
-    p.style.setProperty('--fall-duration', (2 + Math.random() * 1.5) + 's');
-    p.style.setProperty('--delay', (Math.random() * 0.4) + 's');
+  for (let i = 0; i < 44; i++) {
+    const p = createConfettiPiece(i < 7, 1);
+    p.style.left = (Math.random() * 100) + '%';
+    p.style.top = (-8 - Math.random() * 16) + '%';
+    p.style.setProperty('--fall-duration', (2.4 + Math.random() * 1.8) + 's');
+    p.style.setProperty('--delay', (Math.random() * 0.7) + 's');
     p.style.setProperty('--rotation', (360 + Math.random() * 720) + 'deg');
-    if (isRaisin) {
-      const size = 32 + Math.random() * 20;
-      p.style.width = size + 'px';
-      p.style.height = size + 'px';
-      p.style.background = 'none';
-      p.style.borderRadius = '0';
-      p.innerHTML = raisinSvg;
-    } else {
-      p.style.background = colors[Math.floor(Math.random() * colors.length)];
-      p.style.borderRadius = shapes[Math.floor(Math.random() * shapes.length)];
-      const size = 8 + Math.random() * 9;
-      p.style.width = size + 'px';
-      p.style.height = size + 'px';
-    }
     container.appendChild(p);
   }
-  setTimeout(() => container.remove(), 4500);
+  setTimeout(() => container.remove(), 5000);
 }
 
 function spawnMiniConfetti() {
   const container = document.createElement('div');
   container.className = 'confetti-container';
   document.body.appendChild(container);
-  const anchor = document.getElementById('result-card');
-  let originLeftPct = 50;
-  let originTopPct = 30;
-  if (anchor) {
-    const rect = anchor.getBoundingClientRect();
-    originLeftPct = ((rect.left + rect.width / 2) / window.innerWidth) * 100;
-    originTopPct = Math.max(0, (rect.top / window.innerHeight) * 100 - 4);
-  }
-  const colors = ['#e8b87a', '#f5d4a0', '#e2c4ff', '#f0deff', '#7cc88a', '#a8b4f0'];
-  const shapes = ['50%', '2px'];
-  const raisinSvg = '<svg viewBox="0 0 52 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">'
-    + '<path d="M26 8c-6-1-12 2-16 8-3 5-4 11-2 16 2 6 7 10 14 11 3 0 6 0 9-2 5-3 9-8 10-14 1-5-1-10-4-14-3-3-7-5-11-5z" fill="#542a78"/>'
-    + '<path d="M14 16c3 4 5 8 4 13" stroke="#381855" stroke-width="1.4" stroke-linecap="round" fill="none" opacity="0.7"/>'
-    + '<path d="M19 12c1 6-1 13-2 18" stroke="#381855" stroke-width="1.2" stroke-linecap="round" fill="none" opacity="0.6"/>'
-    + '<path d="M26 10c0 7-2 14-4 20" stroke="#381855" stroke-width="1.3" stroke-linecap="round" fill="none" opacity="0.65"/>'
-    + '<path d="M32 13c-1 5-3 10-5 15" stroke="#381855" stroke-width="1.1" stroke-linecap="round" fill="none" opacity="0.55"/>'
-    + '<path d="M26 8c0-3 1-5 3-7" stroke="#6b8a3a" stroke-width="2" stroke-linecap="round"/>'
-    + '</svg>';
-  const count = 10;
-  const spread = 24;
-  // Assign each particle an evenly-spaced slot, then shuffle the slots so the
-  // big raisins (i < 3) don't always land in the leftmost slots and skew the
-  // burst to one side.
-  const slots = [];
-  for (let i = 0; i < count; i++) slots.push(i);
-  for (let i = slots.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    const tmp = slots[i]; slots[i] = slots[j]; slots[j] = tmp;
-  }
-  for (let i = 0; i < count; i++) {
-    const isRaisin = i < 3;
-    const p = document.createElement('div');
-    p.className = 'confetti-particle';
-    // Spread particles evenly across the width by slot, then jitter each
-    // within its slot so they don't clump to one side of the origin.
-    const slot = spread / count;
-    const offset = (slots[i] + Math.random()) * slot - spread / 2;
-    p.style.left = (originLeftPct + offset) + '%';
-    p.style.top = (originTopPct - 6 + Math.random() * 4) + '%';
-    p.style.setProperty('--fall-duration', (1.2 + Math.random() * 0.6) + 's');
-    p.style.setProperty('--delay', (Math.random() * 0.15) + 's');
-    p.style.setProperty('--rotation', (180 + Math.random() * 360) + 'deg');
-    if (isRaisin) {
-      const size = 18 + Math.random() * 8;
-      p.style.width = size + 'px';
-      p.style.height = size + 'px';
-      p.style.background = 'none';
-      p.style.borderRadius = '0';
-      p.innerHTML = raisinSvg;
-    } else {
-      p.style.background = colors[Math.floor(Math.random() * colors.length)];
-      p.style.borderRadius = shapes[Math.floor(Math.random() * shapes.length)];
-      const size = 6 + Math.random() * 6;
-      p.style.width = size + 'px';
-      p.style.height = size + 'px';
-    }
+  for (let i = 0; i < 16; i++) {
+    const p = createConfettiPiece(i < 3, 0.85);
+    p.style.left = (Math.random() * 100) + '%';
+    p.style.top = (-8 - Math.random() * 10) + '%';
+    p.style.setProperty('--fall-duration', (2 + Math.random() * 1.4) + 's');
+    p.style.setProperty('--delay', (Math.random() * 0.5) + 's');
+    p.style.setProperty('--rotation', (300 + Math.random() * 540) + 'deg');
     container.appendChild(p);
   }
-  setTimeout(() => container.remove(), 2500);
+  setTimeout(() => container.remove(), 4000);
 }
 
 // --- Raisin display ---

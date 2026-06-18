@@ -272,15 +272,19 @@
     position: absolute;
     width: 8px;
     height: 8px;
-    border-radius: 2px;
     opacity: 1;
-    animation: confettiFall var(--fall-duration, 2.5s) ease-in forwards;
+    will-change: transform, opacity;
+    animation: confettiFall var(--fall-duration, 2.5s) cubic-bezier(0.3, 0, 0.7, 1) forwards;
     animation-delay: var(--delay, 0s);
   }
+  .confetti-streamer {
+    border-radius: 1px;
+  }
   @keyframes confettiFall {
-    0% { transform: translateY(0) rotate(0deg) scale(1); opacity: 1; }
-    20% { opacity: 1; }
-    100% { transform: translateY(100vh) rotate(var(--rotation, 720deg)) scale(0.3); opacity: 0; }
+    0% { transform: translate3d(0, 0, 0) rotate(0deg); opacity: 1; }
+    8% { opacity: 1; }
+    90% { opacity: 1; }
+    100% { transform: translate3d(var(--drift, 0px), 108vh, 0) rotate(var(--rotation, 720deg)); opacity: 0; }
   }
 
   /* --- Cipher panel --- */
