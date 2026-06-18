@@ -484,8 +484,43 @@ function updateCipherDisplay() {
   });
 }
 
+// Browsers rasterize each glyph the first time it's painted. The cipher's symbols are
+// exotic Unicode (runes, alchemical, chess, dingbats) that the monospace font lacks, so
+// each needs a system font-fallback + shaping + raster on first paint. The opening
+// scramble flips through random glyphs from the whole set, so on a cold first load it
+// triggers a burst of these rasterizations mid-animation — the source of the initial
+// mobile jank. Painting the whole set once on an imperceptible, composited layer (at the
+// cipher's real font + size, so the raster cache actually hits) warms it before the
+// scramble starts. Resolves after the paint frame; paid once per unique symbol set, so
+// later same-set scrambles resolve on a microtask and start with no delay.
+const warmedSymbolSets = new Set();
+function warmGlyphCache(symbols, fontSize, fontFamily) {
+  const key = symbols.join('');
+  if (warmedSymbolSets.has(key)) return Promise.resolve();
+  warmedSymbolSets.add(key);
+  const warm = document.createElement('div');
+  warm.setAttribute('aria-hidden', 'true');
+  // On-screen so it's genuinely painted (offscreen / visibility:hidden gets skipped by
+  // some engines), but imperceptible; its own layer forces the glyphs to rasterize.
+  warm.style.cssText = 'position:fixed;top:0;left:0;opacity:0.004;pointer-events:none;' +
+    'z-index:2147483647;white-space:nowrap;transform:translateZ(0);will-change:transform;';
+  warm.style.fontFamily = fontFamily;
+  warm.style.fontSize = fontSize;
+  warm.textContent = symbols.map(s => s + '︎').join(' ');
+  document.body.appendChild(warm);
+  warm.getBoundingClientRect(); // flush layout so shaping happens now
+  return new Promise(resolve => {
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      warm.remove();
+      resolve();
+    }));
+  });
+}
+
+let scrambleRunId = 0;
 function animateCipherScramble(encoded, targetEl) {
-  if (scrambleTimer) clearInterval(scrambleTimer);
+  if (scrambleTimer) { clearInterval(scrambleTimer); scrambleTimer = null; }
+  const runId = ++scrambleRunId;
   const chars = [...encoded];
   const totalIterations = 15;
   const symbolSet = new Set(currentSymbols);
@@ -499,31 +534,38 @@ function animateCipherScramble(encoded, targetEl) {
   fitCipherToWidth();
   const finalHeight = targetEl.offsetHeight;
   let iteration = 0;
+  // Prime the first scrambled frame before any warm-up wait, so the solved cipher is
+  // never briefly shown while the glyph cache warms.
   setCipherText(targetEl, chars.map((ch, i) =>
     isSymbolPos[i] ? currentSymbols[Math.floor(Math.random() * currentSymbols.length)] : ch
   ).join(''));
   const scrambleHeight = targetEl.offsetHeight;
   targetEl.style.height = Math.max(finalHeight, scrambleHeight) + 'px';
   targetEl.style.overflow = 'hidden';
-  scrambleTimer = setInterval(() => {
-    iteration++;
-    let result = '';
-    for (let i = 0; i < chars.length; i++) {
-      if (iteration >= settleIteration[i]) {
-        result += chars[i];
-      } else {
-        result += currentSymbols[Math.floor(Math.random() * currentSymbols.length)];
+
+  const cs = getComputedStyle(targetEl);
+  warmGlyphCache(currentSymbols, cs.fontSize, cs.fontFamily).then(() => {
+    if (runId !== scrambleRunId) return; // a newer scramble superseded this one
+    scrambleTimer = setInterval(() => {
+      iteration++;
+      let result = '';
+      for (let i = 0; i < chars.length; i++) {
+        if (iteration >= settleIteration[i]) {
+          result += chars[i];
+        } else {
+          result += currentSymbols[Math.floor(Math.random() * currentSymbols.length)];
+        }
       }
-    }
-    setCipherText(targetEl, result);
-    if (iteration >= totalIterations) {
-      clearInterval(scrambleTimer);
-      scrambleTimer = null;
-      setCipherText(targetEl, encoded);
-      targetEl.style.height = '';
-      targetEl.style.overflow = '';
-    }
-  }, 110);
+      setCipherText(targetEl, result);
+      if (iteration >= totalIterations) {
+        clearInterval(scrambleTimer);
+        scrambleTimer = null;
+        setCipherText(targetEl, encoded);
+        targetEl.style.height = '';
+        targetEl.style.overflow = '';
+      }
+    }, 110);
+  });
 }
 
 function spawnConfetti() {
