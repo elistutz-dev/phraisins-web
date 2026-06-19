@@ -1153,8 +1153,7 @@
   .welcome-raisin-hero {
     display: block;
     margin: 0 auto 0.4rem;
-    /* Three-raisin family portrait; sized so the larger foreground raisin reads
-       at roughly the original single raisin's size. */
+    /* Single friendly raisin, matching the one on the About page. */
     height: clamp(60px, 20vw, 80px);
     width: auto;
     filter: drop-shadow(0 3px 8px rgba(80, 30, 120, 0.45));
