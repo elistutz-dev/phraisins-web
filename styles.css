@@ -76,6 +76,17 @@
     font-size: 1.3rem;
   }
   #total-raisins { color: var(--gold); }
+  #total-raisins-group { position: relative; }
+  #total-goal {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    margin-top: 0.22rem;
+    font-size: 0.72em;
+    color: var(--dim);
+    line-height: 1;
+    white-space: nowrap;
+  }
   #current-level {
     color: var(--accent);
     font-size: inherit;
@@ -889,6 +900,7 @@
       text-align: left;
     }
     #total-raisins .total-prefix { display: none; }
+    #total-goal { display: none; }
     #current-level { letter-spacing: 0.04em; text-align: right; }
     #current-level:not(:empty)::before { content: none; }
     #level-up-message { margin: 0.85rem auto 0.3rem; padding: 0.7rem 0.7rem 0.8rem; }
