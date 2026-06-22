@@ -1506,7 +1506,11 @@ function showWin() {
   lastLevelUp = checkLevelUp(totalBefore, totalBefore + won);
   const levelUp = lastLevelUp;
   if (levelUp) {
-    raisinText += '<div id="level-up-message">' + levelUp.phrase + '</div>';
+    raisinText += '<div id="level-up-message">' +
+      '<div class="level-up-eyebrow">New Level</div>' +
+      '<div class="level-up-label">' + levelUp.label + '</div>' +
+      '<div class="level-up-phrase">' + levelUp.phrase + '</div>' +
+      '</div>';
   }
   const newStreak = getStreak() + 1;
   saveStreak(newStreak);
@@ -1517,9 +1521,9 @@ function showWin() {
   game.streak = newStreak;
   game.perfectStreak = newPerfectStreak;
   if (newPerfectStreak >= 3 && [3, 6, 10].includes(newPerfectStreak)) {
-    raisinText += '<div class="streak-message">Perfect streak!<br><span class="nowrap">' + newPerfectStreak + ' in a row</span></div>';
+    raisinText += '<div class="streak-message">Perfect streak: ' + newPerfectStreak + ' in a row!</div>';
   } else if ([3, 6, 10].includes(newStreak)) {
-    raisinText += '<div class="streak-message">You\'re on a hot streak!<br><span class="nowrap">' + newStreak + ' in a row</span></div>';
+    raisinText += '<div class="streak-message">Hot streak: ' + newStreak + ' in a row!</div>';
   }
   recordDailyGame({ won, max: game.maxRaisins, perfect: isPerfect, lost: false });
   if (game.phraseId) {
