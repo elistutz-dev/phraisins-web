@@ -354,6 +354,7 @@ const subtitleEl = document.getElementById('subtitle');
 const totalRaisinsEl = document.getElementById('total-raisins');
 const stakeRaisinsEl = document.getElementById('stake-raisins');
 const currentLevelEl = document.getElementById('current-level');
+const totalGoalEl = document.getElementById('total-goal');
 
 const STAKE_RAISIN_SVG = '<svg class="stake-raisin" viewBox="0 0 52 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">' +
   '<path d="M26 8c-6-1-12 2-16 8-3 5-4 11-2 16 2 6 7 10 14 11 3 0 6 0 9-2 5-3 9-8 10-14 1-5-1-10-4-14-3-3-7-5-11-5z" fill="#542a78"/>' +
@@ -675,6 +676,9 @@ function updateRaisinDisplay() {
   hintBtn.disabled = game && (game.raisins <= 1 || game.triesLeft <= 1 || game.hintsUsed >= MAX_HINTS);
   const level = getCurrentLevel(total);
   const next = getNextLevel(total);
+  // Show the next-level goal under the total only once the first level is
+  // reached; before that the right-hand side already shows "Goal: x".
+  if (totalGoalEl) totalGoalEl.textContent = (level && next) ? 'Next Goal: ' + next.threshold : '';
   if (level) {
     currentLevelEl.textContent = level.label;
     currentLevelEl.classList.remove('next-preview');
