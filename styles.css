@@ -108,7 +108,8 @@
   .streak-message {
     margin-top: 0.9em;
     line-height: 1.5;
-    font-weight: bold;
+    font-size: 1.05rem;
+    font-weight: 600;
     color: var(--accent);
   }
   .daily-summary {
@@ -245,16 +246,48 @@
   }
   .nowrap { white-space: nowrap; }
   #level-up-message {
-    color: var(--accent-bright);
-    font-size: 1.1rem;
-    margin-top: 1rem;
-    line-height: 1.5;
+    margin: 1.15rem auto 0.4rem;
+    max-width: 22rem;
+    padding: 0.85rem 0.9rem 0.95rem;
+    border-radius: 14px;
+    background: radial-gradient(125% 145% at 50% 0%, rgba(246, 236, 255, 0.13), rgba(246, 236, 255, 0.03));
+    border: 1px solid rgba(246, 236, 255, 0.22);
     animation: levelUpGlow 1.5s ease-in-out;
   }
+  .level-up-eyebrow {
+    font-size: 0.85rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    font-weight: bold;
+    color: var(--gold-bright);
+  }
+  .level-up-eyebrow::before,
+  .level-up-eyebrow::after {
+    content: '\2726';
+    margin: 0 0.5em;
+    color: var(--gold);
+    opacity: 0.85;
+  }
+  .level-up-label {
+    font-size: 1.7rem;
+    line-height: 1.15;
+    margin-top: 0.3rem;
+    color: var(--accent-bright);
+    text-shadow: 0 0 10px rgba(246, 236, 255, 0.45);
+  }
+  .level-up-phrase {
+    font-size: 1rem;
+    font-style: italic;
+    margin-top: 0.35rem;
+    color: var(--accent);
+  }
+  /* When the level badge is the last item (no streak after it), give it a
+     little more room above the action buttons. */
+  #level-up-message:last-child { margin-bottom: 1.5rem; }
   @keyframes levelUpGlow {
-    0% { opacity: 0; transform: scale(0.9); }
-    50% { opacity: 1; transform: scale(1.05); }
-    100% { opacity: 1; transform: scale(1); }
+    0% { transform: scale(0.96); }
+    50% { transform: scale(1.04); }
+    100% { transform: scale(1); }
   }
 
   /* --- Confetti --- */
@@ -858,7 +891,12 @@
     #total-raisins .total-prefix { display: none; }
     #current-level { letter-spacing: 0.04em; text-align: right; }
     #current-level:not(:empty)::before { content: none; }
-    #level-up-message { font-size: 0.95rem; margin-top: 0.35rem; }
+    #level-up-message { margin: 0.85rem auto 0.3rem; padding: 0.7rem 0.7rem 0.8rem; }
+    .level-up-eyebrow { font-size: 0.78rem; letter-spacing: 0.18em; }
+    .level-up-eyebrow::before, .level-up-eyebrow::after { margin: 0 0.4em; }
+    .level-up-label { font-size: clamp(1.3rem, 6.5vw, 1.6rem); }
+    .level-up-phrase { font-size: 0.92rem; }
+    #level-up-message:last-child { margin-bottom: 1.2rem; }
     #stake-wrap {
       justify-content: center;
       margin-top: 0.55rem;
