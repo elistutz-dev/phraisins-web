@@ -76,6 +76,7 @@
     font-size: 1.3rem;
   }
   #total-raisins { color: var(--gold); }
+  #total-raisins .mobile-goal { display: none; }
   #total-raisins-group { position: relative; }
   #total-goal {
     position: absolute;
@@ -900,6 +901,7 @@
       text-align: left;
     }
     #total-raisins .total-prefix { display: none; }
+    #total-raisins .mobile-goal { display: inline; font-size: 0.72em; }
     #total-goal { display: none; }
     #current-level { letter-spacing: 0.04em; text-align: right; }
     #current-level:not(:empty)::before { content: none; }
