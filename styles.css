@@ -76,7 +76,6 @@
     font-size: 1.3rem;
   }
   #total-raisins { color: var(--gold); }
-  #total-raisins .total-count { margin-left: 0.45em; }
   #total-raisins-group { position: relative; }
   #total-goal {
     position: absolute;
@@ -96,10 +95,9 @@
   #current-level:not(:empty)::before {
     content: 'Level: ';
     color: var(--dim);
-    margin-right: 0.15rem;
+    margin-right: 0.3rem;
   }
   #current-level.next-preview::before { content: none; }
-  #current-level .goal-count { margin-left: 0.3em; }
   #stake-wrap {
     display: flex;
     justify-content: center;
@@ -903,11 +901,9 @@
       text-align: left;
     }
     #total-raisins .total-prefix { display: none; }
-    #total-raisins .total-count { margin-left: 0.15em; }
     #total-goal { display: block; }
-    #total-goal:not(:empty)::before { content: 'Goal:'; margin-right: 0.15em; }
+    #total-goal:not(:empty)::before { content: 'Goal: '; }
     #current-level { letter-spacing: 0.04em; text-align: right; }
-    #current-level .goal-count { margin-left: 0.15em; }
     #current-level:not(:empty)::before { content: none; }
     #level-up-message { margin: 0.85rem auto 0.3rem; padding: 0.7rem 0.7rem 0.8rem; }
     .level-up-eyebrow { font-size: 0.78rem; letter-spacing: 0.18em; }

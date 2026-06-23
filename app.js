@@ -672,7 +672,7 @@ function updateRaisinDisplay() {
   const total = getTotalRaisins();
   const level = getCurrentLevel(total);
   const next = getNextLevel(total);
-  totalRaisinsEl.innerHTML = '<span class="total-prefix">Total </span>Raisins:<span class="total-count">' + total + '</span>';
+  totalRaisinsEl.innerHTML = '<span class="total-prefix">Total </span>Raisins: ' + total;
   ensureStakeRaisinChips();
   if (game) {
     Array.from(stakeRaisinsEl.children).forEach((el, i) => {
@@ -690,7 +690,7 @@ function updateRaisinDisplay() {
     currentLevelEl.textContent = level.label;
     currentLevelEl.classList.remove('next-preview');
   } else if (next) {
-    currentLevelEl.innerHTML = 'Goal:<span class="goal-count">' + next.threshold + '</span>';
+    currentLevelEl.textContent = 'Goal: ' + next.threshold;
     currentLevelEl.classList.add('next-preview');
   } else {
     currentLevelEl.textContent = '';
