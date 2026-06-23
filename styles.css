@@ -905,7 +905,7 @@
     #total-raisins .total-prefix { display: none; }
     #total-raisins .total-count { margin-left: 0.15em; }
     #total-goal { display: block; }
-    #total-goal:not(:empty)::before { content: 'Goal: '; }
+    #total-goal:not(:empty)::before { content: 'Goal:'; margin-right: 0.15em; }
     #current-level { letter-spacing: 0.04em; text-align: right; }
     #current-level .goal-count { margin-left: 0.15em; }
     #current-level:not(:empty)::before { content: none; }
