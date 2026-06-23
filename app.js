@@ -85,11 +85,17 @@ const REWARD_LEVELS = GAME_CONFIG.rewardLevels || [
   { threshold: 100, phrase: "Raisin for Celebration!!",                  label: "Celebrator" },
   { threshold: 150, phrase: "You're an Amazin Raisin!",                  label: "Amazin Raisin" },
   { threshold: 200, phrase: "You have totally raised the bar!",          label: "Bar Raiser" },
+  { threshold: 250, phrase: "You're raisin eyebrows everywhere!",        label: "Eyebrow Raiser" },
   { threshold: 300, phrase: "You really raise and shine!",               label: "Raisin Shine" },
+  { threshold: 350, phrase: "Your raisin game is off the charts!",       label: "Chart Raiser" },
   { threshold: 400, phrase: "You're really, really raisy today!",        label: "Really Raisy" },
+  { threshold: 450, phrase: "You're raisin the roof!",                   label: "Roof Raiser" },
   { threshold: 500, phrase: "Hip hip hurraisin!",                        label: "Hurraisin" },
-  { threshold: 750, phrase: "You've reached the edge of raisin!",        label: "Edge of Raisin" },
-  { threshold: 1000, phrase: "I pronounce you, Dr. Bran Raisin!",        label: "Dr. Bran Raisin" },
+  { threshold: 600, phrase: "You've reached the edge of raisin!",        label: "Edge of Raisin" },
+  { threshold: 700, phrase: "I pronounce you, Dr. Bran Raisin!",         label: "Dr. Bran Raisin" },
+  { threshold: 800, phrase: "You've entered the grape beyond!",          label: "Beyond Raisin" },
+  { threshold: 900, phrase: "You are the Chosen Raisin!",                label: "Chosen Raisin" },
+  { threshold: 1000, phrase: "At last, the Raisin Singularity!",         label: "Raisin Singularity" },
 ];
 
 function getCurrentLevel(total) {
