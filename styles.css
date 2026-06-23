@@ -76,7 +76,6 @@
     font-size: 1.3rem;
   }
   #total-raisins { color: var(--gold); }
-  #total-raisins .mobile-goal { display: none; }
   #total-raisins-group { position: relative; }
   #total-goal {
     position: absolute;
@@ -88,6 +87,7 @@
     line-height: 1;
     white-space: nowrap;
   }
+  #total-goal:not(:empty)::before { content: 'Next Goal: '; }
   #current-level {
     color: var(--accent);
     font-size: inherit;
@@ -901,8 +901,8 @@
       text-align: left;
     }
     #total-raisins .total-prefix { display: none; }
-    #total-raisins .mobile-goal { display: inline; font-size: 0.72em; }
-    #total-goal { display: none; }
+    #total-goal { display: block; }
+    #total-goal:not(:empty)::before { content: 'Goal: '; }
     #current-level { letter-spacing: 0.04em; text-align: right; }
     #current-level:not(:empty)::before { content: none; }
     #level-up-message { margin: 0.85rem auto 0.3rem; padding: 0.7rem 0.7rem 0.8rem; }

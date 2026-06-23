@@ -672,10 +672,7 @@ function updateRaisinDisplay() {
   const total = getTotalRaisins();
   const level = getCurrentLevel(total);
   const next = getNextLevel(total);
-  // On mobile, append the next goal as "Raisins: x/y" in smaller type. Suppress
-  // it before the first level is reached, since "Goal: 15" already shows there.
-  const mobileGoal = (level && next) ? '<span class="mobile-goal">/' + next.threshold + '</span>' : '';
-  totalRaisinsEl.innerHTML = '<span class="total-prefix">Total </span>Raisins: ' + total + mobileGoal;
+  totalRaisinsEl.innerHTML = '<span class="total-prefix">Total </span>Raisins: ' + total;
   ensureStakeRaisinChips();
   if (game) {
     Array.from(stakeRaisinsEl.children).forEach((el, i) => {
@@ -685,9 +682,10 @@ function updateRaisinDisplay() {
     Array.from(stakeRaisinsEl.children).forEach(el => el.classList.remove('spent'));
   }
   hintBtn.disabled = game && (game.raisins <= 1 || game.triesLeft <= 1 || game.hintsUsed >= MAX_HINTS);
-  // Show the next-level goal under the total only once the first level is
-  // reached; before that the right-hand side already shows "Goal: x".
-  if (totalGoalEl) totalGoalEl.textContent = (level && next) ? 'Next Goal: ' + next.threshold : '';
+  // Show the goal under the total only once the first level is reached; before
+  // that the right-hand side already shows "Goal: x". The label ("Next Goal: "
+  // on desktop, "Goal: " on mobile) is supplied via CSS ::before.
+  if (totalGoalEl) totalGoalEl.textContent = (level && next) ? next.threshold : '';
   if (level) {
     currentLevelEl.textContent = level.label;
     currentLevelEl.classList.remove('next-preview');
