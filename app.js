@@ -672,7 +672,7 @@ function updateRaisinDisplay() {
   const total = getTotalRaisins();
   const level = getCurrentLevel(total);
   const next = getNextLevel(total);
-  totalRaisinsEl.innerHTML = '<span class="total-prefix">Total </span>Raisins: ' + total;
+  totalRaisinsEl.innerHTML = '<span class="total-prefix">Total </span>Raisins:<span class="total-count">' + total + '</span>';
   ensureStakeRaisinChips();
   if (game) {
     Array.from(stakeRaisinsEl.children).forEach((el, i) => {
