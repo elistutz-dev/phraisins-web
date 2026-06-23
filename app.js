@@ -690,7 +690,7 @@ function updateRaisinDisplay() {
     currentLevelEl.textContent = level.label;
     currentLevelEl.classList.remove('next-preview');
   } else if (next) {
-    currentLevelEl.textContent = 'Goal: ' + next.threshold;
+    currentLevelEl.innerHTML = 'Goal:<span class="goal-count">' + next.threshold + '</span>';
     currentLevelEl.classList.add('next-preview');
   } else {
     currentLevelEl.textContent = '';

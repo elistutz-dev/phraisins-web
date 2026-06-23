@@ -99,6 +99,7 @@
     margin-right: 0.3rem;
   }
   #current-level.next-preview::before { content: none; }
+  #current-level .goal-count { margin-left: 0.3em; }
   #stake-wrap {
     display: flex;
     justify-content: center;
@@ -906,6 +907,7 @@
     #total-goal { display: block; }
     #total-goal:not(:empty)::before { content: 'Goal: '; }
     #current-level { letter-spacing: 0.04em; text-align: right; }
+    #current-level .goal-count { margin-left: 0.15em; }
     #current-level:not(:empty)::before { content: none; }
     #level-up-message { margin: 0.85rem auto 0.3rem; padding: 0.7rem 0.7rem 0.8rem; }
     .level-up-eyebrow { font-size: 0.78rem; letter-spacing: 0.18em; }
