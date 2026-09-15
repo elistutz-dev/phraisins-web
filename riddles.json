@@ -1249,5 +1249,68 @@
       "What am I?"
     ],
     "answer": "pillow"
+  },
+  {
+    "id": 111,
+    "lines": [
+      "Hung from two hills,",
+      "I wail and I wheeze,",
+      "A laboring lung,",
+      "With clattering keys.",
+      "What am I?"
+    ],
+    "answer": "accordion"
+  },
+  {
+    "id": 112,
+    "lines": [
+      "Each day I sing or speak or hum,",
+      "'The world awaits, your time has come!'",
+      "But if to put me off you choose,",
+      "Then oh, the chances you may lose.",
+      "What am I?"
+    ],
+    "answer": "alarm clock"
+  },
+  {
+    "id": 113,
+    "lines": [
+      "By night or by day,",
+      "Sit back and you’ll see,",
+      "A great deal of space,",
+      "On the inside of me.",
+      "What am I?"
+    ],
+    "answer": "planetarium"
+  },  
+  {
+    "id": 114,
+    "lines": [
+      "A forest of voices,",
+      "In silence they wait.",
+      "A watcher stands guard,",
+      "For the loud and the late.",
+      "In silence they whisper:",
+      "'Pick me! No, pick me!'",
+      "And you should, for the best",
+      "Things in life are for free.",
+      "What am I?"
+    ],
+    "answer": "library"
+  },
+  {
+    "id": 115,
+    "lines": [
+      "I’m a bottomless pit,",
+      "With a wide, toothless grin,",
+      "I can’t seem to quit,",
+      "Every time I begin.",
+      "My frog never hops,",
+      "And my bird never flies,",
+      "But I always hunt",
+      "With my googly eyes.",
+      "What am I?"
+    ],
+    "answer": "Cookie Monster"
   }
 ]
